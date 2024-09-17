@@ -10,7 +10,7 @@ const Login = () => {
 
     return(
         <div>
-            <h2>Login</h2>
+            <h2>Login1</h2>
             <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
                 <div>
                     <label>Email: </label>
