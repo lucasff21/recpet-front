@@ -1,0 +1,91 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Faz com que o layout ocupe toda a altura da tela */
+}
+
+main {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 1200px;
+    flex: 1; /* Faz o main ocupar todo o espaço disponível */
+}
+
+footer {
+    background-color: #f0ac4c;
+    padding: 10px 0;
+}
+
+/*                    ////////////////////////////          NAV //////////////////// */ 
+.nav-principal {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: bolder;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5%;
+}
+
+.nav-area-cliente1 {
+    justify-content: flex-end;
+}
+
+.nav-area-cliente2 {
+    justify-content: flex-end;
+}
+
+.bi.bi-people {
+    margin-right: 10px;
+    color: #000000;
+}
+
+.rounded-circle {
+    margin-left: 5%;
+    border-radius: 50%;
+    width: 70px;
+}
+
+.nav-hamburger {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bolder;
+}
+
+.custom-close-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+}
+
+/*      ////////////////////////////////////         FOOTER ////////////////////// */
+
+.footer-items {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bolder;
+    padding: 5px;
+}
+
+.no-bullets {
+    list-style-type: none;
+    padding-left: 0;
+
+}
+
+.no-bullets li {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 5px;
+}
+
+.rounded-circle-footer {
+    margin-left: 5%;
+    border-radius: 50%;
+    width: 25%;
+}
