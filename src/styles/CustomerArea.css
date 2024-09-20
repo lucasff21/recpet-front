@@ -1,0 +1,36 @@
+#div-principal-customer{
+    text-align: center;
+}
+
+.card-creat-account, .card-login-account {
+    height: 400px !important;
+    width: 300px !important;
+    border-radius: 24px;
+    background-color: #f0ac4c; 
+    padding: 5px;
+}
+
+
+.card-login-account{
+    margin-left: 1px;
+}
+
+
+.card-login-account input{
+    margin-top: 15px;
+}
+
+.card-login-account input::placeholder{
+    font-size: 12px;
+    opacity: 0.5;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.card-login-account button{
+    margin-top: 50%;
+}
+
+.card-login-account ::placeholder{
+    font-style: italic;
+}
+

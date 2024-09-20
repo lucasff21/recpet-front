@@ -51,7 +51,7 @@ const Home = () => {
 
     return (
         <Layout>
-            <div>
+            <div >
                 <Slider {...settings}>
                     {movies.map((movie) => (
                         <div key={movie.id}>
