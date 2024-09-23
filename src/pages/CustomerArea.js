@@ -12,10 +12,7 @@ const CustomerArea = () => {
     const login = async () => { 
         if (email && password){
             const token = await loginUser(email, password)
-
-            if(token){
-                console.log("TOKEN RETORNADO: ", token )
-            }
+            localStorage.setItem('Tokec_RecSys',token)
         }
     }
 

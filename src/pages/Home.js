@@ -1,9 +1,11 @@
 import Layout from "../components/Layout";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/HomePage.css";
+import { CachorroFindAll } from "../services/ApiAnimal";
+import logo from '../assets/vira-lata.png';
 
 // Componente de seta customizada
 const ArrowRight = (props) => {
@@ -29,14 +31,9 @@ const ArrowLeft = (props) => {
 };
 
 const Home = () => {
-    const movies = [
-        { id: 1, title: "Animal 1", image: "https://via.placeholder.com/150" },
-        { id: 2, title: "Animal 2", image: "https://via.placeholder.com/150" },
-        { id: 3, title: "Animal 3", image: "https://via.placeholder.com/150" },
-        { id: 4, title: "Animal 4", image: "https://via.placeholder.com/150" },
-        { id: 5, title: "Animal 5", image: "https://via.placeholder.com/150" },
-        { id: 6, title: "Animal 6", image: "https://via.placeholder.com/150" },
-    ];
+    const [cachorros, setCachorros] = useState([]);
+    const [loading, setLoading] = useState(true);
+
 
     const settings = {
         dots: false,
@@ -49,17 +46,75 @@ const Home = () => {
         prevArrow: <ArrowLeft />,
     };
 
+    useEffect(() => {
+        const fetchCachorros = async () => {
+            const body = await CachorroFindAll();
+            if (body) {
+                setCachorros(body)
+            }
+            setLoading(false);
+        }
+        fetchCachorros();
+    }, [])
+
+
+    console.log(cachorros)
+
     return (
         <Layout>
             <div >
-                <Slider {...settings}>
-                    {movies.map((movie) => (
-                        <div key={movie.id}>
-                            <img src={movie.image} alt={movie.title} />
-                            <h3>{movie.title}</h3>
-                        </div>
-                    ))}
-                </Slider>
+                {loading ? (
+                    <p>Carregando...</p>
+                ) : cachorros.length > 0 ? (
+                    <Slider {...settings}>
+                        {cachorros.map((cachorro) => (
+                            <div key={cachorro.id}>
+                                <img src={logo} alt={cachorro.nome}
+                                    style={{ width: '200px', height: '200px', objectFit: 'cover' }}
+                                />
+                                <h3>{cachorro.nome}</h3>
+                            </div>
+                        ))}
+                    </Slider>
+                ) : (
+                    <p>Nenhum cachorro encontrado</p>
+                )}
+            </div>
+            <div style={{marginTop: 100}}>
+                {loading ? (
+                    <p>Carregando...</p>
+                ) : cachorros.length > 0 ? (
+                    <Slider {...settings}>
+                        {cachorros.map((cachorro) => (
+                            <div key={cachorro.id}>
+                                <img src={logo} alt={cachorro.nome}
+                                    style={{ width: '200px', height: '200px', objectFit: 'cover' }}
+                                />
+                                <h3>{cachorro.nome}</h3>
+                            </div>
+                        ))}
+                    </Slider>
+                ) : (
+                    <p>Nenhum cachorro encontrado</p>
+                )}
+            </div>
+            <div style={{marginTop: 100}}>
+                {loading ? (
+                    <p>Carregando...</p>
+                ) : cachorros.length > 0 ? (
+                    <Slider {...settings}>
+                        {cachorros.map((cachorro) => (
+                            <div key={cachorro.id}>
+                                <img src={logo} alt={cachorro.nome}
+                                    style={{ width: '200px', height: '200px', objectFit: 'cover' }}
+                                />
+                                <h3>{cachorro.nome}</h3>
+                            </div>
+                        ))}
+                    </Slider>
+                ) : (
+                    <p>Nenhum cachorro encontrado</p>
+                )}
             </div>
         </Layout>
     );
