@@ -1,23 +1,7 @@
-import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Signup from './pages/Signup';
+import React from "react";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import Layout from './components/Layout';
-import CustomerArea from './pages/CustomerArea';
+import Routes from './routes';
 
-
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/area-cliente" element={<CustomerArea />} />
-        <Route path="/signup" element={<Signup />} />
-      </Routes>
-
-    </Router>
-  );
-}
+const App = () => <Routes />;
 
 export default App;
