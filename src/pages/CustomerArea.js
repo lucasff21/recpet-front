@@ -1,21 +1,34 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom'; // Importando useNavigate
 import Layout from "../components/Layout";
-import "../styles/CustomerArea.css"
+import "../styles/CustomerArea.css";
 import { loginUser } from "../services/ApiUser";
 
 const CustomerArea = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate(); // Hook para navegação
   
 
     const login = async () => { 
         if (email && password){
-            const token = await loginUser(email, password)
-            localStorage.setItem('Tokec_RecSys',token)
-        }
-    }
+            try {
+                const response = await loginUser(email, password);
+                
+                const token = response.token;
 
+                if (token) {
+                    localStorage.setItem('Tokec_RecSys', token);
+                    navigate("/admin-area");
+                }
+            } catch (error) {
+                console.error("Erro ao realizar login:", error);
+                
+            }
+        } else {
+            console.log("Email ou senha não preenchidos");
+        }
+    };
     return (
         <Layout>
             <div className="container" id="div-principal-customer">

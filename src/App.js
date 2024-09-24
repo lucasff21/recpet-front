@@ -1,7 +1,7 @@
 import React from "react";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import Routes from './routes';
+import AppRoutes from "./AppRoutes";
 
-const App = () => <Routes />;
+const App = () => <AppRoutes />;
 
 export default App;
