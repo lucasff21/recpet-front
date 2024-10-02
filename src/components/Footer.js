@@ -14,7 +14,7 @@ const Footer = () => {
                         </ul>
                     </div>
                     <div className ="col-4">
-                        <img src={logo} alt="Logo" className="rounded-circle-footer" />
+                        <img src={logo} alt="Logo" className="rounded-circle-footer img-footer-pet" />
 
                     </div>
                     <div className ="col-4">

@@ -3,14 +3,14 @@ import NavBar from './NavBar';
 import '../styles/StyledComponentLayout.css';
 
 
-const Layout = ({ children }) => {
+const Layout = ({ children, showNavBar= true, showFooter = true }) => { 
     return (
         <div className="layout-container">
-            <NavBar />  
+            {showNavBar && <NavBar />}
             <main>
                 {children}  
             </main>
-            <Footer />
+            {showFooter && <Footer />} 
         </div>
     );
 };
