@@ -1,14 +1,17 @@
-import { useState } from "react";
-import { useNavigate } from 'react-router-dom'; // Importando useNavigate
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from 'react-router-dom'; // Importando useNavigate
 import Layout from "../components/Layout";
 import "../styles/CustomerArea.css";
 import { loginUser } from "../services/ApiUser";
 import petImage from '../assets/pet-createaccount.png';
+import { toast, ToastContainer } from "react-toastify";
 
 const CustomerArea = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate(); // Hook para navegação
+    const navigate = useNavigate(); 
+    const location = useLocation();
+    const userCreated = location.state?.userCreated;
 
 
     const login = async () => {
@@ -31,11 +34,21 @@ const CustomerArea = () => {
         }
     };
 
+    useEffect(() => {
+        if (userCreated) {
+            toast.success('Usuário criado com sucesso!', {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 3000,
+            });
+        }
+    }, [userCreated]);
+
     const acessarCriarConta = () => {
         navigate("/criar-conta");
     }
     return (
         <Layout>
+            <ToastContainer />
             <div className="container" id="div-principal-customer">
                 <div className="row">
                     <div className="col card-creat-account">

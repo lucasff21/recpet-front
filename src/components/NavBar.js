@@ -11,7 +11,7 @@ const NavBar = () => {
         </button>
         <div className="collapse navbar-collapse nav-area-cliente1">
           <div className="navbar-nav">
-            <a className="nav-item nav-link" href="#">Home</a>
+            <a className="nav-item nav-link" href="/">Home</a>
             <a className="nav-item nav-link" href="#">Quem Somos</a>
             <a className="nav-item nav-link" href="#">Cadastrar Pet</a>
             <a className="nav-item nav-link" href="#">Contato</a>

@@ -3,8 +3,9 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Home from "./pages/Home"; // Importar a Home
 import CustomerArea from "./pages/CustomerArea";
 import Signup from "./pages/Signup";
-import AdminArea from "./pages/AdminArea";
 import CreateAccount from "./pages/CreateAccount";
+import AdminArea from "./pages/AdminPages/AdminArea";
+import AddPet from "./pages/AdminPages/AddPet";
 
 
 const getToken = () => {
@@ -28,6 +29,7 @@ const AppRoutes = () => (
             {/* ROTAS PROTEGIDA*/}
 
             <Route path="/admin-area" element={<PrivateRoute element={AdminArea} />} /> 
+            <Route path="/admin-area/adicionar" element={<PrivateRoute element={AddPet} />} /> 
 
         </Routes>
     </BrowserRouter>

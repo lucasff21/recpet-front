@@ -1,0 +1,51 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.barra-lateral {
+    background-color: rgb(219, 202, 180);
+    width: 300px;
+    height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.list-group {
+    flex-grow: 1; 
+}
+
+.barra-lateral .btn-danger {
+    margin-top: auto;
+}
+
+
+.col-12 {
+    padding: 20px;
+}
+
+.area_inputs input, .area_inputs select {
+    margin-top: 2%;
+    width: 50%;
+}
+
+.add_pet_area {
+    margin-top: 3%;
+}
+
+.title_add_pet {
+    margin-bottom: 3%;
+}

@@ -18,8 +18,29 @@ export const loginUser = async (email, password) => {
         })
 
         return response.data;
-    } catch (error) { 
+    } catch (error) {
         console.error("Error during login:", error?.response?.data || error.message);
+        return null;
+    }
+}
+
+
+export const createUser = async (email, password, tipoUsuario) => {
+    try {
+        const payload = { email, password, tipoUsuario }
+        const url = `${apiUrl}/users`
+        const response = await axios({
+            url,
+            method: 'POST',
+            data: payload,
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+
+        return response.data;
+    } catch (error) {
+        console.error("Error ao criar conta:", error?.response?.data || error.message);
         return null;
     }
 }
