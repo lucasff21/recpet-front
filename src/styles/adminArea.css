@@ -49,3 +49,7 @@ body {
 .title_add_pet {
     margin-bottom: 3%;
 }
+
+select:invalid {
+    color: gray;
+  }

@@ -23,7 +23,7 @@ const AppRoutes = () => (
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<Signup />} /> 
             <Route path="/area-cliente" element={<CustomerArea />} />
-            <Route path="/criar-conta" element={<CreateAccount />} /> 
+            <Route path="/criar-conta-admin" element={<CreateAccount />} /> 
 
 
             {/* ROTAS PROTEGIDA*/}

@@ -43,9 +43,14 @@ const CustomerArea = () => {
         }
     }, [userCreated]);
 
-    const acessarCriarConta = () => {
-        navigate("/criar-conta");
+    const acessarCriarContaAdmin = () => {
+        navigate("/criar-conta-admin");
     }
+
+    const acessarCriarContaUser = () => {
+        navigate("/criar-conta-adotante");
+    }
+
     return (
         <Layout>
             <ToastContainer />
@@ -56,7 +61,10 @@ const CustomerArea = () => {
                         <img src={petImage} alt="Logo" className="img-pet" />
                         <p className="text-creat-account">Junte-se a nós na missão de proporcionar um lar amoroso para todos os pets.
                             Faça a diferença hoje e conheça nosso Pets</p>
-                        <button type="submit" className="button-customer" onClick={acessarCriarConta}>Criar Conta</button>
+                        <button type="submit" className="button-customer" onClick={acessarCriarContaAdmin}>Criar Conta</button>
+                        <br/>
+                        <br/>
+                        <button type="submit" className="button-customer" onClick={acessarCriarContaUser}>Criar Conta Usuario Comum</button>
                     </div>
                     <div className="col card-login-account">
                         <h3>Login</h3>

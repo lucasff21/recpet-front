@@ -4,7 +4,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/HomePage.css";
-import { CachorroFindAll } from "../services/ApiAnimal";
+import { CachorroFindAll } from "../services/ConsumeApi";
 import logo from '../assets/vira-lata.png';
 
 // Componente de seta customizada
@@ -70,7 +70,7 @@ const Home = () => {
                         {cachorros.map((cachorro) => (
                             <div key={cachorro.id}>
                                 <img src={logo} alt={cachorro.nome}
-                                    style={{ width: '200px', height: '200px', objectFit: 'cover' }}
+                                    style={{ width: '250px', height: '200px', objectFit: 'cover' }}
                                 />
                                 <h3>{cachorro.nome}</h3>
                             </div>
@@ -80,6 +80,7 @@ const Home = () => {
                     <p>Nenhum cachorro encontrado</p>
                 )}
             </div>
+            {/*
             <div style={{marginTop: 100}}>
                 {loading ? (
                     <p>Carregando...</p>
@@ -98,6 +99,9 @@ const Home = () => {
                     <p>Nenhum cachorro encontrado</p>
                 )}
             </div>
+
+            */}
+            { /* 
             <div style={{marginTop: 100}}>
                 {loading ? (
                     <p>Carregando...</p>
@@ -116,6 +120,7 @@ const Home = () => {
                     <p>Nenhum cachorro encontrado</p>
                 )}
             </div>
+            */}
         </Layout>
     );
 };
