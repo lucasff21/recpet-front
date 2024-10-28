@@ -1,6 +1,6 @@
 import Footer from './Footer';
 import NavBar from './NavBar';
-import '../styles/StyledComponentLayout.css';
+import '../styles/ComponentLayout.css';
 
 
 const Layout = ({ children, showNavBar= true, showFooter = true }) => { 

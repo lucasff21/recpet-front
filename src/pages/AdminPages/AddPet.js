@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AdminArea from "./AdminArea";
 import { createCachorro } from "../../services/ConsumeApi";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AuthContext } from "../../contexts/AuthContext";
 
 
 const AddPet = () => {
@@ -18,6 +19,7 @@ const AddPet = () => {
     const [necessidadeCorrer, setNecessidadeCorrer] = useState(false);
     const [quedaPelo, setQuedaPelo] = useState(false);
     const [tendeLatir, setTendeLatir] = useState(false);
+    const { authToken } = useContext(AuthContext)
 
     const cadastrarPet = async () => {
         if (!nome || !idade || !sexo || !porte || !pelagem) {
@@ -40,8 +42,7 @@ const AddPet = () => {
             tendeLatir,
         };
 
-        const token = localStorage.getItem('Tokec_RecSys');
-        const result = await createCachorro(petData, token);
+        const result = await createCachorro(petData, authToken);
         if (result) {
             toast.success('Pet cadastrado com sucesso!');
             // Limpar os campos após o cadastro

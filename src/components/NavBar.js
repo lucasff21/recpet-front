@@ -1,4 +1,4 @@
-import '../styles/StyledComponentLayout.css';
+import '../styles/ComponentLayout.css';
 import logo from '../assets/logo-pet.png';
 
 const NavBar = () => {

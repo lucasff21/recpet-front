@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import "../../styles/adminArea.css";
+import "../../styles/AdminPages.css";
 
 const AdminArea = ({ children }) => {
     const navigate = useNavigate();
 
 
     const logout = () => {
-        localStorage.removeItem("Tokec_RecSys");
+        localStorage.removeItem("Token_RecSys");
 
         navigate("/area-cliente");
 

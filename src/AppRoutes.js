@@ -1,29 +1,30 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Home from "./pages/Home"; // Importar a Home
-import CustomerArea from "./pages/CustomerArea";
-import Signup from "./pages/Signup";
-import CreateAccount from "./pages/CreateAccount";
+
+
 import AdminArea from "./pages/AdminPages/AdminArea";
 import AddPet from "./pages/AdminPages/AddPet";
-
-
-const getToken = () => {
-    return localStorage.getItem("Tokec_RecSys");
-};
+import { AuthContext } from "./contexts/AuthContext"; // Importar o contexto de autenticação
+import CustomerArea from "./pages/UserPages/CustomerArea";
+import CreateAccount from "./pages/UserPages/CreateAccount";
+import QuestionarioAdotante from "./pages/UserPages/QuestionarioAdotante";
 
 
 const PrivateRoute = ({ element: Element }) => {
-    return getToken() ? <Element /> : <Navigate to="/" />; 
+    const { isAuthenticated } = useContext(AuthContext); // Usar contexto para verificar autenticação
+    
+    return isAuthenticated ? <Element /> : <Navigate to="/" />; // Verificar a autenticação com o context
 };
 
 const AppRoutes = () => (
     <BrowserRouter>
         <Routes> 
             <Route path="/" element={<Home />} />
-            <Route path="/signup" element={<Signup />} /> 
             <Route path="/area-cliente" element={<CustomerArea />} />
             <Route path="/criar-conta-admin" element={<CreateAccount />} /> 
+            <Route path="/criar-conta-adotante" element={<CreateAccount />} /> 
+            <Route path="/questionario-adotante" element={<QuestionarioAdotante />} />
 
 
             {/* ROTAS PROTEGIDA*/}

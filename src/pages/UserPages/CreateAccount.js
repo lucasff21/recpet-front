@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import Layout from "../components/Layout";
-import "../styles/CustomerArea.css";
-import { createUser } from "../services/ApiUser";
+import { useLocation, useNavigate } from 'react-router-dom';
+import "../../styles/UserPages.css";
+import { createUser } from "../../services/ApiUser";
+import Layout from "../../components/Layout";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -11,14 +11,19 @@ const CreateAccount = () => {
     const [confirmEmail, setConfirmEmail] = useState(''); // Estado para e-mail de confirmação
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+    const role = location.state?.role;
+
 
     const createAccount = async () => {
         if (email && password && email === confirmEmail) { // Verifica se os e-mails correspondem
-            try {
-                await createUser(email, password, 'ADMIN');
 
+            console.log('ROLE RECUPERADA  ' + role)
+
+            try {
+                await createUser(email, password, role);
                 navigate("/area-cliente", { state: { userCreated: true } });
-             
+
             } catch (error) {
                 console.error("Erro ao criar conta:", error);
             }
@@ -31,6 +36,8 @@ const CreateAccount = () => {
             console.log("Email ou senha não preenchidos");
         }
     }
+
+    console.log(role)
 
     return (
         <Layout showFooter={false}>
