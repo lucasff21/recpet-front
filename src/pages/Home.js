@@ -34,7 +34,6 @@ const Home = () => {
     const [cachorros, setCachorros] = useState([]);
     const [loading, setLoading] = useState(true);
 
-
     const settings = {
         dots: false,
         infinite: true,

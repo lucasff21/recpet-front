@@ -5,7 +5,7 @@ const apiUrl = BASE_API_URL.baseUrl
 
 export const CachorroFindAll = async () => {
     try {
-        const url = `${apiUrl}/api/cachorro`
+        const url = `${apiUrl}/api/cachorro/findall`
         const response = await axios.get(url);
         return response.data;
     } catch (error) { 
@@ -17,7 +17,7 @@ export const CachorroFindAll = async () => {
 export const createCachorro = async (cachorroData, token) => {
     console.log('Token:', token); 
     try {
-        const url = `${apiUrl}/api/cachorro`;
+        const url = `${apiUrl}/api/cachorro/create`;
         const response = await axios.post(url, cachorroData, {
             headers: {
                 'Content-Type': 'application/json',
@@ -47,6 +47,24 @@ export const createQuestionario = async (questinarioData, token) => {
         return response.data
     } catch (error) { 
         console.error("Error post:", error?.response?.data || error.message);
+        return null;
+    }
+}
+
+export const findByQuestionarioEmail = async (email, token) => {
+    try {
+        const url = `${apiUrl}/api/questionario/email/${email}`
+        const response = await axios({
+            url,
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        return response.data;
+    } catch (error) {
+        console.error("Error: ", error?.response?.data || error.message);
         return null;
     }
 }

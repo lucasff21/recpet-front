@@ -7,7 +7,8 @@ export const AuthProvider = ({ children }) => {
     const [authToken, setAuthToken] = useState(() => {
         return localStorage.getItem('Token_RecSys'); // Inicializa com o token do localStorage
     });
-    const [role, setRole] = useState(null); 
+    const [role, setRole] = useState(null);
+    const [userEmail, setUserEmail] = useState(null)
 
     const isAuthenticated = !!authToken; 
 
@@ -33,14 +34,25 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const userEmailToken = (token) => {
+        try {
+            const decodedToken = jwtDecode(token);
+            const userEmailToken = decodedToken.sub || null;
+            setUserEmail(userEmailToken)
+        } catch (error) {
+            console.error("Erro ao decodificar o token:", error);
+        }
+    }
+
     useEffect(() => {
         if (authToken) {
             tokenDecode(authToken); 
+            userEmailToken(authToken);
         }
     }, [authToken]); 
 
     return (
-        <AuthContext.Provider value={{ authToken, isAuthenticated, login, logout, role }}>
+        <AuthContext.Provider value={{ authToken, isAuthenticated, login, logout, role, userEmail }}>
             {children}
         </AuthContext.Provider>
     );

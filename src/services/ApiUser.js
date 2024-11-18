@@ -19,7 +19,7 @@ export const loginUser = async (email, password) => {
 
         return response.data;
     } catch (error) {
-        console.error("Error during login:", error?.response?.data || error.message);
+        console.error("Error :", error?.response?.data || error.message);
         return null;
     }
 }
@@ -40,7 +40,44 @@ export const createUser = async (email, password, tipoUsuario) => {
 
         return response.data;
     } catch (error) {
-        console.error("Error ao criar conta:", error?.response?.data || error.message);
+        console.error("Error: ", error?.response?.data || error.message);
+        return null;
+    }
+}
+
+
+export const findByUserEmail = async (email, token) => {
+    try {
+        const url = `${apiUrl}/users/findbyemail/${email}`
+        const response = await axios({
+            url,
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        return response.data;
+    } catch (error) {
+        console.error("Error: ", error?.response?.data || error.message);
+        return null;
+    }
+}
+
+export const findbyUserId = async (id, token) => {
+    try {
+        const url = `${apiUrl}/users/${id}`
+        const response = await axios({
+            url,
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        return response.data;
+    } catch (error) {
+        console.error("Error: ", error?.response?.data || error.message);
         return null;
     }
 }

@@ -6,6 +6,7 @@ import { loginUser } from "../../services/ApiUser";
 import petImage from '../../assets/pet-createaccount.png';
 import { toast, ToastContainer } from "react-toastify";
 import { AuthContext } from "../../contexts/AuthContext";
+import { findByQuestionarioEmail } from "../../services/ConsumeApi";
 
 const CustomerArea = () => {
     const [email, setEmail] = useState('');
@@ -14,19 +15,14 @@ const CustomerArea = () => {
     const location = useLocation();
     const userCreated = location.state?.userCreated;
 
-    const { login, role } = useContext(AuthContext); // Pega o login e o papel do AuthContext
+    const { login, role, authToken } = useContext(AuthContext);
 
     const handleLogin = async () => {
         if (email && password) {
             try {
                 const response = await loginUser(email, password);
                 const token = response.token;
-
-                console.log("TOKEN RECEBIDO ----> " + token); // Exibe o token
-
-                login(token); // Chama o login do AuthContext, que já cuida da decodificação
-
-                // O redirecionamento ocorrerá no useEffect
+                login(token);
             } catch (error) {
                 console.error("Erro ao realizar login:", error);
             }
@@ -35,16 +31,36 @@ const CustomerArea = () => {
         }
     };
 
-    useEffect(() => {
-        if (role) {
-            if (role.includes("ADMIN")) {
-                navigate("/admin-area");
-            } else if (role.includes("ADOTANTE")) {
-                console.log("ENTROU");
+    const userQuestionario = async () => {
+        try {
+            const response = await findByQuestionarioEmail(email, authToken);
+            if (response?.user) {
+                navigate("/");
+            } else {
                 navigate("/questionario-adotante");
             }
+        } catch (error) {
+            console.error("Erro ao verificar questionário:", error);
+            toast.error("Erro ao verificar questionário.");
         }
-    }, [role, navigate])
+    };
+
+    useEffect(() => {
+        const checkQuestionario = async () => {
+            if (role?.includes("ADOTANTE") && email && authToken) {
+                await userQuestionario();
+            }
+        };
+        checkQuestionario();
+    }, [role, email, authToken]);
+
+    useEffect(() => {
+        if (role?.includes("ADMIN")) {
+            navigate("/admin-area");
+        }
+    }, [role, navigate]);
+
+
 
     useEffect(() => {
         if (userCreated) {
