@@ -47,3 +47,15 @@
 #questionario-adotante label{
     margin-top: 3%;
 }
+
+
+#questionario-adotante select {
+    width: 50%;
+}
+
+#questionario-adotante {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}

@@ -8,7 +8,7 @@ const AdminArea = ({ children }) => {
     const logout = () => {
         localStorage.removeItem("Token_RecSys");
 
-        navigate("/area-cliente");
+        navigate("/");
 
     }
 

@@ -1,13 +1,15 @@
 import Layout from "../components/Layout";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/HomePage.css";
-import { CachorroFindAll } from "../services/ConsumeApi";
+import { CachorroFindAll, findByIdCachorro } from "../services/ConsumeApi";
 import logo from '../assets/vira-lata.png';
+import { AuthContext } from "../contexts/AuthContext";
+import { Modal, Button } from "react-bootstrap";
 
-// Componente de seta customizada
+
 const ArrowRight = (props) => {
     const { onClick } = props;
     return (
@@ -33,6 +35,12 @@ const ArrowLeft = (props) => {
 const Home = () => {
     const [cachorros, setCachorros] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { authToken } = useContext(AuthContext)
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const [selectedDog, setSelectedDog] = useState(null);
+
 
     const settings = {
         dots: false,
@@ -57,8 +65,41 @@ const Home = () => {
     }, [])
 
 
-    console.log(cachorros)
+    const openModalPet = async (id) => {
+        const response = await findByIdCachorro(id, authToken);
+        if (response) {
+            console.log(response)
+            setSelectedDog(response); // Armazena os dados do cachorro
+            setShow(true); // Abre o modal
+        }
+    };
 
+    const renderModal = () => (
+        <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>{selectedDog?.nome || "Detalhes do Cachorro"}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {selectedDog ? (
+                    <div>
+                        <p><strong>Raça:</strong> {selectedDog.raca}</p>
+                        <p><strong>Idade:</strong> {selectedDog.idade}</p>
+                        <p><strong>Descrição:</strong> {selectedDog.descricao}</p>
+                    </div>
+                ) : (
+                    <p>Carregando...</p>
+                )}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Fechar
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    );
+
+
+    console.log(cachorros)
     return (
         <Layout>
             <div >
@@ -72,25 +113,7 @@ const Home = () => {
                                     style={{ width: '250px', height: '200px', objectFit: 'cover' }}
                                 />
                                 <h3>{cachorro.nome}</h3>
-                            </div>
-                        ))}
-                    </Slider>
-                ) : (
-                    <p>Nenhum cachorro encontrado</p>
-                )}
-            </div>
-            {/*
-            <div style={{marginTop: 100}}>
-                {loading ? (
-                    <p>Carregando...</p>
-                ) : cachorros.length > 0 ? (
-                    <Slider {...settings}>
-                        {cachorros.map((cachorro) => (
-                            <div key={cachorro.id}>
-                                <img src={logo} alt={cachorro.nome}
-                                    style={{ width: '200px', height: '200px', objectFit: 'cover' }}
-                                />
-                                <h3>{cachorro.nome}</h3>
+                                <button type="button" class="btn btn-warning" onClick={() => openModalPet(cachorro.id)}>Visualizar Informações</button>
                             </div>
                         ))}
                     </Slider>
@@ -99,27 +122,7 @@ const Home = () => {
                 )}
             </div>
 
-            */}
-            { /* 
-            <div style={{marginTop: 100}}>
-                {loading ? (
-                    <p>Carregando...</p>
-                ) : cachorros.length > 0 ? (
-                    <Slider {...settings}>
-                        {cachorros.map((cachorro) => (
-                            <div key={cachorro.id}>
-                                <img src={logo} alt={cachorro.nome}
-                                    style={{ width: '200px', height: '200px', objectFit: 'cover' }}
-                                />
-                                <h3>{cachorro.nome}</h3>
-                            </div>
-                        ))}
-                    </Slider>
-                ) : (
-                    <p>Nenhum cachorro encontrado</p>
-                )}
-            </div>
-            */}
+            {renderModal()}
         </Layout>
     );
 };

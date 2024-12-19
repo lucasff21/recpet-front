@@ -52,7 +52,7 @@ const CustomerArea = () => {
             }
         };
         checkQuestionario();
-    }, [role, email, authToken]);
+    }, [role, authToken]);
 
     useEffect(() => {
         if (role?.includes("ADMIN")) {

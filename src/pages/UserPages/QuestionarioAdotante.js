@@ -19,10 +19,10 @@ const QuestionarioAdotante = () => {
     const [tendeLatir, setTendeLatir] = useState("");
     const { authToken, role } = useContext(AuthContext)
     const navigate = useNavigate();
-    
 
 
-    const handleCreateQuestionario  = async (e) => {
+
+    const handleCreateQuestionario = async (e) => {
         e.preventDefault();
 
         if (!sexo || !porte || !pelagem || !idealCasa || !gostaCrianca || !caoGuarda || !brincalhao || !necessidadeCorrer || !quedaPelo || !tendeLatir) {
@@ -45,7 +45,7 @@ const QuestionarioAdotante = () => {
 
         console.log(role)
 
-         try {
+        try {
             if (role.includes("ADOTANTE")) {
                 const result = await createQuestionario(formData, authToken);
 
@@ -75,139 +75,146 @@ const QuestionarioAdotante = () => {
                 position: 'bottom-right',
                 autoClose: 5000,
             });
-        }    
+        }
     };
 
     return (
         <Layout showFooter={false}>
             <ToastContainer />
-            <form id="questionario-adotante" onSubmit={handleCreateQuestionario}>
-                <label htmlFor="sexo">Qual o sexo do pet que você prefere?</label>
-                <select
-                    id="sexo"
-                    className="form-control"
-                    value={sexo}
-                    onChange={(e) => setSexo(e.target.value)}
-                >
-                    <option value="" disabled>Selecione:</option>
-                    <option value="macho">Macho</option>
-                    <option value="femea">Fêmea</option>
-                </select>
+            <div id="questionario-pet" style={{backgroundColor: "#EFC483"}}>
+                <div  style={{textAlign: "center"}}>
+                    <h3>Encontre o Pet ideal para você!</h3>
+                    <p>Responda às perguntas abaixo para que possamos encontrar o cachorro perfeito para o seu estilo de vida.</p>
+                </div>
 
-                <label htmlFor="porte">Qual o porte do pet que você prefere?</label>
-                <select
-                    id="porte"
-                    className="form-control"
-                    value={porte}
-                    onChange={(e) => setPorte(e.target.value)}
-                >
-                    <option value="" disabled>Selecione:</option>
-                    <option value="pequeno">Pequeno</option>
-                    <option value="medio">Médio</option>
-                    <option value="grande">Grande</option>
-                    <option value="gigantes">Gigante</option>
-                </select>
+                <form id="questionario-adotante" onSubmit={handleCreateQuestionario}>
+                    <label htmlFor="sexo">Qual o sexo do pet que você prefere?</label>
+                    <select
+                        id="sexo"
+                        className="form-control"
+                        value={sexo}
+                        onChange={(e) => setSexo(e.target.value)}
+                    >
+                        <option value="" disabled>Selecione:</option>
+                        <option value="macho">Macho</option>
+                        <option value="femea">Fêmea</option>
+                    </select>
 
-                <label htmlFor="pelagem">Qual o tipo de pelagem que você prefere?</label>
-                <select
-                    id="pelagem"
-                    className="form-control"
-                    value={pelagem}
-                    onChange={(e) => setPelagem(e.target.value)}
-                >
-                    <option value="" disabled>Selecione:</option>
-                    <option value="pelo curto liso">Pelo curto liso</option>
-                    <option value="pelo curto duro">Pelo curto e duro</option>
-                    <option value="pelo longo liso">Pelo longo liso</option>
-                    <option value="pelo longo ondulado">Pelo longo ondulado</option>
-                </select>
+                    <label htmlFor="porte">Qual o porte do pet que você prefere?</label>
+                    <select
+                        id="porte"
+                        className="form-control"
+                        value={porte}
+                        onChange={(e) => setPorte(e.target.value)}
+                    >
+                        <option value="" disabled>Selecione:</option>
+                        <option value="pequeno">Pequeno</option>
+                        <option value="medio">Médio</option>
+                        <option value="grande">Grande</option>
+                        <option value="gigantes">Gigante</option>
+                    </select>
 
-                <label htmlFor="idealCasa">O pet será ideal para viver em casa?</label>
-                <select
-                    id="idealCasa"
-                    className="form-control"
-                    value={idealCasa}
-                    onChange={(e) => setIdealCasa(e.target.value)}
-                >
-                    <option value="" disabled>Selecione:</option>
-                    <option value="true">Sim</option>
-                    <option value="false">Não</option>
-                </select>
+                    <label htmlFor="pelagem">Qual o tipo de pelagem que você prefere?</label>
+                    <select
+                        id="pelagem"
+                        className="form-control"
+                        value={pelagem}
+                        onChange={(e) => setPelagem(e.target.value)}
+                    >
+                        <option value="" disabled>Selecione:</option>
+                        <option value="pelo curto liso">Pelo curto liso</option>
+                        <option value="pelo curto duro">Pelo curto e duro</option>
+                        <option value="pelo longo liso">Pelo longo liso</option>
+                        <option value="pelo longo ondulado">Pelo longo ondulado</option>
+                    </select>
 
-                <label htmlFor="gostaCrianca">O pet precisa ser amigável com crianças?</label>
-                <select
-                    id="gostaCrianca"
-                    className="form-control"
-                    value={gostaCrianca}
-                    onChange={(e) => setGostaCrianca(e.target.value)}
-                >
-                    <option value="" disabled>Selecione:</option>
-                    <option value="true">Sim</option>
-                    <option value="false">Não</option>
-                </select>
+                    <label htmlFor="idealCasa">O pet será ideal para viver em casa?</label>
+                    <select
+                        id="idealCasa"
+                        className="form-control"
+                        value={idealCasa}
+                        onChange={(e) => setIdealCasa(e.target.value)}
+                    >
+                        <option value="" disabled>Selecione:</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                    </select>
 
-                <label htmlFor="caoGuarda">Você está procurando um cão de guarda?</label>
-                <select
-                    id="caoGuarda"
-                    className="form-control"
-                    value={caoGuarda}
-                    onChange={(e) => setCaoGuarda(e.target.value)}
-                >
-                    <option value="" disabled>Selecione:</option>
-                    <option value="true">Sim</option>
-                    <option value="false">Não</option>
-                </select>
+                    <label htmlFor="gostaCrianca">O pet precisa ser amigável com crianças?</label>
+                    <select
+                        id="gostaCrianca"
+                        className="form-control"
+                        value={gostaCrianca}
+                        onChange={(e) => setGostaCrianca(e.target.value)}
+                    >
+                        <option value="" disabled>Selecione:</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                    </select>
 
-                <label htmlFor="brincalhao">O pet deve ser brincalhão?</label>
-                <select
-                    id="brincalhao"
-                    className="form-control"
-                    value={brincalhao}
-                    onChange={(e) => setBrincalhao(e.target.value)}
-                >
-                    <option value="" disabled>Selecione:</option>
-                    <option value="true">Sim</option>
-                    <option value="false">Não</option>
-                </select>
+                    <label htmlFor="caoGuarda">Você está procurando um cão de guarda?</label>
+                    <select
+                        id="caoGuarda"
+                        className="form-control"
+                        value={caoGuarda}
+                        onChange={(e) => setCaoGuarda(e.target.value)}
+                    >
+                        <option value="" disabled>Selecione:</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                    </select>
 
-                <label htmlFor="necessidadeCorrer">O pet terá necessidade de correr frequentemente?</label>
-                <select
-                    id="necessidadeCorrer"
-                    className="form-control"
-                    value={necessidadeCorrer}
-                    onChange={(e) => setNecessidadeCorrer(e.target.value)}
-                >
-                    <option value="" disabled>Selecione:</option>
-                    <option value="true">Sim</option>
-                    <option value="false">Não</option>
-                </select>
+                    <label htmlFor="brincalhao">O pet deve ser brincalhão?</label>
+                    <select
+                        id="brincalhao"
+                        className="form-control"
+                        value={brincalhao}
+                        onChange={(e) => setBrincalhao(e.target.value)}
+                    >
+                        <option value="" disabled>Selecione:</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                    </select>
 
-                <label htmlFor="quedaPelo">Você se incomoda com queda de pelos?</label>
-                <select
-                    id="quedaPelo"
-                    className="form-control"
-                    value={quedaPelo}
-                    onChange={(e) => setQuedaPelo(e.target.value)}
-                >
-                    <option value="" disabled>Selecione:</option>
-                    <option value="true">Sim</option>
-                    <option value="false">Não</option>
-                </select>
+                    <label htmlFor="necessidadeCorrer">O pet terá necessidade de correr frequentemente?</label>
+                    <select
+                        id="necessidadeCorrer"
+                        className="form-control"
+                        value={necessidadeCorrer}
+                        onChange={(e) => setNecessidadeCorrer(e.target.value)}
+                    >
+                        <option value="" disabled>Selecione:</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                    </select>
 
-                <label htmlFor="tendeLatir">O pet pode ser de uma raça que tende a latir com frequência?</label>
-                <select
-                    id="tendeLatir"
-                    className="form-control"
-                    value={tendeLatir}
-                    onChange={(e) => setTendeLatir(e.target.value)}
-                >
-                    <option value="" disabled>Selecione:</option>
-                    <option value="true">Sim</option>
-                    <option value="false">Não</option>
-                </select>
+                    <label htmlFor="quedaPelo">Você se incomoda com queda de pelos?</label>
+                    <select
+                        id="quedaPelo"
+                        className="form-control"
+                        value={quedaPelo}
+                        onChange={(e) => setQuedaPelo(e.target.value)}
+                    >
+                        <option value="" disabled>Selecione:</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                    </select>
 
-                <button type="submit" className="btn btn-primary mt-3">Enviar</button>
-            </form>
+                    <label htmlFor="tendeLatir">O pet pode ser de uma raça que tende a latir com frequência?</label>
+                    <select
+                        id="tendeLatir"
+                        className="form-control"
+                        value={tendeLatir}
+                        onChange={(e) => setTendeLatir(e.target.value)}
+                    >
+                        <option value="" disabled>Selecione:</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                    </select>
+
+                    <button type="submit" className="btn btn-primary mt-3">Enviar</button>
+                </form>
+            </div>
         </Layout>
     )
 }
