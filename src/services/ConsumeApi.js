@@ -104,3 +104,22 @@ export const findByIdCachorro = async (id, token) => {
         return null;
     }
 }
+
+
+export const downloadImage = async(filePath) => {
+    try {
+        const url = `${apiUrl}/api/cachorro/download-image?fileName=${encodeURIComponent(filePath)}`;
+        const response = await axios({
+            url,
+            method: 'GET',
+            responseType: 'blob', 
+        })
+        
+        const blob = new Blob([response.data], { type: response.headers['content-type'] });
+        return URL.createObjectURL(blob); 
+
+    } catch (error) {
+        console.error("Error: ", error?.response?.data || error.message);
+        return null;
+    }
+}

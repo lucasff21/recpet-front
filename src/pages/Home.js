@@ -4,7 +4,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/HomePage.css";
-import { CachorroFindAll, findByIdCachorro } from "../services/ConsumeApi";
+import { CachorroFindAll, downloadImage, findByIdCachorro } from "../services/ConsumeApi";
 import logo from '../assets/vira-lata.png';
 import { AuthContext } from "../contexts/AuthContext";
 import { Modal, Button } from "react-bootstrap";
@@ -40,6 +40,8 @@ const Home = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [selectedDog, setSelectedDog] = useState(null);
+    const [imageUrl, setImageUrl] = useState(null);
+
 
 
     const settings = {
@@ -56,13 +58,29 @@ const Home = () => {
     useEffect(() => {
         const fetchCachorros = async () => {
             const body = await CachorroFindAll();
-            if (body) {
-                setCachorros(body)
+    
+            if (body && Array.isArray(body)) {
+                const cachorrosWithImages = await Promise.all(
+                    body.map(async (cachorro) => {
+                        const imagePet = await downloadImage(cachorro.imagePath);
+                        return {
+                            ...cachorro,
+                            imageUrl: imagePet, 
+                        };
+                    })
+                );
+    
+                setCachorros(cachorrosWithImages); // Atualiza o estado com os cachorros e suas imagens
             }
+    
+            console.log(cachorros)
+
             setLoading(false);
-        }
+        };
+    
         fetchCachorros();
-    }, [])
+    }, []);
+    
 
 
     const openModalPet = async (id) => {
@@ -108,8 +126,8 @@ const Home = () => {
                 ) : cachorros.length > 0 ? (
                     <Slider {...settings}>
                         {cachorros.map((cachorro) => (
-                            <div key={cachorro.id}>
-                                <img src={logo} alt={cachorro.nome}
+                            <div key={imageUrl}>
+                                <img src={cachorro.imageUrl || logo} alt={cachorro.nome}
                                     style={{ width: '250px', height: '200px', objectFit: 'cover' }}
                                 />
                                 <h3>{cachorro.nome}</h3>
