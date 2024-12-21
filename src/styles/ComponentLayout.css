@@ -1,6 +1,7 @@
 html, body {
     height: 100%;
     margin: 0;
+    font-family: 'Inter', serif !important;
 }
 
 .layout-container {
@@ -16,11 +17,6 @@ main {
     flex: 1;
 }
 
-footer {
-    background-color: #f0ac4c;
-    padding: 10px 0;
-}
-
 .button-customer{
     color: #fff;
     background-color: rgb(204, 103, 8);
@@ -32,7 +28,6 @@ footer {
 
 /*                    ////////////////////////////          NAV //////////////////// */ 
 .nav-principal {
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
     font-weight: bolder;
     display: flex;
@@ -61,7 +56,6 @@ footer {
 }
 
 .nav-hamburger {
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
     font-weight: bolder;
 }
@@ -72,10 +66,32 @@ footer {
     font-size: 1.5rem;
 }
 
-/*      ////////////////////////////////////         FOOTER ////////////////////// */
+/*      ////////////////////////////  FOOTER ////////////////////// */
+
+.footer {
+    background-color: #5C4C3A;
+    color: #FFFFFF;
+    padding: 10px 0;
+    vertical-align: unset;
+
+    &.no-bullets li {
+        font-weight: normal;
+    }
+
+    & a {
+        color: #FFFFFF;
+    }
+
+    & img {
+        width: 160px;
+    }
+}
+
+.details {
+    font-weight: normal;
+}
 
 .footer-items {
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
     font-weight: bolder;
     padding: 5px;
@@ -84,17 +100,34 @@ footer {
 .no-bullets {
     list-style-type: none;
     padding-left: 0;
-
 }
 
 .no-bullets li {
     list-style-type: none;
     padding-left: 0;
     margin-bottom: 5px;
+    text-align: left;
 }
 
 .rounded-circle-footer {
     margin-left: 5%;
     border-radius: 50%;
     width: 25%;
+}
+
+.icon-container {
+    display: flex;
+    height: 40px;
+    width: 40px;
+    background: rgb(0 0 0 / 20%);
+
+    & > svg {
+        margin: auto;
+    }
+}
+
+.list-group-contact {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
 }
