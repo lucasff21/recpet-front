@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useCallback, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { schemaForm } from "../zod/personalForms"; o
+import { schemaForm } from "../zod/personalForms";
 import { getAdressByZipCode } from "../services/viaCepApi";
 import { toast } from "react-toastify";
 import { createUser } from "../services/ApiUser";
