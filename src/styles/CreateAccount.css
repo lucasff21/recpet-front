@@ -1,0 +1,34 @@
+.form-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 20px 10%;
+    gap: 10px;
+
+    & input {
+        display: block;
+        padding: 5px 10px;
+        border-radius: 8px;
+        border: none;
+        width: 100%;
+    }
+
+    & span {
+        color: red;
+    }
+}
+
+.full-row {
+    grid-column: 1 / -1;
+}
+
+.row-title {
+    padding-top: 10px;
+    border-bottom: 2px solid;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    padding-top: 20px;
+}
