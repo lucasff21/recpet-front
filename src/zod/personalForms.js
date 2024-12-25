@@ -8,7 +8,11 @@ export const schemaForm = z.object({
             .refine(value => validateCPF(value), "CPF inválido"),
         gender: z.string().nonempty("Gênero é obrigatório"),
         birthDate: z.string().nonempty("Data de nascimento é obrigatória"),
-        phone: z.string().min(10, "Celular deve ter pelo menos 10 dígitos"),
+        phone: z.string({
+            required_error: 'Celular é obrigatório',
+            invalid_type_error: 'Celular deve ser uma string',
+        })
+            .regex(/^\d{10,11}$/, 'Celular deve conter apenas números e ter entre 10 e 11 dígitos'),
         email: z.string().nonempty("Email é obrigatório").email("Email inválido."),
         confirmEmail: z.string().nonempty("Email é obrigatório").email("Email inválido."),
         password: z.string().nonempty("Senha é obrigatório")
@@ -32,12 +36,13 @@ export const schemaForm = z.object({
         path: ["confirmPassword"],
     }),
     address: z.object({
-        zipCode: z.coerce
-            .number({
-                required_error: 'CEP é obrigatório',
-                invalid_type_error: 'CEP deve conter apenas números',
-            })
-            .refine((val) => `${val}`.length === 8, 'CEP deve conter 8 dígitos'),
+        zipCode: z.string({
+            required_error: 'CEP é obrigatório',
+            invalid_type_error: 'CEP deve ser uma string',
+        })
+            .regex(/^\d{5}-?\d{3}$/, 'CEP inválido, deve estar no formato 00000-000 ou 00000000')
+            .min(8, 'CEP deve conter pelo menos 8 caracteres')
+            .max(9, 'CEP deve conter no máximo 9 caracteres'),
         street: z.string().nonempty("Logradouro é obrigatório"),
         complement: z.string().optional(),
         district: z.string().nonempty("Bairro é obrigatório"),
