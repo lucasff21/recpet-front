@@ -12,7 +12,9 @@ const CreateAccount = () => {
         register,
         handleSubmit,
         handleFormSubmit,
-        handleClear
+        handleClear,
+        ufs,
+        cities
     } = usePersonalForm();
 
     const minDate18YearsOld = () => {
@@ -30,13 +32,15 @@ const CreateAccount = () => {
                 <form onSubmit={handleSubmit(handleFormSubmit)} className="form-container">
                     <div>
                         <label htmlFor="email">E-mail</label>
-                        <input id="email" name="email" {...register("personalData.email")} placeholder="E-mail"/>
+                        <input id="email" name="email" {...register("personalData.email")}
+                               placeholder="E-mail"/>
                         {errors?.personalData?.email && <span>{errors?.personalData?.email.message}</span>}
                     </div>
 
                     <div>
                         <label htmlFor="confirmarEmail">Confirmar E-mail</label>
-                        <input id="confirmarEmail" name="confirmarEmail" {...register("personalData.confirmEmail")}
+                        <input id="confirmarEmail" name="confirmarEmail"
+                               {...register("personalData.confirmEmail")}
                                placeholder="Confirme seu E-mail"/>
                         {errors?.personalData?.confirmEmail &&
                             <span>{errors?.personalData?.confirmEmail.message}</span>}
@@ -44,16 +48,23 @@ const CreateAccount = () => {
 
                     <div>
                         <label htmlFor="senha">Senha</label>
-                        <input type="password" id="senha" name="senha" {...register("personalData.password")}
-                               placeholder="Senha"/>
+                        <input type="password" id="senha"
+                               name="senha"
+                               {...register("personalData.password")}
+                               placeholder="Senha"
+                               autoComplete="new-password"
+                        />
                         {errors?.personalData?.password && <span>{errors?.personalData?.password.message}</span>}
                     </div>
 
                     <div>
                         <label htmlFor="confirmarSenha">Confirmar Senha</label>
                         <input type="password" id="confirmarSenha"
-                               name="confirmarSenha" {...register("personalData.confirmPassword")}
-                               placeholder="Confirme sua Senha"/>
+                               name="confirmarSenha"
+                               {...register("personalData.confirmPassword")}
+                               placeholder="Confirme sua Senha"
+                               autoComplete="new-password"
+                        />
                         {errors?.personalData?.confirmPassword &&
                             <span>{errors?.personalData?.confirmPassword.message}</span>}
                     </div>
@@ -75,20 +86,28 @@ const CreateAccount = () => {
 
                     <div>
                         <label htmlFor="genero">Gênero</label>
-                        <input id="genero" name="genero" {...register("personalData.gender")} placeholder="Gênero"/>
+                        <select id="gendero" name="genero" {...register("personalData.gender")}>
+                            <option value="" disabled selected>Selecione um gênero</option>
+                            <option value="Feminino" selected>Feminino</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Não-binário">Não-binário</option>
+                            <option value="Prefiro não dizer">Prefiro não dizer</option>
+                        </select>
                         {errors?.personalData?.gender && <span>{errors?.personalData?.gender.message}</span>}
                     </div>
 
                     <div>
                         <label htmlFor="dataNascimento">Data de Nascimento</label>
                         <input type="date" id="dataNascimento"
-                               name="dataNascimento" {...register("personalData.birthDate")} max={minDate18YearsOld()}/>
+                               name="dataNascimento" {...register("personalData.birthDate")}
+                               max={minDate18YearsOld()}/>
                         {errors?.personalData?.birthDate && <span>{errors?.personalData?.birthDate.message}</span>}
                     </div>
 
                     <div>
                         <label htmlFor="celular">Celular</label>
-                        <input id="celular" name="celular" {...register("personalData.phone")} placeholder="Celular"/>
+                        <input id="celular" name="celular" {...register("personalData.phone")}
+                               placeholder="Celular"/>
                         {errors?.personalData?.phone && <span>{errors?.personalData?.phone.message}</span>}
                     </div>
 
@@ -96,7 +115,7 @@ const CreateAccount = () => {
 
                     <div>
                         <label htmlFor="cep">CEP</label>
-                        <input id="cep" name="cep" {...register("address.zipCode")} placeholder="CEP" maxLength="8"/>
+                        <input id="cep" name="cep" {...register("address.zipCode")} placeholder="CEP"/>
                         {errors?.address?.zipCode && <span>{errors?.address?.zipCode.message}</span>}
                     </div>
 
@@ -121,19 +140,32 @@ const CreateAccount = () => {
 
                     <div>
                         <label htmlFor="cidade">Cidade</label>
-                        <input id="cidade" name="cidade" {...register("address.city")} placeholder="Cidade"/>
+                        <select {...register("address.city")}>
+                            <option value="" disabled selected>Selecione uma cidade</option>
+                            {cities.map((city) => (
+                                <option key={city.id} value={city.nome}>
+                                    {city.nome}
+                                </option>
+                            ))}
+                        </select>
                         {errors?.address?.city && <span>{errors?.address?.city.message}</span>}
                     </div>
 
                     <div>
                         <label htmlFor="estado">Estado</label>
-                        <input id="estado" name="estado" {...register("address.state")} placeholder="Estado"/>
+                        <select{...register("address.state")}>
+                            <option value="" disabled selected>Selecione um Estado</option>
+                            {ufs.map((uf) => (
+                                <option key={uf.id} value={uf.sigla}>
+                                    {uf.nome}
+                                </option>
+                            ))}
+                        </select>
                         {errors?.address?.state && <span>{errors?.address?.state.message}</span>}
                     </div>
 
                     <div className="full-row buttons-container">
-                        <Button text="Limpar Campos" onClick={handleClear} disabled={false}/>
-                        <Button text="Cancelar" onClick={handleFormSubmit} disabled={false}/>
+                        <Button text="Cancelar" onClick={handleClear} disabled={false}/>
                         <Button text="Cadastrar" onClick={handleSubmit(handleFormSubmit)} disabled={false}
                                 lightMode={false}/>
                     </div>
