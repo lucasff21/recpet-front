@@ -1,4 +1,4 @@
-.form-container {
+.form {
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 20px 10%;
@@ -31,4 +31,37 @@
     justify-content: flex-end;
     gap: 20px;
     padding-top: 20px;
+}
+
+
+.form-container {
+    background: #EFC483;
+    width: 60vw;
+
+    border-radius: 30px
+}
+
+.form-container-header {
+    background: #ECAC4C;
+    padding: 10px;
+    text-align: center;
+    border-radius: 30px;
+}
+
+@media only screen and (max-width: 768px) {
+    .form {
+        grid-template-columns: 1fr;
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .form-container {
+        width: 90vw;
+        box-sizing: border-box;
+    }
+
+    .buttons-container {
+        justify-content: center;
+    }
 }

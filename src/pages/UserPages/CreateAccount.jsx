@@ -25,11 +25,11 @@ const CreateAccount = () => {
 
     return (
         <Layout showFooter={true}>
-            <div style={{background: '#EFC483', width: '60vw', maxWidth: '800px', borderRadius: '30px'}}>
-                <header style={{background: '#ECAC4C', padding: '10px', textAlign: 'center', borderRadius: '30px'}}>
+            <div className="form-container">
+                <header className="form-container-header">
                     <h1>Crie sua conta</h1>
                 </header>
-                <form onSubmit={handleSubmit(handleFormSubmit)} className="form-container">
+                <form onSubmit={handleSubmit(handleFormSubmit)} className="form">
                     <div>
                         <label htmlFor="email">E-mail</label>
                         <input id="email" name="email" {...register("personalData.email")}
