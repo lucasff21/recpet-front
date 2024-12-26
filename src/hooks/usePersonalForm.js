@@ -5,12 +5,14 @@ import { schemaForm } from "../zod/personalForms";
 import { getAddressByZipCode } from "../services/addressService";
 import { toast } from "react-toastify";
 import { createUser } from "../services/ApiUser";
-import {getAllStates, getCitiesFromState} from "../services/addressService";
+import { getAllStates, getCitiesFromState } from "../services/addressService";
+import {useNavigate} from "react-router-dom";
 
 export const usePersonalForm = () => {
     const [ufs, setUfs] = useState([]);
     const [cities, setCities] = useState([]);
     const [loadingCities, setLoadingCities] = useState(false);
+    const navigate = useNavigate();
 
     const {
         handleSubmit,
@@ -72,7 +74,7 @@ export const usePersonalForm = () => {
              logradouro: data.address.street,
              complemento: data.address.complement || "",
              bairro: data.address.district,
-             cidade: data.address.city,
+             localidade: data.address.city,
              uf: data.address.state,
          };
 
@@ -80,11 +82,10 @@ export const usePersonalForm = () => {
 
         try {
             let response = await createUser(payload);
-            console.log(response)
-            // se for ok
-            // if (response.status === 201) {
-            //     navigate("/login", { state: { userCreated: true } });
-            // }
+
+            if (response.status === 201) {
+                navigate("/login", { state: { userCreated: true } });
+            }
             showToast('Usuário criado com sucesso')
         } catch (error) {
             showToast("Erro ao criar conta", 'error');
