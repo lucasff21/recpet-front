@@ -101,7 +101,7 @@ export const usePersonalForm = () => {
             setValue("address.district", data.bairro);
             setValue("address.complement", data.complemento || "");
         },
-        [setValue, state, loadingCities]
+        [setValue, loadingCities]
     );
 
     useEffect(() => {
@@ -131,9 +131,9 @@ export const usePersonalForm = () => {
 
 
     useEffect( () => {
-        if (zipCode?.length > 8) {
-            const zipCodeFormat = zipCode.replace(/\D/g, '');
+        const zipCodeFormat = zipCode?.replace(/\D/g, '');
 
+        if (zipCodeFormat?.length === 8) {
             getAddressByZipCode(zipCodeFormat)
                  .then(response => {
                      handleSetAddress(response.data)
