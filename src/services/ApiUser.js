@@ -25,24 +25,15 @@ export const loginUser = async (email, password) => {
 }
 
 
-export const createUser = async (email, password, tipoUsuario) => {
-    try {
-        const payload = { email, password, tipoUsuario }
-        const url = `${apiUrl}/users/create`
-        const response = await axios({
-            url,
+export const createUser = async (payload) => {
+        return axios({
+            url: `${apiUrl}/users/create`,
             method: 'POST',
             data: payload,
             headers: {
                 'Content-Type': 'application/json',
             }
         })
-
-        return response.data;
-    } catch (error) {
-        console.error("Error: ", error?.response?.data || error.message);
-        return null;
-    }
 }
 
 
