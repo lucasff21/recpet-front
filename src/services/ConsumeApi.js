@@ -87,7 +87,7 @@ export const uploadImagePet = async (formData, token) => {
     }
 }
 
-export const findByIdCachorro = async (id, token) => {
+export const findByIdCachorro = async (id) => {
     try {
         const url = `${apiUrl}/api/cachorro/${id}`
         const response = await axios({
@@ -95,7 +95,6 @@ export const findByIdCachorro = async (id, token) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
             }
         })
         return response.data;

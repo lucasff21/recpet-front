@@ -58,57 +58,131 @@ const Home = () => {
     useEffect(() => {
         const fetchCachorros = async () => {
             const body = await CachorroFindAll();
-    
+
             if (body && Array.isArray(body)) {
                 const cachorrosWithImages = await Promise.all(
                     body.map(async (cachorro) => {
                         const imagePet = await downloadImage(cachorro.imagePath);
                         return {
                             ...cachorro,
-                            imageUrl: imagePet, 
+                            imageUrl: imagePet,
                         };
                     })
                 );
-    
+
                 setCachorros(cachorrosWithImages); // Atualiza o estado com os cachorros e suas imagens
             }
-    
+
             console.log(cachorros)
 
             setLoading(false);
         };
-    
+
         fetchCachorros();
     }, []);
-    
+
 
 
     const openModalPet = async (id) => {
-        const response = await findByIdCachorro(id, authToken);
-        if (response) {
-            console.log(response)
-            setSelectedDog(response); // Armazena os dados do cachorro
-            setShow(true); // Abre o modal
+        try {
+            const response = await findByIdCachorro(id);
+
+            if (response) {
+                const imagePet = await downloadImage(response.imagePath);
+
+                setSelectedDog({
+                    ...response,
+                    imageUrl: imagePet,
+                });
+
+                setShow(true);
+            } else {
+                console.error("Nenhuma informação encontrada para o ID:", id);
+            }
+        } catch (error) {
+            console.error("Erro ao abrir o modal do pet:", error);
         }
     };
 
+
+
     const renderModal = () => (
-        <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>{selectedDog?.nome || "Detalhes do Cachorro"}</Modal.Title>
+        <Modal show={show} onHide={handleClose} >
+            <Modal.Header closeButton style={{ backgroundColor: '#F0EFEC' }} >
+                {selectedDog && (
+                    <>
+                        <img
+                            src={selectedDog.imageUrl || logo}
+                            alt={selectedDog.nome || "Cachorro"}
+                            style={{ width: '200px', height: '200px', objectFit: 'contain' }}
+                        />
+                        <Modal.Title>{selectedDog.nome || "Detalhes do Cachorro"}</Modal.Title>
+                    </>
+                )}
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body style={{ backgroundColor: '#F0EFEC' }}>
                 {selectedDog ? (
-                    <div>
-                        <p><strong>Raça:</strong> {selectedDog.raca}</p>
-                        <p><strong>Idade:</strong> {selectedDog.idade}</p>
-                        <p><strong>Descrição:</strong> {selectedDog.descricao}</p>
-                    </div>
+                    <>
+                        <div class="row">
+                            <div className="titleModalPet">
+                                <h4>Perfil </h4>
+                            </div>
+
+                            <div class="labelPet">Data de nascimento:</div>
+                            <div class="valorPet">{selectedDog.idade}</div>
+
+                            <div class="labelPet">Sexo:</div>
+                            <div class="valorPet">{selectedDog.sexo}</div>
+
+                            <div class="labelPet">Porte:</div>
+                            <div class="valorPet">{selectedDog.porte}</div>
+
+                            <div class="labelPet">Pelagem:</div>
+                            <div class="valorPet">{selectedDog.pelagem}</div>
+
+                        </div>
+                        <div class="row">
+                            <div className="titleModalPet">
+                                <h4>Características </h4>
+                            </div>
+                            <div class="labelPet">Gosta de Crianças</div>
+                            <div class="valorPet">{selectedDog.gostaCrianca ? 'Sim' : 'Não'}</div>
+
+                            <div class="labelPet">Ideal para casa?</div>
+                            <div class="valorPet">{selectedDog.idealCasa ? 'Sim' : 'Não'}</div>
+
+                            <div class="labelPet">Gosta de brincar?</div>
+                            <div class="valorPet">{selectedDog.brincalhao ? 'Sim' : 'Não'}</div>
+
+                            <div class="labelPet">É cão de guarda?</div>
+                            <div class="valorPet">{selectedDog.caoGuarda ? 'Sim' : 'Não'}</div>
+
+                            <div class="labelPet">Tem necessidade de correr?</div>
+                            <div class="valorPet">{selectedDog.necessidadeCorrer ? 'Sim' : 'Não'}</div>
+
+                            <div class="labelPet">Tem queda de pelo?</div>
+                            <div class="valorPet">{selectedDog.necessidadeCorrer ? 'Sim' : 'Não'}</div>
+
+                            <div class="labelPet">Gosta de Latir?</div>
+                            <div class="valorPet">{selectedDog.tendeLatir ? 'Sim' : 'Não'}</div>
+
+                        </div>
+                        <div class="row" >
+                            <div className="titleModalPet">
+                                <h4>Comportamento </h4>
+                            </div>
+
+                            <div class="labelPet">Raça:</div>
+                            <div class="valorPet">Sem raça definida</div>
+                            <div class="labelPet">Altura:</div>
+                            <div class="valorPet">50 cm</div>
+                        </div>
+                    </>
                 ) : (
                     <p>Carregando...</p>
                 )}
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer style={{ backgroundColor: '#F0EFEC' }}>
                 <Button variant="secondary" onClick={handleClose}>
                     Fechar
                 </Button>
@@ -126,12 +200,20 @@ const Home = () => {
                 ) : cachorros.length > 0 ? (
                     <Slider {...settings}>
                         {cachorros.map((cachorro) => (
-                            <div key={imageUrl}>
-                                <img src={cachorro.imageUrl || logo} alt={cachorro.nome}
+                            <div key={cachorro.id}>
+                                <img
+                                    src={cachorro.imageUrl || logo}
+                                    alt={cachorro.nome || "Cachorro"}
                                     style={{ width: '250px', height: '200px', objectFit: 'cover' }}
                                 />
-                                <h3>{cachorro.nome}</h3>
-                                <button type="button" class="btn btn-warning" onClick={() => openModalPet(cachorro.id)}>Visualizar Informações</button>
+                                <h3>{cachorro.nome || "Nome não disponível"}</h3>
+                                <button
+                                    type="button"
+                                    className="btn btn-warning"
+                                    onClick={() => openModalPet(cachorro.id)}
+                                >
+                                    Visualizar Informações
+                                </button>
                             </div>
                         ))}
                     </Slider>

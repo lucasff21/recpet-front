@@ -8,3 +8,15 @@
     color: rgb(0, 0, 0);
     font-size: 30px;
   }
+
+  .labelPet{
+    font-weight: bolder;
+  }
+
+.titleModalPet{
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  height: 50px ;
+  background-image: linear-gradient(to right, #ECC891 , #A58F6F);
+}
