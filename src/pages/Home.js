@@ -4,10 +4,11 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/HomePage.css";
-import { CachorroFindAll, downloadImage, findByIdCachorro } from "../services/ConsumeApi";
+import { adotarPet, CachorroFindAll, downloadImage, findByIdCachorro } from "../services/ConsumeApi";
 import logo from '../assets/vira-lata.png';
 import { AuthContext } from "../contexts/AuthContext";
 import { Modal, Button } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
 
 
 const ArrowRight = (props) => {
@@ -40,8 +41,15 @@ const Home = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [selectedDog, setSelectedDog] = useState(null);
-    const [imageUrl, setImageUrl] = useState(null);
+  
 
+    const [userAuthenticated, setUserAuthenticated] = useState(false)
+
+    useEffect(() => {
+        if (authToken) {
+            setUserAuthenticated(true)
+        }
+    }, [])
 
 
     const settings = {
@@ -81,8 +89,6 @@ const Home = () => {
         fetchCachorros();
     }, []);
 
-
-
     const openModalPet = async (id) => {
         try {
             const response = await findByIdCachorro(id);
@@ -103,7 +109,6 @@ const Home = () => {
             console.error("Erro ao abrir o modal do pet:", error);
         }
     };
-
 
 
     const renderModal = () => (
@@ -127,45 +132,50 @@ const Home = () => {
                             <div className="titleModalPet">
                                 <h4>Perfil </h4>
                             </div>
+                            <div className="col-6 mt-1">
+                                <div class="labelPet">Data de nascimento:</div>
+                                <div class="valorPet">{selectedDog.idade}</div>
 
-                            <div class="labelPet">Data de nascimento:</div>
-                            <div class="valorPet">{selectedDog.idade}</div>
+                                <div class="labelPet">Sexo:</div>
+                                <div class="valorPet">{selectedDog.sexo}</div>
+                            </div>
 
-                            <div class="labelPet">Sexo:</div>
-                            <div class="valorPet">{selectedDog.sexo}</div>
+                            <div className="col-6 mt-1">
+                                <div class="labelPet">Porte:</div>
+                                <div class="valorPet">{selectedDog.porte}</div>
 
-                            <div class="labelPet">Porte:</div>
-                            <div class="valorPet">{selectedDog.porte}</div>
-
-                            <div class="labelPet">Pelagem:</div>
-                            <div class="valorPet">{selectedDog.pelagem}</div>
-
+                                <div class="labelPet">Pelagem:</div>
+                                <div class="valorPet">{selectedDog.pelagem}</div>
+                            </div>
                         </div>
                         <div class="row">
                             <div className="titleModalPet">
                                 <h4>Características </h4>
                             </div>
-                            <div class="labelPet">Gosta de Crianças</div>
-                            <div class="valorPet">{selectedDog.gostaCrianca ? 'Sim' : 'Não'}</div>
 
-                            <div class="labelPet">Ideal para casa?</div>
-                            <div class="valorPet">{selectedDog.idealCasa ? 'Sim' : 'Não'}</div>
+                            <div className="col-6 mt-1">
+                                <div class="labelPet">Gosta de Crianças</div>
+                                <div class="valorPet">{selectedDog.gostaCrianca ? 'Sim' : 'Não'}</div>
 
-                            <div class="labelPet">Gosta de brincar?</div>
-                            <div class="valorPet">{selectedDog.brincalhao ? 'Sim' : 'Não'}</div>
+                                <div class="labelPet">Ideal para casa?</div>
+                                <div class="valorPet">{selectedDog.idealCasa ? 'Sim' : 'Não'}</div>
 
-                            <div class="labelPet">É cão de guarda?</div>
-                            <div class="valorPet">{selectedDog.caoGuarda ? 'Sim' : 'Não'}</div>
+                                <div class="labelPet">Gosta de brincar?</div>
+                                <div class="valorPet">{selectedDog.brincalhao ? 'Sim' : 'Não'}</div>
+                            </div>
+                            <div className="col-6 mt-1">
+                                <div class="labelPet">É cão de guarda?</div>
+                                <div class="valorPet">{selectedDog.caoGuarda ? 'Sim' : 'Não'}</div>
 
-                            <div class="labelPet">Tem necessidade de correr?</div>
-                            <div class="valorPet">{selectedDog.necessidadeCorrer ? 'Sim' : 'Não'}</div>
+                                <div class="labelPet">Tem necessidade de correr?</div>
+                                <div class="valorPet">{selectedDog.necessidadeCorrer ? 'Sim' : 'Não'}</div>
 
-                            <div class="labelPet">Tem queda de pelo?</div>
-                            <div class="valorPet">{selectedDog.necessidadeCorrer ? 'Sim' : 'Não'}</div>
+                                <div class="labelPet">Tem queda de pelo?</div>
+                                <div class="valorPet">{selectedDog.necessidadeCorrer ? 'Sim' : 'Não'}</div>
 
-                            <div class="labelPet">Gosta de Latir?</div>
-                            <div class="valorPet">{selectedDog.tendeLatir ? 'Sim' : 'Não'}</div>
-
+                                <div class="labelPet">Gosta de Latir?</div>
+                                <div class="valorPet">{selectedDog.tendeLatir ? 'Sim' : 'Não'}</div>
+                            </div>
                         </div>
                         <div class="row" >
                             <div className="titleModalPet">
@@ -186,14 +196,44 @@ const Home = () => {
                 <Button variant="secondary" onClick={handleClose}>
                     Fechar
                 </Button>
+                <Button variant="none" style={{ backgroundColor: '#ECC891', color: 'black' }} onClick={() => interesseAdocao(selectedDog.id)} disabled={!userAuthenticated}>
+                    {userAuthenticated ? 'Tenho Interesse' : 'Logar no sistema para adotar'}
+                </Button>
+
             </Modal.Footer>
         </Modal>
     );
 
 
-    console.log(cachorros)
+    const interesseAdocao = async (petId) => {
+        const dataLocal = new Date().toISOString().split('T')[0];
+
+        try {
+            const response = await findByIdCachorro(petId);
+            const adocaoData = {
+                dataAdocao: dataLocal,  
+                status: 'Pendente',         
+                animal: response            
+            };
+
+
+            await adotarPet(adocaoData, authToken)
+
+            handleClose();
+
+            toast.success('Você acabou de demonstrar interesse em um de nossos pets, dentro de alguns dias entraremos em contato!', {
+                position: "top-right",
+                autoClose: 6000,
+            });
+
+        } catch (error) {
+            console.error("Erro ao adotar o pet:", error);
+        }
+    }
+
     return (
         <Layout>
+            <ToastContainer />
             <div >
                 {loading ? (
                     <p>Carregando...</p>

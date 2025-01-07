@@ -32,8 +32,6 @@ export const createCachorro = async (cachorroData, token) => {
 };
 
 
-// QUESTIONARIO
-
 export const createQuestionario = async (questinarioData, token) => {
     try {
         const url = `${apiUrl}/api/questionario`;
@@ -88,7 +86,7 @@ export const uploadImagePet = async (formData, token) => {
 }
 
 export const findByIdCachorro = async (id) => {
-    try {
+
         const url = `${apiUrl}/api/cachorro/${id}`
         const response = await axios({
             url,
@@ -98,10 +96,6 @@ export const findByIdCachorro = async (id) => {
             }
         })
         return response.data;
-    } catch (error) {
-        console.error("Error: ", error?.response?.data || error.message);
-        return null;
-    }
 }
 
 
@@ -121,4 +115,23 @@ export const downloadImage = async(filePath) => {
         console.error("Error: ", error?.response?.data || error.message);
         return null;
     }
+}
+
+
+export const adotarPet = async(data, token) => {
+
+    console.log(token)
+
+    console.log(data)
+   
+        const url = `${apiUrl}/api/adocao`;
+        const response = await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        return response.data
+   
 }
