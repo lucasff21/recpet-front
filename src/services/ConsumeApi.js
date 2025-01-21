@@ -87,29 +87,29 @@ export const uploadImagePet = async (formData, token) => {
 
 export const findByIdCachorro = async (id) => {
 
-        const url = `${apiUrl}/api/cachorro/${id}`
-        const response = await axios({
-            url,
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        return response.data;
+    const url = `${apiUrl}/api/cachorro/${id}`
+    const response = await axios({
+        url,
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    return response.data;
 }
 
 
-export const downloadImage = async(filePath) => {
+export const downloadImage = async (filePath) => {
     try {
         const url = `${apiUrl}/api/cachorro/download-image?fileName=${encodeURIComponent(filePath)}`;
         const response = await axios({
             url,
             method: 'GET',
-            responseType: 'blob', 
+            responseType: 'blob',
         })
-        
+
         const blob = new Blob([response.data], { type: response.headers['content-type'] });
-        return URL.createObjectURL(blob); 
+        return URL.createObjectURL(blob);
 
     } catch (error) {
         console.error("Error: ", error?.response?.data || error.message);
@@ -118,20 +118,39 @@ export const downloadImage = async(filePath) => {
 }
 
 
-export const adotarPet = async(data, token) => {
+export const adotarPet = async (data, token) => {
 
     console.log(token)
 
     console.log(data)
-   
-        const url = `${apiUrl}/api/adocao`;
-        const response = await axios.post(url, data, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
 
-        return response.data
-   
+    const url = `${apiUrl}/api/adocao`;
+    const response = await axios.post(url, data, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    return response.data
+
+}
+
+export const findAllAdocoes = async (token) => {
+
+    const url = `${apiUrl}/api/adocao`
+    const response = await axios({
+        url,
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+
+        }
+    })
+    console.log('RETORNO API', response.data)
+    return response.data;
+
+    
+
 }
