@@ -9,6 +9,8 @@ const AdocaoArea = () => {
     const [listAdocoes, setListAdocoes] = useState([])
     const { authToken } = useContext(AuthContext)
 
+    console.log("Token no AdocaoArea:", authToken); // Verifique se o token está correto aqui
+
     useEffect(() => {
         const findAdocoes = async () => {
             try {
@@ -22,7 +24,9 @@ const AdocaoArea = () => {
             }
         };
 
-        findAdocoes();
+        if (authToken) {
+            findAdocoes();
+        }
     }, [authToken]);
 
 
@@ -34,7 +38,7 @@ const AdocaoArea = () => {
 
     return (
         <AdminArea>
-            <h1>Gerenciamento de Adoções</h1>
+            <h1>Gerenciar de Adoções</h1>
 
             <table className="table">
                 <thead>
@@ -50,13 +54,12 @@ const AdocaoArea = () => {
                 <tbody>
                     {listAdocoes.map((adocoes) => (
                         <tr key={adocoes.id}>
-                            <td>{adocoes.id}</td>
-                            <td>{adocoes.dataAdocao}</td>
-                            <td>{adocoes.status}</td>
-                            <td>{adocoes.animal.nome}</td>
-                            <td>{adocoes.user?.email}</td> {/* Exemplo para mostrar o nome do usuário */}
-
-                        </tr>
+                        <td>{adocoes.id ?? ''}</td>
+                        <td>{adocoes.dataAdocao ?? ''}</td>
+                        <td>{adocoes.status ?? ''}</td>
+                        <td>{adocoes.animal?.nome ?? ''}</td>
+                        <td>{adocoes.user?.email ?? ''}</td>
+                    </tr>
                     ))}
 
 

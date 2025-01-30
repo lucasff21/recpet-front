@@ -15,7 +15,6 @@ export const CachorroFindAll = async () => {
 }
 
 export const createCachorro = async (cachorroData, token) => {
-    console.log('Token:', token);
     try {
         const url = `${apiUrl}/api/cachorro/create`;
         const response = await axios.post(url, cachorroData, {
@@ -137,20 +136,25 @@ export const adotarPet = async (data, token) => {
 }
 
 export const findAllAdocoes = async (token) => {
+    console.log("Iniciando requisição...");
+    console.log("Token recebido:", token); // Verifique se o token aparece corretamente no console
 
-    const url = `${apiUrl}/api/adocao`
-    const response = await axios({
-        url,
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+    const url = `${apiUrl}/api/adocao`;
+    console.log("URL da API:", url);
 
-        }
-    })
-    console.log('RETORNO API', response.data)
-    return response.data;
+    try {
+        const response = await axios.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
 
-    
+        console.log("Resposta da API:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar adoções:", error);
+        throw error;
+    }
+};
 
-}
