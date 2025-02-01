@@ -103,7 +103,7 @@ const AddPet = () => {
     }
 
     return (
-        <AdminArea>
+        <div>
             <ToastContainer />
             <div className="add_pet_area">
                 <h1 className="title_add_pet"> ADICIONAR NOVO PET </h1>
@@ -202,7 +202,7 @@ const AddPet = () => {
                     </div>
                 </form>
             </div>
-        </AdminArea>
+        </div>
     );
 };
 
