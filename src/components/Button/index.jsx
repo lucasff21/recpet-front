@@ -1,4 +1,4 @@
-import "./style.css";
+import "./styles.css";
 
 export const Button = ({ text, onClick, disabled, lightMode = true }) => {
     return (
