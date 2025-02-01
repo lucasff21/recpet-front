@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {getUsers} from "../services/ApiUser";
+import {getUsers} from "../services/ApiAdmin";
 import {toast} from "react-toastify";
 import {Link} from "react-router-dom";
 import {deleteUser} from "../services/ApiAdmin";
@@ -83,16 +83,23 @@ const UserTable = () => {
     }
 
     return (
-        <div>
+        <div className="user-management">
             <h1>Usuários ({total})</h1>
-            <div className="filters">
+            <div className="search-container">
+                <button className="search-button" onClick={handleFilteredSearch}>
+                    🔍
+                </button>
                 <input
                     type="text"
                     name="query"
-                    placeholder="Pesquise por nome or email"
+                    placeholder="Pesquise por nome ou email"
                     value={filters.query}
                     onChange={handleFilterChange}
+                    style={{marginBottom: '1rem', width: '40%', alignSelf: 'end'}}
+                    onKeyDown={(e) => e.key === 'Enter' && handleFilteredSearch()}
                 />
+            </div>
+            <div className="filters">
                 <select name="role" value={filters.role} onChange={handleFilterChange}>
                     <option value="">Todos</option>
                     {Object.entries(tipos).map(([key, value]) => (
@@ -106,7 +113,6 @@ const UserTable = () => {
                 <button type="button" className="btn btn-success">
                     <Link to="../criar" className="list-group-item list-group-item-action">+ Criar usuário</Link>
                 </button>
-                {/* <button type="button" className="btn btn-success" onClick={handleFilteredSearch}>Pesquisar</button>*/}
             </div>
             <table>
                 <thead>
@@ -139,7 +145,7 @@ const UserTable = () => {
                 <ConfirmModal
                     message="Tem certeza que deseja excluir este usuário?"
                     onConfirm={confirmDelete}
-                    onCancel={() => setModal({ isOpen: false, userId: null })}
+                    onCancel={() => setModal({isOpen: false, userId: null})}
                 />
             )}
         </div>

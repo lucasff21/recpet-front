@@ -20,15 +20,14 @@
         margin-bottom: 20px;
     }
 
-    .filters input,
-    .filters select {
+    input, select {
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
         flex: 1;
     }
 
-    .filters select {
+    select {
         flex: 0.5;
     }
 
@@ -71,6 +70,39 @@
     button:focus {
         outline: none;
     }
+
+    .user-management {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .search-container {
+        position: relative;
+        width: 40%;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        align-self: end;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 8px 40px 8px 12px; /* Espaço para o botão */
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .search-button {
+        position: absolute;
+        right: 5px;
+        top: 10px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
 }
 
 
