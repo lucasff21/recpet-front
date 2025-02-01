@@ -24,3 +24,16 @@ export const deleteUser = async (id) => {
         },
     })
 }
+
+
+export const getUsers = (params) => {
+    return axios({
+        url: `${apiUrl}/users/findall`,
+        method: 'GET',
+        params: params,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("Token_RecSys")}`
+        }
+    })
+}
