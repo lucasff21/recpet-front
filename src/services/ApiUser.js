@@ -5,23 +5,14 @@ import { BASE_API_URL } from '../helpers/apiRoutes'
 const apiUrl = BASE_API_URL.baseUrl
 
 export const loginUser = async (email, password) => {
-    try {
-        const payload = { email, password }
-        const url = `${apiUrl}/users/login`
-        const response = await axios({
-            url,
+        return axios({
+            url: `${apiUrl}/users/login`,
             method: 'POST',
-            data: payload,
+            data:  { email, password },
             headers: {
                 'Content-Type': 'application/json',
             },
         })
-
-        return response.data;
-    } catch (error) {
-        console.error("Error :", error?.response?.data || error.message);
-        return null;
-    }
 }
 
 
@@ -71,4 +62,16 @@ export const findbyUserId = async (id, token) => {
         console.error("Error: ", error?.response?.data || error.message);
         return null;
     }
+}
+
+export const getUsers = (params) => {
+    return axios({
+        url: `${apiUrl}/users/findall`,
+        method: 'GET',
+        params: params,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("Token_RecSys")}`
+        }
+    })
 }
