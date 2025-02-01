@@ -28,7 +28,7 @@ export const deleteUser = async (id) => {
 
 export const getUsers = (params) => {
     return axios({
-        url: `${apiUrl}/users/findall`,
+        url: `${apiUrl}/admin/findall`,
         method: 'GET',
         params: params,
         headers: {
