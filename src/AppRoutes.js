@@ -1,20 +1,26 @@
-import React, { useContext } from "react";
+import React, {useContext} from "react";
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-import Home from "./pages/Home"; // Importar a Home
-
+import Home from "./pages/Home";
 
 import AdminArea from "./pages/AdminPages/AdminArea";
-import AddPet from "./pages/AdminPages/AddPet";
-import { AuthContext } from "./contexts/AuthContext"; // Importar o contexto de autenticação
+import { AuthContext } from "./contexts/AuthContext";
 import CustomerArea from "./pages/UserPages/CustomerArea";
 import CreateAccount from "./pages/UserPages/CreateAccount";
 import QuestionarioAdotante from "./pages/UserPages/QuestionarioAdotante";
 
 
 const PrivateRoute = ({ element: Element }) => {
-    const { isAuthenticated } = useContext(AuthContext); // Usar contexto para verificar autenticação
-    
-    return isAuthenticated ? <Element /> : <Navigate to="/" />; // Verificar a autenticação com o context
+    const { isAuthenticated } = useContext(AuthContext);
+
+    return isAuthenticated ? <Element /> : <Navigate to="/" />;
+};
+
+const AdminRoute = ({ element: Element }) => {
+    const { isAuthenticated, role, loading } = useContext(AuthContext);
+
+    if (!loading) {
+        return isAuthenticated && role === "ADMIN" ? <Element /> : <Navigate to="/" />;
+    }
 };
 
 const AppRoutes = () => (
@@ -29,9 +35,8 @@ const AppRoutes = () => (
 
             {/* ROTAS PROTEGIDA*/}
 
-            <Route path="/admin-area" element={<PrivateRoute element={AdminArea} />} /> 
-            <Route path="/admin-area/adicionar" element={<PrivateRoute element={AddPet} />} /> 
-
+            {/* ROTAS PROTEGIDA ADMIN*/}
+            <Route path="/admin-area/*" element={<AdminRoute element={AdminArea} />}/>
         </Routes>
     </BrowserRouter>
 );
