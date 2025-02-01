@@ -1,0 +1,76 @@
+.admin-table {
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+
+    & > h1 {
+        text-align: left;
+    }
+
+    & > h1 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .filters {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .filters input,
+    .filters select {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        flex: 1;
+    }
+
+    .filters select {
+        flex: 0.5;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table th,
+    table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background: #fff1e5;
+    }
+
+    tr:hover {
+        background-color: #fffbf8;
+    }
+
+    .edit-btn,
+    .delete-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 0 5px;
+    }
+
+    .edit-btn {
+        color: #007bff;
+    }
+
+    .delete-btn {
+        color: #dc3545;
+    }
+
+    button:focus {
+        outline: none;
+    }
+}
+
+
