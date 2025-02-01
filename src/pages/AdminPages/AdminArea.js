@@ -4,7 +4,7 @@ import AddPet from "./AddPet";
 import UserManagement from "./UserManagement";
 import {ToastContainer} from "react-toastify";
 
-const AdmianArea = () => {
+const AdminArea = () => {
     const navigate = useNavigate();
 
     const logout = () => {
