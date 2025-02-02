@@ -25,7 +25,7 @@ const CreateAccount = () => {
 
     return (
         <Layout showFooter={true}>
-            <div className="form-container" style={{ width: '60%'}}>
+            <div className="form-container">
                 <header className="form-container-header">
                     <h1>Crie sua conta</h1>
                 </header>
