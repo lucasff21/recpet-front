@@ -40,7 +40,7 @@ export const useCreateAdminUserForm = () => {
     const handleFormSubmit = async (data) => {
         const payload = {
             nome: data.personalData.fullName,
-            role: data.personalData.role,
+            tipo: data.personalData.role,
             email: data.personalData.email,
             senha: data.personalData.password,
         };
@@ -48,7 +48,7 @@ export const useCreateAdminUserForm = () => {
         createUser(payload)
             .then((response) => {
                 if (response.status === 201) {
-                    navigate("/admin-area/usuarios");
+                    navigate("/admin-area/usuarios/lista");
                 }
                 showToast('Usuário criado com sucesso')
             })
