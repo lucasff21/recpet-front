@@ -10,6 +10,9 @@ export const AuthProvider = ({ children }) => {
     const [role, setRole] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [user , setUser] = useState(() => {
+        return JSON.parse(localStorage.getItem('User_RecSys')); // Inicializa com o token do localStorage
+    });
 
     const isTokenExpired = (token) => {
         try {
@@ -21,16 +24,19 @@ export const AuthProvider = ({ children }) => {
 
     const isAuthenticated =  !isTokenExpired(authToken) && !!authToken;
 
-    const login = (token) => {
-        setAuthToken(token);
-        localStorage.setItem('Token_RecSys', token); 
-        tokenDecode(token); 
+    const login = (data) => {
+        setAuthToken(data.token);
+        setUser(data.user);
+        localStorage.setItem('Token_RecSys', data.token);
+        tokenDecode(data.token);
+        localStorage.setItem('User_RecSys', JSON.stringify(data.user));
     };
 
     const logout = () => {
         setAuthToken(null);
         setRole(null); 
         localStorage.removeItem('Token_RecSys');
+        localStorage.removeItem('User_RecSys');
     };
 
     const tokenDecode = (token) => {
@@ -57,7 +63,7 @@ export const AuthProvider = ({ children }) => {
     }, [authToken]); 
 
     return (
-        <AuthContext.Provider value={{ authToken, isAuthenticated, login, logout, role, userEmail, loading }}>
+        <AuthContext.Provider value={{ authToken, isAuthenticated, login, logout, role, userEmail, loading, user }}>
             {children}
         </AuthContext.Provider>
     );
