@@ -1,27 +1,30 @@
-import React, {useEffect, useState} from "react";
-import {getUsers} from "../services/ApiAdmin";
+import React, {useContext, useEffect, useState} from "react";
+import {getUsers, updateRole} from "../services/ApiAdmin";
 import {toast} from "react-toastify";
 import {Link} from "react-router-dom";
 import {deleteUser} from "../services/ApiAdmin";
 import ConfirmModal from "./ConfirmModal";
+import {showToast} from "../services/toastService";
+import {AuthContext} from "../contexts/AuthContext";
 
 const UserTable = () => {
-    const [users, setUsers] = useState([])
+    const [accounts, setAccounts] = useState([])
     const [filters, setFilters] = useState({ query: '', role: '', sortByDate: 'desc' });
     const [total, setTotal] = useState([]);
     const [modal, setModal] = useState({ isOpen: false, userId: null });
+    const { user } = useContext(AuthContext);
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters({ ...filters, [name]: value });
     };
 
-    const filteredUsers = users
-        .filter((user) => {
+    const filteredUsers = accounts
+        .filter((account ) => {
             const queryMatch =
-                user.nome.toLowerCase().includes(filters.query.toLowerCase()) ||
-                user.email.toLowerCase().includes(filters.query.toLowerCase());
-            const roleMatch = filters.role === '' || user['tipoUsuario'] === filters.role;
+                account.nome.toLowerCase().includes(filters.query.toLowerCase()) ||
+                account.email.toLowerCase().includes(filters.query.toLowerCase());
+            const roleMatch = filters.role === '' || account['tipoUsuario'] === filters.role;
             return queryMatch && roleMatch;
         })
         .sort((a, b) => {
@@ -39,18 +42,25 @@ const UserTable = () => {
     const confirmDelete = () => {
         deleteUser(modal.userId)
             .then(() => {
-                setUsers(users.filter((user) => user.id !== modal.userId));
-                toast("Sucesso ao deletar o usuário", { position: 'bottom-right', autoClose: 5000 });
+                setAccounts(accounts.filter((account ) => account.id !== modal.userId));
+                showToast("Sucesso ao deletar o usuário");
             })
             .catch(() => {
-                toast("Erro ao deletar o usuário", { type: 'error', position: 'bottom-right', autoClose: 5000 });
+                showToast("Erro ao deletar o usuário", 'error');
             });
         setModal({ isOpen: false, userId: null });
     };
 
 
-    const handleEdit = (id) => {
-        alert(`Edit user with ID: ${id}`);
+    const handleRoleChange = (id, newRole) => {
+        updateRole(id, { tipo: newRole })
+            .then(() => {
+                setAccounts(accounts.map(account => account.id === id ? { ...account, tipoUsuario: newRole } : account ));
+                showToast("Sucesso ao editar o usuário");
+            })
+            .catch(() => {
+                showToast("Erro ao editar o usuário", 'error');
+            });
     };
 
     const tipos = {
@@ -63,7 +73,7 @@ const UserTable = () => {
         getUsers(filters)
             .then((response) => {
                 setTotal(response.data['totalElements']);
-                setUsers(response.data.content);
+                setAccounts(response.data.content);
             })
             .catch(() => {
                 toast("Erro ao buscar os usuários", {
@@ -124,16 +134,24 @@ const UserTable = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {filteredUsers.map((user) => (
-                    <tr key={user.id}>
-                        <td>{user.nome}</td>
-                        <td>{user.email}</td>
-                        <td>{tipos[user['tipoUsuario']]}</td>
+                {filteredUsers.map((account) => (
+                    <tr key={account.id}>
+                        <td>{account.nome}</td>
+                        <td>{account.email}</td>
                         <td>
-                            <button className="edit-btn" onClick={() => handleEdit(user.id)}>
-                                ✏️ Editar
-                            </button>
-                            <button className="delete-btn" onClick={() => handleDelete(user.id)}>
+                            <select
+                                disabled={account.id === user.id}
+                                value={account['tipoUsuario']}
+                                onChange={(e) =>
+                                    handleRoleChange(account.id, e.target.value)}
+                            >
+                                {Object.entries(tipos).map(([key, value]) => (
+                                    <option key={key} value={key}> {value} </option>
+                                ))}
+                            </select>
+                        </td>
+                        <td>
+                            <button className="delete-btn" onClick={() => handleDelete(account.id)}>
                                 🗑️ Excluir
                             </button>
                         </td>
