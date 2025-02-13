@@ -9,7 +9,7 @@ const Footer = () => {
                     <div className="col-4 details">
                         <p>IC - INSTITUTO DE COMPUTAÇÃO/UFBA</p>
                         <p>Avenida Milton Santos, s/n - Campus de Ondina, PAF 2 - Salvador - Bahia, CEP 40.170-110</p>
-                        <p>Desenvolvido por: Lucas França & Milena</p>
+                        <p>Desenvolvido por: Lucas França & Milena Limoeiro</p>
                     </div>
 
                     <div className ="col-4 text-center">
