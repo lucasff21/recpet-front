@@ -84,7 +84,7 @@ export const usePersonalForm = () => {
             let response = await createUser(payload);
 
             if (response.status === 201) {
-                navigate("/login", { state: { userCreated: true } });
+                navigate("/area-cliente", { state: { userCreated: true } });
             }
             showToast('Usuário criado com sucesso')
         } catch (error) {
