@@ -18,7 +18,7 @@ const AdminArea = ({ children }) => {
                 <div className="list-group">
                     <a href="/admin-area/adicionar" className="list-group-item list-group-item-action">Adicionar Pet</a>
                     <a href="#" className="list-group-item list-group-item-action">Gerenciar Usuários</a>
-                    <a href="#" className="list-group-item list-group-item-action">Gerenciar Adoções</a>
+                    <a href="/admin-area/area-adocao" className="list-group-item list-group-item-action">Gerenciar Adoções</a>
                     <a className="list-group-item list-group-item-action disabled" aria-disabled="true">Export Data</a>
                 </div>
 

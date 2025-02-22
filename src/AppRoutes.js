@@ -9,6 +9,7 @@ import { AuthContext } from "./contexts/AuthContext"; // Importar o contexto de 
 import CustomerArea from "./pages/UserPages/CustomerArea";
 import CreateAccount from "./pages/UserPages/CreateAccount";
 import QuestionarioAdotante from "./pages/UserPages/QuestionarioAdotante";
+import AdocaoArea from "./pages/AdminPages/AdocaoArea";
 
 
 const PrivateRoute = ({ element: Element }) => {
@@ -31,6 +32,7 @@ const AppRoutes = () => (
 
             <Route path="/admin-area" element={<PrivateRoute element={AdminArea} />} /> 
             <Route path="/admin-area/adicionar" element={<PrivateRoute element={AddPet} />} /> 
+            <Route path="/admin-area/area-adocao" element={<PrivateRoute element={AdocaoArea} />} /> 
 
         </Routes>
     </BrowserRouter>
