@@ -6,7 +6,7 @@ import { getAddressByZipCode } from "../services/addressService";
 import { toast } from "react-toastify";
 import { createUser } from "../services/ApiUser";
 import { getAllStates, getCitiesFromState } from "../services/addressService";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const usePersonalForm = () => {
     const [ufs, setUfs] = useState([]);
