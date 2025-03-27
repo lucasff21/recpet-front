@@ -1,6 +1,6 @@
 import '../styles/ComponentLayout.css';
 import logo from '../assets/logo-pet.png';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link, NavLink } from 'react-router-dom';
 
