@@ -27,7 +27,7 @@ const AppRoutes = () => (
     <BrowserRouter>
         <Routes> 
             <Route path="/" element={<Home />} />
-            <Route path="/area-cliente" element={<CustomerArea />} />
+            <Route path="/login" element={<CustomerArea />} />
             <Route path="/criar-conta-admin" element={<CreateAccount />} /> 
             <Route path="/criar-conta-adotante" element={<CreateAccount />} /> 
             <Route path="/questionario-adotante" element={<QuestionarioAdotante />} />
