@@ -8,51 +8,62 @@ export const AuthProvider = ({ children }) => {
         return localStorage.getItem('Token_RecSys'); // Inicializa com o token do localStorage
     });
     const [role, setRole] = useState(null);
-    const [userEmail, setUserEmail] = useState(null)
+    const [userEmail, setUserEmail] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [user , setUser] = useState(() => {
+        return JSON.parse(localStorage.getItem('User_RecSys')); // Inicializa com o token do localStorage
+    });
 
-    const isAuthenticated = !!authToken; 
+    const isTokenExpired = (token) => {
+        try {
+            const decodedToken = jwtDecode(token);
+            let expired = decodedToken.exp * 1000 < Date.now();
+            return expired;
+        } catch { return true; }
+    };
 
-    const login = (token) => {
-        setAuthToken(token);
-        localStorage.setItem('Token_RecSys', token); 
-        tokenDecode(token); 
+    const isAuthenticated =  !isTokenExpired(authToken) && !!authToken;
+
+    const login = (data) => {
+        setAuthToken(data.token);
+        setUser(data.user);
+        localStorage.setItem('Token_RecSys', data.token);
+        tokenDecode(data.token);
+        localStorage.setItem('User_RecSys', JSON.stringify(data.user));
     };
 
     const logout = () => {
         setAuthToken(null);
         setRole(null); 
         localStorage.removeItem('Token_RecSys');
+        localStorage.removeItem('User_RecSys');
     };
 
     const tokenDecode = (token) => {
         try {
             const decodedToken = jwtDecode(token);
-            const userRole = decodedToken.ROLE || null; 
+            const userRole = decodedToken.ROLE || null;
+            const userEmailToken = decodedToken.sub || null;
+            setUserEmail(userEmailToken)
             setRole(userRole); 
         } catch (error) {
             console.error("Erro ao decodificar o token:", error);
         }
     };
 
-    const userEmailToken = (token) => {
-        try {
-            const decodedToken = jwtDecode(token);
-            const userEmailToken = decodedToken.sub || null;
-            setUserEmail(userEmailToken)
-        } catch (error) {
-            console.error("Erro ao decodificar o token:", error);
-        }
-    }
-
     useEffect(() => {
         if (authToken) {
-            tokenDecode(authToken); 
-            userEmailToken(authToken);
+            if (!isTokenExpired(authToken)) {
+                tokenDecode(authToken);
+            } else {
+                logout();
+            }
         }
+        setLoading(false);
     }, [authToken]); 
 
     return (
-        <AuthContext.Provider value={{ authToken, isAuthenticated, login, logout, role, userEmail }}>
+        <AuthContext.Provider value={{ authToken, isAuthenticated, login, logout, role, userEmail, loading, user }}>
             {children}
         </AuthContext.Provider>
     );

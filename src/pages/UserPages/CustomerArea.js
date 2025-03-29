@@ -21,9 +21,13 @@ const CustomerArea = () => {
         if (email && password) {
             try {
                 const response = await loginUser(email, password);
-                const token = response.token;
-                login(token);
+                login(response.data);
             } catch (error) {
+                toast("Erro ao realizar login", {
+                    type: 'error',
+                    position: 'bottom-right',
+                    autoClose: 5000,
+                })
                 console.error("Erro ao realizar login:", error);
             }
         } else {
@@ -82,7 +86,6 @@ const CustomerArea = () => {
     return (
         <Layout showFooter={false}>
             <ToastContainer />
-
             <>
                 <div className="container" id="div-principal-customer">
                     <div className="row">

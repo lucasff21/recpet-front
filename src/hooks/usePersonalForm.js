@@ -6,7 +6,7 @@ import { getAddressByZipCode } from "../services/addressService";
 import { toast } from "react-toastify";
 import { createUser } from "../services/ApiUser";
 import { getAllStates, getCitiesFromState } from "../services/addressService";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const usePersonalForm = () => {
     const [ufs, setUfs] = useState([]);
@@ -84,7 +84,7 @@ export const usePersonalForm = () => {
             let response = await createUser(payload);
 
             if (response.status === 201) {
-                navigate("/area-cliente", { state: { userCreated: true } });
+                navigate("/login", { state: { userCreated: true } });
             }
             showToast('Usuário criado com sucesso')
         } catch (error) {

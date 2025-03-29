@@ -1,12 +1,12 @@
 import Footer from './Footer';
-import NavBar from './NavBar';
+import Header from './Header';
 import '../styles/ComponentLayout.css';
 
 
 const Layout = ({ children, showNavBar= true, showFooter = true }) => { 
     return (
         <div className="layout-container">
-            {showNavBar && <NavBar />}
+            {showNavBar && <Header />}
             <main>
                 {children}  
             </main>
