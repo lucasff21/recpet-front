@@ -95,7 +95,6 @@ const CustomerArea = () => {
                             Faça a diferença hoje e conheça nosso Pets</p>
                         <button type="submit" className="button-customer" onClick={acessarCriarContaAdmin}>Criar Conta</button>
                         <br />
-                        <br />
                         <button type="submit" className="button-customer" onClick={acessarCriarContaUser}>Criar Conta Usuario Comum</button>
                     </div>
                     <div className="col card-login-account">
