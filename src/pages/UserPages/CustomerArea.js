@@ -84,32 +84,33 @@ const CustomerArea = () => {
     };
 
     return (
-        <Layout>
+        <Layout showFooter={false}>
             <ToastContainer />
-            <div className="container" id="div-principal-customer">
-                <div className="row">
-                    <div className="col card-creat-account">
-                        <h3>Bem Vindo</h3>
-                        <img src={petImage} alt="Logo" className="img-pet" />
-                        <p className="text-creat-account">Junte-se a nós na missão de proporcionar um lar amoroso para todos os pets.
-                            Faça a diferença hoje e conheça nosso Pets</p>
-                        <button type="submit" className="button-customer" onClick={acessarCriarContaAdmin}>Criar Conta</button>
-                        <br />
-                        <button type="submit" className="button-customer" onClick={acessarCriarContaUser}>Criar Conta Usuario Comum</button>
-                    </div>
-                    <div className="col card-login-account">
-                        <h3>Login</h3>
-                        <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
-                            <div className="form-group">
-                                <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E M A I L: " />
+            <>
+                <div className="container" id="div-principal-customer">
+                    <div className="row">
+                        <div className="col-12 card-login-account">
+                            <h3>Login</h3>
+                            <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
+                                <div className="form-group">
+                                    <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E M A I L: " />
 
-                                <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} id="exampleInputPassword1" placeholder="S E N H A:" />
-                            </div>
-                            <button type="submit" className="button-customer button-customer-area">Login</button>
-                        </form>
+                                    <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} id="exampleInputPassword1" placeholder="S E N H A:" />
+                                </div>
+                                <br />
+                                <button type="submit" className="button-customer button-customer-area">Entrar</button>
+                            </form>
+                            <hr />
+                            <p className="text-link">
+                                Não tem uma conta? <span onClick={acessarCriarContaAdmin}>Registre-se</span>
+                            </p>
+
+                        </div>
                     </div>
                 </div>
-            </div>
+
+            </>
+
         </Layout>
     );
 };

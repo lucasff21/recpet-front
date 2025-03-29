@@ -19,7 +19,7 @@ main {
 
 .button-customer{
     color: #fff;
-    background-color: rgb(204, 103, 8);
+    background-color: #27667B;
     border: 1px;
     border-radius: 24px;
     width: 100%;
@@ -28,14 +28,33 @@ main {
 
 /*                    ////////////////////////////          NAV //////////////////// */ 
 .nav-principal {
-    font-size: 20px;
-    font-weight: bolder;
+    font-size: 18px;
+    font-weight: bold;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 5%;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 }
-
+   
+.button-customer1 {
+    background-color: #2e677a; 
+    color: white;
+    padding: 8px 20px; 
+    border: none;
+    border-radius: 20px; 
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none; 
+    margin-right: 10px;
+}
 .nav-area-cliente1 {
     justify-content: flex-end;
 }
