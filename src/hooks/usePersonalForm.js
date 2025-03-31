@@ -78,8 +78,6 @@ export const usePersonalForm = () => {
              uf: data.address.state,
          };
 
-        console.log("Dados do formulário enviados:", payload);
-
         try {
             let response = await createUser(payload);
 
@@ -87,9 +85,8 @@ export const usePersonalForm = () => {
                 navigate("/login", { state: { userCreated: true } });
             }
             showToast('Usuário criado com sucesso')
-        } catch (error) {
+        } catch {
             showToast("Erro ao criar conta", 'error');
-            console.error("Erro ao criar conta:", error);
         }
     };
 
@@ -150,6 +147,7 @@ export const usePersonalForm = () => {
         ufs,
         cities,
         handleSubmit,
+        watch,
         handleFormSubmit,
         handleClear
     };
