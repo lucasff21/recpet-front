@@ -2,11 +2,13 @@ import React, {useContext} from "react";
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Home from "./pages/Home";
 
-import AdminArea from "./pages/AdminPages/AdminArea";
+import AdminArea from "./pages/Admin/AdminArea";
 import { AuthContext } from "./contexts/AuthContext";
-import CustomerArea from "./pages/UserPages/CustomerArea";
-import CreateAccount from "./pages/UserPages/CreateAccount";
-import QuestionarioAdotante from "./pages/UserPages/QuestionarioAdotante";
+import Login from "./pages/User/Login";
+import QuestionarioAdotante from "./pages/User/QuestionarioAdotante";
+import CreateAccountForm from "./components/CreateAccountForm";
+import AboutUs from "./pages/AboutUs";
+import Blog from "./pages/Blog";
 
 
 const PrivateRoute = ({ element: Element }) => {
@@ -27,16 +29,16 @@ const AppRoutes = () => (
     <BrowserRouter>
         <Routes> 
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<CustomerArea />} />
-            <Route path="/criar-conta-admin" element={<CreateAccount />} /> 
-            <Route path="/criar-conta-adotante" element={<CreateAccount />} /> 
-            <Route path="/questionario-adotante" element={<QuestionarioAdotante />} />
-
+            <Route path="/login" element={<Login />} />
+            <Route path="/criar-conta" element={<CreateAccountForm />} />
+            <Route path="/questionario" element={<QuestionarioAdotante />} />
+            <Route path="/quem-somos" element={<AboutUs />} />
+            <Route path="/blog" element={<Blog />} />
 
             {/* ROTAS PROTEGIDA*/}
 
             {/* ROTAS PROTEGIDA ADMIN*/}
-            <Route path="/admin-area/*" element={<AdminRoute element={AdminArea} />}/>
+            <Route path="/admin/*" element={<AdminRoute element={AdminArea} />}/>
         </Routes>
     </BrowserRouter>
 );
