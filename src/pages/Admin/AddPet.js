@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import AdminArea from "./AdminArea";
-import { createCachorro, uploadImagePet } from "../../services/ConsumeApi";
+import { createCachorro, uploadImagePet } from "../../services/AuthApi";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from "../../contexts/AuthContext";
@@ -24,7 +24,9 @@ const AddPet = () => {
     const [imagePreSave, setImagePreSave] = useState(null);
 
 
-    const cadastrarPet = async () => {
+    const cadastrarPet = async (e) => {
+        e.preventDefault();
+
         if (!nome || !idade || !sexo || !porte || !pelagem) {
             toast.warning('Por favor, preencha todos os campos obrigatórios.');
             return;
@@ -50,9 +52,6 @@ const AddPet = () => {
                 imagePath: resultImage ? resultImage : "" 
             };
 
-            console.log("Dados sendo enviados:", petData);
-
-
             const result = await createCachorro(petData, authToken);
             if (result) {
                 toast.success('Pet cadastrado com sucesso!');
@@ -62,7 +61,6 @@ const AddPet = () => {
             }
         } catch (error) {
             toast.error("Erro ao salvar a imagem ou cadastrar o pet.");
-            console.error(error);
         }
     };
     
@@ -94,8 +92,6 @@ const AddPet = () => {
     
         // Atualiza o estado
         setImagePreSave(formData);
-    
-        console.log(imagePreSave)
     };
 
     const handleCheckboxChange = (setter) => (e) => {
@@ -105,13 +101,15 @@ const AddPet = () => {
     return (
         <div>
             <ToastContainer />
-            <div className="add_pet_area">
-                <h1 className="title_add_pet"> ADICIONAR NOVO PET </h1>
-                <form onSubmit={(e) => { e.preventDefault(); cadastrarPet(); }}>
-                    <div style={{ border: '1px solid black' }}>
+            <div className="add_pet_area bg-white p-4 rounded">
+                <form onSubmit={ cadastrarPet}>
+                    <div>
+                        <h1 className="title_add_pet"> Adicionar Pet</h1>
                         <div className="area_inputs mt-5">
-                            <input type="text" className="form-control" placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} />
-                            <input type="text" className="form-control" placeholder="Idade" value={idade} onChange={(e) => setIdade(e.target.value)} />
+                            <input type="text" className="form-control" placeholder="Nome" value={nome}
+                                   onChange={(e) => setNome(e.target.value)}/>
+                            <input type="text" className="form-control" placeholder="Idade" value={idade}
+                                   onChange={(e) => setIdade(e.target.value)}/>
                             <select
                                 id="sexo"
                                 className="form-control"
@@ -123,7 +121,8 @@ const AddPet = () => {
                                 <option value="femea">Fêmea</option>
                             </select>
 
-                            <input type="text" className="form-control" placeholder="Porte" value={porte} onChange={(e) => setPorte(e.target.value)} />
+                            <input type="text" className="form-control" placeholder="Porte" value={porte}
+                                   onChange={(e) => setPorte(e.target.value)}/>
 
                             <select
                                 id="pelagem"
@@ -142,56 +141,63 @@ const AddPet = () => {
                             </select>
                         </div>
 
-                        <div style={{ textAlign: "left" }} className="mt-3">
-                            <ul style={{ listStyle: "none" }}>
+                        <div style={{textAlign: "left"}} className="mt-3">
+                            <ul style={{listStyle: "none"}}>
                                 <li>
-                                    <input className="form-check-input" type="checkbox" checked={idealCasa} onChange={(e) => setIdealCasa(e.target.checked)} />
+                                    <input className="form-check-input" type="checkbox" checked={idealCasa}
+                                           onChange={(e) => setIdealCasa(e.target.checked)}/>
                                     <label className="form-check-label" htmlFor="gridCheck1">
                                         Ideal para casa?
                                     </label>
                                 </li>
                                 <li>
-                                    <input className="form-check-input" type="checkbox" checked={gostaCrianca} onChange={handleCheckboxChange(setGostaCrianca)} />
+                                    <input className="form-check-input" type="checkbox" checked={gostaCrianca}
+                                           onChange={handleCheckboxChange(setGostaCrianca)}/>
                                     <label className="form-check-label" htmlFor="gridCheck1">
                                         Gosta de crianças?
                                     </label>
                                 </li>
                                 <li>
-                                    <input className="form-check-input" type="checkbox" checked={caoGuarda} onChange={handleCheckboxChange(setCaoGuarda)} />
+                                    <input className="form-check-input" type="checkbox" checked={caoGuarda}
+                                           onChange={handleCheckboxChange(setCaoGuarda)}/>
                                     <label className="form-check-label" htmlFor="gridCheck1">
                                         Cão de guarda?
                                     </label>
                                 </li>
                                 <li>
-                                    <input className="form-check-input" type="checkbox" checked={brincalhao} onChange={handleCheckboxChange(setBrincalhao)} />
+                                    <input className="form-check-input" type="checkbox" checked={brincalhao}
+                                           onChange={handleCheckboxChange(setBrincalhao)}/>
                                     <label className="form-check-label" htmlFor="gridCheck1">
                                         Gosta de brincar?
                                     </label>
                                 </li>
                                 <li>
-                                    <input className="form-check-input" type="checkbox" checked={necessidadeCorrer} onChange={handleCheckboxChange(setNecessidadeCorrer)} />
+                                    <input className="form-check-input" type="checkbox" checked={necessidadeCorrer}
+                                           onChange={handleCheckboxChange(setNecessidadeCorrer)}/>
                                     <label className="form-check-label" htmlFor="gridCheck1">
                                         Necessita de correr?
                                     </label>
                                 </li>
                                 <li>
-                                    <input className="form-check-input" type="checkbox" checked={quedaPelo} onChange={handleCheckboxChange(setQuedaPelo)} />
+                                    <input className="form-check-input" type="checkbox" checked={quedaPelo}
+                                           onChange={handleCheckboxChange(setQuedaPelo)}/>
                                     <label className="form-check-label" htmlFor="gridCheck1">
                                         Queda de pelo?
                                     </label>
                                 </li>
                                 <li>
-                                    <input className="form-check-input" type="checkbox" checked={tendeLatir} onChange={handleCheckboxChange(setTendeLatir)} />
+                                    <input className="form-check-input" type="checkbox" checked={tendeLatir}
+                                           onChange={handleCheckboxChange(setTendeLatir)}/>
                                     <label className="form-check-label" htmlFor="gridCheck1">
                                         Tende a latir?
                                     </label>
                                 </li>
-                                <br />
+                                <br/>
                                 <li>
                                     <div>
                                         <h2>Imagem do Pet:</h2>
-                                        <input type="file" onChange={(e) => uploadImage(e)} />
-                                        <img style={{ width: 300 }} src={imagePath} />
+                                        <input type="file" onChange={(e) => uploadImage(e)}/>
+                                        <img style={{width: 300}} src={imagePath}/>
                                     </div>
                                 </li>
                             </ul>
