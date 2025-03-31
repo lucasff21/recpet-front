@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
-import AdminArea from "./AdminArea";
-import { createCachorro, uploadImagePet } from "../../services/AuthApi";
+import { createCachorro, uploadImagePet } from "../../services/ApiAdocao";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from "../../contexts/AuthContext";
