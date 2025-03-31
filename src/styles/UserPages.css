@@ -2,13 +2,16 @@
     text-align: center;
 }
 
-.card-creat-account, .card-login-account {
-    height: 400px !important;
-    width: 300px !important;
+.card-login-account {
+    border: 1px solid #ddd; 
     border-radius: 24px;
-    background-color: #f0ac4c; 
+    height: 45vh !important;
+    width: 50vh !important;
+    background-color: #ffffff; 
     padding: 20px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); 
 }
+
 
 
 .card-login-account{
@@ -34,15 +37,6 @@
     width: 35%;
 }
 
-.text-creat-account{
-    font-size: 16px;
-    font-weight: bolder;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.button-customer-area{
-    margin-top: 50%;
-}
 
 #questionario-adotante label{
     margin-top: 3%;
@@ -58,4 +52,20 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+}
+
+.text-link {
+    font-size: 16px;
+    color: #333; /* Cor do texto */
+}
+
+.text-link span {
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+    color: #000; /* Cor do link */
+}
+
+.text-link span:hover {
+    color: #007bff; /* Cor ao passar o mouse */
 }
