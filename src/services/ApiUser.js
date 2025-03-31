@@ -2,7 +2,7 @@ import axios from 'axios';
 import { BASE_API_URL } from '../helpers/apiRoutes'
 
 
-const apiUrl = BASE_API_URL.deploymentUrl
+const apiUrl = BASE_API_URL.url
 
 export const loginUser = async (email, password) => {
         return axios({
