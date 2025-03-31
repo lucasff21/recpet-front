@@ -4,7 +4,7 @@ import Layout from "../../components/Layout";
 import "../../styles/UserPages.css";
 import { loginUser } from "../../services/ApiUser";
 import { AuthContext } from "../../contexts/AuthContext";
-import { findByQuestionarioEmail } from "../../services/AuthApi";
+import { findByQuestionarioEmail } from "../../services/ApiAdocao";
 import { showToast } from "../../utils/toast";
 
 const Login = () => {
