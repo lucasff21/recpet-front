@@ -4,7 +4,7 @@ import {toast} from "react-toastify";
 import {Link} from "react-router-dom";
 import {deleteUser} from "../services/ApiAdmin";
 import ConfirmModal from "./ConfirmModal";
-import {showToast} from "../services/toastService";
+import {showToast} from "../utils/toast";
 import {AuthContext} from "../contexts/AuthContext";
 
 const UserTable = () => {
