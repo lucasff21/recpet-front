@@ -4,11 +4,12 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/HomePage.css";
-import { adotarPet, CachorroFindAll, downloadImage, findByIdCachorro } from "../services/ConsumeApi";
+import { adotarPet, cachorroFindAll, downloadImage, findByIdCachorro } from "../services/ApiAdocao";
 import logo from '../assets/vira-lata.png';
 import { AuthContext } from "../contexts/AuthContext";
 import { Modal, Button } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
+import PetCard from "../components/PetCard";
 
 
 const ArrowRight = (props) => {
@@ -65,21 +66,14 @@ const Home = () => {
 
     useEffect(() => {
         const fetchCachorros = async () => {
-            const body = await CachorroFindAll();
+            let cachorrosWithImages = [];
 
-            if (body && Array.isArray(body)) {
-                const cachorrosWithImages = await Promise.all(
-                    body.map(async (cachorro) => {
-                        const imagePet = await downloadImage(cachorro.imagePath);
-                        return {
-                            ...cachorro,
-                            imageUrl: imagePet,
-                        };
-                    })
-                );
-
-                setCachorros(cachorrosWithImages); // Atualiza o estado com os cachorros e suas imagens
-            }
+             await cachorroFindAll()
+                .then( async (response) => {
+                    let cachorros = response.data;
+                    setCachorros(cachorros)
+                })
+                .catch();
 
             console.log(cachorros)
 
@@ -233,34 +227,24 @@ const Home = () => {
 
     return (
         <Layout>
-            <ToastContainer />
-            <div >
+            <ToastContainer/>
+            <div>
                 {loading ? (
                     <p>Carregando...</p>
                 ) : cachorros.length > 0 ? (
-                    <Slider {...settings}>
+                    <Slider {...settings} className="w-[1000px]">
                         {cachorros.map((cachorro) => (
-                            <div key={cachorro.id}>
-                                <img
-                                    src={cachorro.imageUrl || logo}
-                                    alt={cachorro.nome || "Cachorro"}
-                                    style={{ width: '250px', height: '200px', objectFit: 'cover' }}
-                                />
-                                <h3>{cachorro.nome || "Nome não disponível"}</h3>
-                                <button
-                                    type="button"
-                                    className="btn btn-warning"
-                                    onClick={() => openModalPet(cachorro.id)}
-                                >
-                                    Visualizar Informações
-                                </button>
-                            </div>
+                            <PetCard cachorro={cachorro} openModalPet={openModalPet} key={cachorro.id} />
                         ))}
                     </Slider>
                 ) : (
                     <p>Nenhum cachorro encontrado</p>
                 )}
             </div>
+
+            {cachorros.map((cachorro) => (
+                <PetCard cachorro={cachorro} openModalPet={openModalPet} key={cachorro.id} />
+            ))}
 
             {renderModal()}
         </Layout>
