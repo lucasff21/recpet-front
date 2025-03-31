@@ -16,7 +16,7 @@ const AdminArea = () => {
     return (
         <div style={{ display: 'flex' }}>
             <ToastContainer />
-            <div className="barra-lateral">
+            <div className="barra-lateral bg-cyan-700">
                 <div className="list-group">
                     <Link to="adicionar" className="list-group-item list-group-item-action">Adicionar Pet</Link>
                     <Link to="usuarios/lista" className="list-group-item list-group-item-action">Gerenciar Usuários</Link>

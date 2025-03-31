@@ -1,17 +1,10 @@
 import axios from 'axios';
 import { BASE_API_URL } from '../helpers/apiRoutes'
 
-const apiUrl = BASE_API_URL.deploymentUrl
+const apiUrl = BASE_API_URL.url
 
-export const CachorroFindAll = async () => {
-    try {
-        const url = `${apiUrl}/api/cachorro/findall`
-        const response = await axios.get(url);
-        return response.data;
-    } catch (error) {
-        console.error("Error get List:", error?.response?.data || error.message);
-        return null;
-    }
+export const cachorroFindAll = async () => {
+    return await axios.get(`${apiUrl}/api/cachorro/findall`);
 }
 
 export const createCachorro = async (cachorroData, token) => {

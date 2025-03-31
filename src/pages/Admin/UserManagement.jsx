@@ -7,7 +7,7 @@ import CreateUserAdmin from "./CreateUserAdmin";
 const UserManagement = () => {
     const location = useLocation();
 
-    const isCreatePage = location.pathname === "/admin-area/usuarios/criar";
+    const isCreatePage = location.pathname === "/admin/usuarios/criar";
     return (
         <div className="admin-table">
             {isCreatePage && (

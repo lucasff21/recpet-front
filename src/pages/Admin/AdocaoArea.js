@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { findAllAdocoes } from "../../services/ConsumeApi"
+import { findAllAdocoes } from "../../services/ApiAdocao"
 import AdminArea from "./AdminArea"
 import { AuthContext } from "../../contexts/AuthContext"
 
