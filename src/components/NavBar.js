@@ -46,7 +46,6 @@ const NavBar = () => {
               {user ? (user.name || user.email) : "Entrar"}
             </button>
           </div>
-
         </div>
       </nav>
 
