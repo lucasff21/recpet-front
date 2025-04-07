@@ -241,11 +241,6 @@ const Home = () => {
                     <p>Nenhum cachorro encontrado</p>
                 )}
             </div>
-
-            {cachorros.map((cachorro) => (
-                <PetCard cachorro={cachorro} openModalPet={openModalPet} key={cachorro.id} />
-            ))}
-
             {renderModal()}
         </Layout>
     );
