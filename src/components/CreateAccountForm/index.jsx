@@ -35,14 +35,17 @@ const CreateAccountForm = () => {
         const requiredFields = {
             1: ['email', 'confirmEmail', 'password', 'confirmPassword'],
             2: ['fullName', 'cpf', 'birthDate', 'phone', 'gender'],
-            3: ['zipCode', 'street',  'district', 'state', 'city']
+            3: ['zipCode', 'street', 'district', 'state', 'city']
         };
-
+    
+        const section = step === 3 ? 'address' : 'personalData';
+    
         return requiredFields[step].every(field =>
-            !!values.personalData?.[field] &&
-            !errors.personalData?.[field]
+            !!values[section]?.[field] &&
+            !errors[section]?.[field]
         );
     };
+    
 
     return (
         <Layout showFooter={true}>
