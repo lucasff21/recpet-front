@@ -4,9 +4,12 @@ import {schemaForm} from "../zod/userAdminForms";
 import {toast} from "react-toastify";
 import { createUser } from "../services/ApiAdmin";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { showToast } from "../utils/toast";
 
 export const useCreateAdminUserForm = () => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const {
         handleSubmit,
@@ -29,14 +32,6 @@ export const useCreateAdminUserForm = () => {
 
     const handleClear = () => { reset() };
 
-    const showToast = (message, type = 'sucess') => {
-        toast(message, {
-            type: type,
-            position: 'bottom-right',
-            autoClose: 5000,
-        });
-    }
-
     const handleFormSubmit = async (data) => {
         const payload = {
             nome: data.personalData.fullName,
@@ -45,6 +40,7 @@ export const useCreateAdminUserForm = () => {
             senha: data.personalData.password,
         };
 
+        setLoading(true);
         createUser(payload)
             .then((response) => {
                 if (response.status === 201) {
@@ -54,12 +50,15 @@ export const useCreateAdminUserForm = () => {
             })
             .catch((error) => {
                 showToast("Erro ao criar conta", 'error');
+            }).finally(() => {
+                setLoading(false);
             });
     };
 
     return {
         errors,
         register,
+        loading,
         handleSubmit,
         handleFormSubmit,
         handleClear
