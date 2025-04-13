@@ -4,7 +4,7 @@ const AccountStep = ({ register, errors }) => {
     return (
         <>
             <InputField
-                id="personalData.email"
+                id="email"
                 label="E-mail"
                 register={register}
                 errors={errors}
@@ -14,7 +14,7 @@ const AccountStep = ({ register, errors }) => {
             />
 
             <InputField
-                id="personalData.confirmEmail"
+                id="confirmEmail"
                 label="Confirmar E-mail"
                 register={register}
                 errors={errors}
@@ -24,7 +24,7 @@ const AccountStep = ({ register, errors }) => {
             />
 
             <InputField
-                id="personalData.password"
+                id="password"
                 label="Senha"
                 register={register}
                 errors={errors}
@@ -34,7 +34,7 @@ const AccountStep = ({ register, errors }) => {
             />
 
             <InputField
-                id="personalData.confirmPassword"
+                id="confirmPassword"
                 label="Confirmar Senha"
                 register={register}
                 errors={errors}
