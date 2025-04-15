@@ -3,11 +3,12 @@ import React, { useContext, useEffect, useState, useCallback } from "react";
 import { adotarPet, cachorroFindAll} from "../services/ApiAdocao";
 import { AuthContext } from "../contexts/AuthContext";
 import { Spinner } from "react-bootstrap";
-import { ToastContainer, toast } from "react-toastify";
 import PetCard from "../components/Cards/PetCard";
 import FeaturedPetCard from "../components/Cards/FeaturedPetCard";
 import ModalPet from "../components/ModalPet";
 import {useNavigate} from "react-router-dom";
+import {showToast} from "../utils/toast";
+
 
 const Home = () => {
     const [cachorros, setCachorros] = useState([]);
@@ -20,6 +21,8 @@ const Home = () => {
 
 
     const openModalPet = useCallback((id) => {
+        if (featuredPets.length === 0 && cachorros.length === 0) return;
+
         const pet = [...featuredPets, ...cachorros].find(p => p.id === id);
         if (pet) {
             setSelectedDog(pet);
@@ -43,9 +46,9 @@ const Home = () => {
             }, authToken);
 
             setShowModal(false);
-            toast.success('Interesse registrado! Entraremos em contato.');
+            showToast('Interesse registrado! Entraremos em contato.');
         } catch (error) {
-            toast.error("Erro ao processar interesse");
+            showToast("Erro ao processar interesse", 'error');
         }
     }, [selectedDog, authToken]);
 
@@ -61,7 +64,7 @@ const Home = () => {
                 }
             } catch (error) {
                 if (!ignore) {
-                    toast.error("Erro ao carregar pets");
+                    showToast("Erro ao carregar pets", 'error');
                 }
             } finally {
                 if (!ignore) {
@@ -78,7 +81,6 @@ const Home = () => {
 
     return (
         <Layout>
-            <ToastContainer />
             <div className="flex flex-col min-h-screen">
                 <main className="flex-grow container mx-auto px-4 py-6">
                     <section className="mb-8">
