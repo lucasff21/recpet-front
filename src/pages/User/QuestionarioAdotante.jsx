@@ -81,12 +81,12 @@ const QuestionarioAdotante = () => {
     return (
         <Layout showFooter={false}>
             <ToastContainer />
-            <div id="questionario-pet" style={{backgroundColor: "#EFC483"}}>
-                <div  style={{textAlign: "center"}}>
+            <div className="space-y-8 bg-white p-8 rounded-lg shadow-md border border-gray-200">
+                <div style={{ textAlign: "center" }}>
                     <h3>Encontre o Pet ideal para você!</h3>
-                    <p>Responda às perguntas abaixo para que possamos encontrar o cachorro perfeito para o seu estilo de vida.</p>
+                    <p className="font-medium">Responda às perguntas abaixo para que possamos encontrar o cachorro ideal para o seu estilo de vida.</p>
                 </div>
-
+                <hr />
                 <form id="questionario-adotante" onSubmit={handleCreateQuestionario}>
                     <label htmlFor="sexo">Qual o sexo do pet que você prefere?</label>
                     <select
