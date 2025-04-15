@@ -80,7 +80,7 @@ const Header = () => {
     };
 
     return (
-        <header className="flex justify-between items-center px-4 py-2 bg-white shadow-md relative">
+        <header className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-4 py-2 bg-white shadow-md md:relative">
             <img src={logo} alt="Logo" className="w-10 h-10"/>
 
             <button className="md:hidden" onClick={toggleMenu}>
