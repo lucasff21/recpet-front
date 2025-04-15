@@ -6,10 +6,9 @@ import AdminArea from "./pages/Admin/AdminArea";
 import { AuthContext } from "./contexts/AuthContext";
 import Login from "./pages/User/Login";
 import QuestionarioAdotante from "./pages/User/QuestionarioAdotante";
-import CreateAccountForm from "./components/CreateAccountForm";
+import CreateAccountForm from "./pages/User/CreateAccount";
 import AboutUs from "./pages/AboutUs";
 import Blog from "./pages/Blog";
-
 
 const PrivateRoute = ({ element: Element }) => {
     const { isAuthenticated } = useContext(AuthContext);
@@ -25,19 +24,27 @@ const AdminRoute = ({ element: Element }) => {
     }
 };
 
+const PublicRoute = ({ element: Element }) => {
+    const { isAuthenticated } = useContext(AuthContext);
+
+    return isAuthenticated ? <Navigate to="/" /> : <Element />;
+};
+
 const AppRoutes = () => (
     <BrowserRouter>
-        <Routes> 
+        <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/criar-conta" element={<CreateAccountForm />} />
-            <Route path="/questionario" element={<QuestionarioAdotante />} />
             <Route path="/quem-somos" element={<AboutUs />} />
             <Route path="/blog" element={<Blog />} />
 
-            {/* ROTAS PROTEGIDA*/}
+            {/* ROTAS PROTEGIDAS PARA USUÁRIO LOGADO */}
+            <Route path="/login" element={<PublicRoute element={Login} />} />
+            <Route path="/criar-conta" element={<PublicRoute element={CreateAccountForm} />} />
 
-            {/* ROTAS PROTEGIDA ADMIN*/}
+            {/* ROTAS PROTEGIDA */}
+            <Route path="/questionario" element={< PrivateRoute element={QuestionarioAdotante} />} />
+
+            {/* ROTAS PROTEGIDA ADMIN */}
             <Route path="/admin/*" element={<AdminRoute element={AdminArea} />}/>
         </Routes>
     </BrowserRouter>

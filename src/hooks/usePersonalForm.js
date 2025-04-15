@@ -3,16 +3,15 @@ import {useCallback, useEffect, useState} from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaForm } from "../zod/personalForms";
 import { getAddressByZipCode } from "../services/addressService";
-import { toast } from "react-toastify";
 import { createUser } from "../services/ApiUser";
-import { getAllStates, getCitiesFromState } from "../services/addressService";
 import { useNavigate } from "react-router-dom";
+import { showToast } from "../utils/toast";
 
 export const usePersonalForm = () => {
-    const [ufs, setUfs] = useState([]);
-    const [cities, setCities] = useState([]);
-    const [loadingCities, setLoadingCities] = useState(false);
+    const [uf, setUf] = useState(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const [currentStep, setCurrentStep] = useState(1);
 
     const {
         handleSubmit,
@@ -23,132 +22,100 @@ export const usePersonalForm = () => {
         reset,
     } = useForm({
         mode: "all",
-        criteriaMode: "all",
         resolver: zodResolver(schemaForm),
         defaultValues: {
-            personalData: {
-                fullName: "",
-                cpf: "",
-                gender: "",
-                birthDate: "",
-                phone: "",
-                email: "",
-                confirmEmail: "",
-                password: "",
-                confirmPassword: "",
-            },
-            address: {
-                zipCode: "",
-                street: "",
-                complement: "",
-                district: "",
-                city: "",
-                state: "",
-            },
+            fullName: "",
+            cpf: "",
+            gender: "",
+            birthDate: "",
+            phone: "",
+            email: "",
+            confirmEmail: "",
+            password: "",
+            confirmPassword: "",
+            zipCode: "",
+            street: "",
+            complement: "",
+            district: "",
+            city: "",
+            state: "",
         },
     });
 
     const handleClear = () => { reset() };
 
-    const zipCode = watch("address.zipCode");
-    const state = watch("address.state");
-
-    const showToast = (message, type = 'sucess') => {
-        toast(message, {
-            type: type,
-            position: 'bottom-right',
-            autoClose: 5000,
-        });
-    }
+    const zipCode = watch("zipCode");
 
     const handleFormSubmit = async (data) => {
          const payload = {
-             nome: data.personalData.fullName,
-             cpf: data.personalData.cpf,
-             genero: data.personalData.gender,
-             dataNascimento: data.personalData.birthDate,
-             telefone: data.personalData.phone,
-             email: data.personalData.email,
-             senha: data.personalData.password,
-             cep: data.address.zipCode,
-             logradouro: data.address.street,
-             complemento: data.address.complement || "",
-             bairro: data.address.district,
-             localidade: data.address.city,
-             uf: data.address.state,
+             nome: data.fullName,
+             cpf: data.cpf,
+             genero: data.gender,
+             dataNascimento: data.birthDate,
+             telefone: data.phone,
+             email: data.email,
+             senha: data.password,
+             cep: data.zipCode,
+             logradouro: data.street,
+             complemento: data.complement || "",
+             bairro: data.district,
+             localidade: data.city,
+             uf: uf.sigla,
          };
 
-        try {
-            let response = await createUser(payload);
+        setLoading(true)
 
-            if (response.status === 201) {
-                navigate("/login", { state: { userCreated: true } });
-            }
-            showToast('Usuário criado com sucesso')
-        } catch {
-            showToast("Erro ao criar conta", 'error');
-        }
+        await createUser(payload)
+            .then((response) => {
+                if (response.status === 201) {
+                    navigate("/login", { state: { userCreated: true } });
+                }
+            })
+            .catch(() => {
+                showToast("Erro ao criar conta", 'error');
+            }).finally(() => {
+                setLoading(false)
+            });
     };
 
     const handleSetAddress = useCallback(
         (data) => {
-            setValue("address.state", data.uf);
-            setValue("address.city", data.localidade);
-            setValue("address.street", data.logradouro || "");
-            setValue("address.district", data.bairro);
-            setValue("address.complement", data.complemento || "");
+            setValue("state", data.estado);
+            setValue("city", data.localidade);
+            setValue("street", data.logradouro || "");
+            setValue("district", data.bairro);
+            setValue("complement", data.complemento || "");
+            setUf({sigla: data.uf});
         },
-        [setValue, loadingCities]
+        [setValue, loading]
     );
-
-    useEffect(() => {
-        getAllStates()
-            .then((response) => {
-                setUfs(response.data);
-            })
-            .catch(() => {
-                showToast("Erro ao buscar os Estados", 'error')
-            });
-    }, []);
-
-
-    useEffect(() => {
-        if (!state) return;
-        setLoadingCities(true);
-
-        getCitiesFromState(state)
-            .then((response) => {
-                setCities(response.data);
-            })
-            .catch(() => {
-                showToast("Erro ao buscar as cidades", 'error')
-            })
-            .finally(() => setLoadingCities(false));
-    }, [state]);
-
 
     useEffect( () => {
         const zipCodeFormat = zipCode?.replace(/\D/g, '');
 
         if (zipCodeFormat?.length === 8) {
+            setLoading(true)
             getAddressByZipCode(zipCodeFormat)
                  .then(response => {
                      handleSetAddress(response.data)
                  })
                  .catch(() => {
                      showToast("Erro ao buscar o endereço", 'error')
-                 })
+                 }).finally(() => {
+                     setLoading(false)
+                 });
         }
     }, [zipCode, handleSetAddress]);
 
     return {
         errors,
         register,
-        ufs,
-        cities,
         handleSubmit,
         watch,
+        currentStep,
+        setCurrentStep,
+        loading,
         handleFormSubmit,
-        handleClear
+        handleClear,
     };
 };

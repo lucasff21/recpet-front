@@ -24,6 +24,8 @@ export const AuthProvider = ({ children }) => {
 
     const isAuthenticated =  !isTokenExpired(authToken) && !!authToken;
 
+    const isAdmin = isAuthenticated && role === "ADMIN";
+
     const login = (data) => {
         setAuthToken(data.token);
         setUser(data.user);
@@ -34,7 +36,8 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         setAuthToken(null);
-        setRole(null); 
+        setRole(null);
+        setUser(null);
         localStorage.removeItem('Token_RecSys');
         localStorage.removeItem('User_RecSys');
     };
@@ -63,7 +66,7 @@ export const AuthProvider = ({ children }) => {
     }, [authToken]); 
 
     return (
-        <AuthContext.Provider value={{ authToken, isAuthenticated, login, logout, role, userEmail, loading, user }}>
+        <AuthContext.Provider value={{ authToken, isAuthenticated, login, logout, role, userEmail, loading, user, isAdmin }}>
             {children}
         </AuthContext.Provider>
     );

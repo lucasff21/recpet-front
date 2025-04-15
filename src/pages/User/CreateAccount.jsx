@@ -1,21 +1,29 @@
-import "../../styles/CreateAccount.css";
+import AccountStep from '../../components/CreateAccountForm/AccountStep';
+import PersonalStep from '../../components/CreateAccountForm/PersonalStep';
+import AddressStep from '../../components/CreateAccountForm/AddressStep';
+import ProgressIndicator from '../../components/CreateAccountForm/ProgressIndicator';
+import { usePersonalForm } from '../../hooks/usePersonalForm';
 import Layout from "../../components/Layout";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Button } from "../../components/Button";
-import { usePersonalForm } from "../../hooks/usePersonalForm.js";
 
-const CreateAccount = () => {
-
+const CreateAccountForm = () => {
     const {
         errors,
         register,
         handleSubmit,
+        watch,
+        setCurrentStep,
+        currentStep,
+        loading,
         handleFormSubmit,
-        handleClear,
-        ufs,
-        cities
     } = usePersonalForm();
+
+    const nextStep = () => setCurrentStep(currentStep + 1);
+    const prevStep = () => setCurrentStep(currentStep - 1);
+    const goToStep = (step) => {
+        if (canProceed(step)) {
+            setCurrentStep(step);
+        }
+    }
 
     const minDate18YearsOld = () => {
         const today = new Date();
@@ -23,158 +31,77 @@ const CreateAccount = () => {
         return today.toISOString().split('T')[0];
     };
 
+    const canProceed = (step) => {
+        const values = watch();
+        const requiredFields = {
+            1: ['email', 'confirmEmail', 'password', 'confirmPassword'],
+            2: ['fullName', 'cpf', 'birthDate', 'phone', 'gender'],
+            3: ['zipCode', 'street', 'district', 'state', 'city']
+        };
+        return requiredFields[step].every(field => !!values[field] && !errors[field]);
+    };
+
     return (
         <Layout showFooter={true}>
-            <div className="form-container">
-                <header className="form-container-header">
-                    <h1>Crie sua conta</h1>
+            <div className="w-[330px] md:w-[700px] p-6">
+                <header className="text-center mb-8">
+                    <h1 className="text-2xl font-bold text-gray-800 mb-4">Crie sua conta</h1>
+                    <ProgressIndicator currentStep={currentStep} goToStep={goToStep}/>
                 </header>
-                <form onSubmit={handleSubmit(handleFormSubmit)} className="form">
-                    <div>
-                        <label htmlFor="email">E-mail</label>
-                        <input id="email" name="email" {...register("personalData.email")}
-                               placeholder="E-mail"/>
-                        {errors?.personalData?.email && <span>{errors?.personalData?.email.message}</span>}
-                    </div>
 
-                    <div>
-                        <label htmlFor="confirmarEmail">Confirmar E-mail</label>
-                        <input id="confirmarEmail" name="confirmarEmail"
-                               {...register("personalData.confirmEmail")}
-                               placeholder="Confirme seu E-mail"/>
-                        {errors?.personalData?.confirmEmail &&
-                            <span>{errors?.personalData?.confirmEmail.message}</span>}
-                    </div>
+                <form onSubmit={handleSubmit(handleFormSubmit)}
+                      className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
+                    {currentStep === 1 && (
+                        <AccountStep register={register} errors={errors}/>
+                    )}
 
-                    <div>
-                        <label htmlFor="senha">Senha</label>
-                        <input type="password" id="senha"
-                               name="senha"
-                               {...register("personalData.password")}
-                               placeholder="Senha"
-                               autoComplete="new-password"
+                    {currentStep === 2 && (
+                        <PersonalStep
+                            register={register}
+                            errors={errors}
+                            minDate={minDate18YearsOld()}
                         />
-                        {errors?.personalData?.password && <span>{errors?.personalData?.password.message}</span>}
-                    </div>
+                    )}
 
-                    <div>
-                        <label htmlFor="confirmarSenha">Confirmar Senha</label>
-                        <input type="password" id="confirmarSenha"
-                               name="confirmarSenha"
-                               {...register("personalData.confirmPassword")}
-                               placeholder="Confirme sua Senha"
-                               autoComplete="new-password"
-                        />
-                        {errors?.personalData?.confirmPassword &&
-                            <span>{errors?.personalData?.confirmPassword.message}</span>}
-                    </div>
-
-                    <h2 className="row-title full-row">Dados Pessoais</h2>
-
-                    <div>
-                        <label htmlFor="nomeCompleto">Nome Completo</label>
-                        <input id="nomeCompleto" name="nomeCompleto" {...register("personalData.fullName")}
-                               placeholder="Nome Completo"/>
-                        {errors?.personalData?.fullName && <span>{errors?.personalData?.fullName.message}</span>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="cpf">CPF</label>
-                        <input id="cpf" name="cpf" {...register("personalData.cpf")} placeholder="CPF"/>
-                        {errors?.personalData?.cpf && <span>{errors?.personalData?.cpf.message}</span>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="genero">Gênero</label>
-                        <select id="gendero" name="genero" {...register("personalData.gender")}>
-                            <option value="" disabled selected>Selecione um gênero</option>
-                            <option value="Feminino" selected>Feminino</option>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Não-binário">Não-binário</option>
-                            <option value="Prefiro não dizer">Prefiro não dizer</option>
-                        </select>
-                        {errors?.personalData?.gender && <span>{errors?.personalData?.gender.message}</span>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="dataNascimento">Data de Nascimento</label>
-                        <input type="date" id="dataNascimento"
-                               name="dataNascimento" {...register("personalData.birthDate")}
-                               max={minDate18YearsOld()}/>
-                        {errors?.personalData?.birthDate && <span>{errors?.personalData?.birthDate.message}</span>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="celular">Celular</label>
-                        <input id="celular" name="celular" {...register("personalData.phone")}
-                               placeholder="Celular"/>
-                        {errors?.personalData?.phone && <span>{errors?.personalData?.phone.message}</span>}
-                    </div>
-
-                    <h2 className="row-title full-row">Endereço</h2>
-
-                    <div>
-                        <label htmlFor="cep">CEP</label>
-                        <input id="cep" name="cep" {...register("address.zipCode")} placeholder="CEP"/>
-                        {errors?.address?.zipCode && <span>{errors?.address?.zipCode.message}</span>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="logradouro">Logradouro</label>
-                        <input id="logradouro" name="logradouro" {...register("address.street")}
-                               placeholder="Logradouro"/>
-                        {errors?.address?.street && <span>{errors?.address?.street.message}</span>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="complemento">Complemento</label>
-                        <input id="complemento" name="complemento" {...register("address.complement")}
-                               placeholder="Complemento"/>
-                    </div>
-
-                    <div>
-                        <label htmlFor="bairro">Bairro</label>
-                        <input id="bairro" name="bairro" {...register("address.district")} placeholder="Bairro"/>
-                        {errors?.address?.district && <span>{errors?.address?.district.message}</span>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="cidade">Cidade</label>
-                        <select {...register("address.city")}>
-                            <option value="" disabled selected>Selecione uma cidade</option>
-                            {cities.map((city) => (
-                                <option key={city.id} value={city.nome}>
-                                    {city.nome}
-                                </option>
-                            ))}
-                        </select>
-                        {errors?.address?.city && <span>{errors?.address?.city.message}</span>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="estado">Estado</label>
-                        <select{...register("address.state")}>
-                            <option value="" disabled selected>Selecione um Estado</option>
-                            {ufs.map((uf) => (
-                                <option key={uf.id} value={uf.sigla}>
-                                    {uf.nome}
-                                </option>
-                            ))}
-                        </select>
-                        {errors?.address?.state && <span>{errors?.address?.state.message}</span>}
-                    </div>
-
-                    <div className="full-row buttons-container">
-                        <Button text="Cancelar" onClick={handleClear} disabled={false}/>
-                        <Button text="Cadastrar" onClick={handleSubmit(handleFormSubmit)} disabled={false}
-                                lightMode={false}/>
-                    </div>
+                    {currentStep === 3 && (
+                        <AddressStep register={register} errors={errors}/>
+                    )}
                 </form>
 
+                <div className="col-span-full flex justify-between mt-8">
+                    {currentStep > 1 && (
+                        <button
+                            className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={prevStep}
+                            disabled={loading}
+                        >
+                            Voltar
+                        </button>
+                    )}
+
+                    {currentStep < 3 ? (
+                        <button
+                            type="button"
+                            className="bg-cyan-950 hover:bg-cyan-900 px-6 py-2 text-white rounded-md disabled:opacity-50"
+                            onClick={nextStep}
+                            disabled={!canProceed(currentStep)}
+                        >
+                            Próximo
+                        </button>
+                    ) : (
+                        <button
+                            type="submit"
+                            className="bg-cyan-950 hover:bg-cyan-900 px-6 py-2 text-white rounded-md disabled:opacity-50"
+                            disabled={!canProceed(3) || loading}
+                            onClick={handleSubmit(handleFormSubmit)}
+                        >
+                            Cadastrar
+                        </button>
+                    )}
+                </div>
             </div>
-            <ToastContainer/>
         </Layout>
     );
-}
+};
 
-export default CreateAccount;
+export default CreateAccountForm;

@@ -6,7 +6,7 @@ const PersonalStep = ({ register, errors, minDate }) => {
     return (
         <>
             <InputField
-                id="personalData.fullName"
+                id="fullName"
                 label="Nome Completo"
                 register={register}
                 errors={errors}
@@ -15,7 +15,7 @@ const PersonalStep = ({ register, errors, minDate }) => {
             />
 
             <InputField
-                id="personalData.cpf"
+                id="cpf"
                 label="CPF"
                 register={register}
                 errors={errors}
@@ -23,7 +23,7 @@ const PersonalStep = ({ register, errors, minDate }) => {
             />
 
             <SelectField
-                id="personalData.gender"
+                id="gender"
                 label="Gênero"
                 register={register}
                 errors={errors}
@@ -35,7 +35,7 @@ const PersonalStep = ({ register, errors, minDate }) => {
             />
 
             <DateField
-                id="personalData.birthDate"
+                id="birthDate"
                 label="Data de Nascimento"
                 register={register}
                 errors={errors}
@@ -43,7 +43,7 @@ const PersonalStep = ({ register, errors, minDate }) => {
             />
 
             <InputField
-                id="personalData.phone"
+                id="phone"
                 label="Celular"
                 register={register}
                 errors={errors}

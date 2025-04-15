@@ -7,20 +7,13 @@ export const cachorroFindAll = async () => {
     return await axios.get(`${apiUrl}/api/cachorro/findall`);
 }
 
-export const createCachorro = async (cachorroData, token) => {
-    try {
-        const url = `${apiUrl}/api/cachorro/create`;
-        const response = await axios.post(url, cachorroData, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Error post:", error?.response?.data || error.message);
-        return null;
-    }
+export const createCachorro = (cachorroData, token) => {
+    return axios.post(`${apiUrl}/api/cachorro/create`, cachorroData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            'Authorization': `Bearer ${token}`
+        }
+    });
 };
 
 
@@ -59,26 +52,7 @@ export const findByQuestionarioEmail = async (email, token) => {
     }
 }
 
-
-export const uploadImagePet = async (formData, token) => {
-    try {
-        const url = `${apiUrl}/api/cachorro/upload-image`
-        const response = await axios.post(url, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        return response.data; // Retorna a resposta para ser tratada no front-end
-    }
-    catch (error) {
-        console.error("Error: ", error?.response?.data || error.message);
-        return null;
-    }
-}
-
 export const findByIdCachorro = async (id) => {
-
     const url = `${apiUrl}/api/cachorro/${id}`
     const response = await axios({
         url,
@@ -90,64 +64,21 @@ export const findByIdCachorro = async (id) => {
     return response.data;
 }
 
-
-export const downloadImage = async (filePath) => {
-    try {
-        const url = `${apiUrl}/api/cachorro/download-image?fileName=${encodeURIComponent(filePath)}`;
-        const response = await axios({
-            url,
-            method: 'GET',
-            responseType: 'blob',
-        })
-
-        const blob = new Blob([response.data], { type: response.headers['content-type'] });
-        return URL.createObjectURL(blob);
-
-    } catch (error) {
-        console.error("Error: ", error?.response?.data || error.message);
-        return null;
-    }
-}
-
-
-export const adotarPet = async (data, token) => {
-
-    console.log(token)
-
-    console.log(data)
-
-    const url = `${apiUrl}/api/adocao`;
-    const response = await axios.post(url, data, {
+export const adotarPet = (data, token) => {
+    return axios.post(`${apiUrl}/api/adocao`, data, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         }
     });
-
-    return response.data
-
 }
 
-export const findAllAdocoes = async (token) => {
-    console.log("Iniciando requisição...");
-    console.log("Token recebido:", token); // Verifique se o token aparece corretamente no console
-
-    const url = `${apiUrl}/api/adocao`;
-    console.log("URL da API:", url);
-
-    try {
-        const response = await axios.get(url, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        console.log("Resposta da API:", response.data);
-        return response.data;
-    } catch (error) {
-        console.error("Erro ao buscar adoções:", error);
-        throw error;
-    }
+export const findAllAdocoes = (token) => {
+    return axios.get(`${apiUrl}/api/adocao`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
 };
 

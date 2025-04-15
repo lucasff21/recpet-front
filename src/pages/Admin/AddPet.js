@@ -1,212 +1,221 @@
-import { useContext, useState } from "react";
-import { createCachorro, uploadImagePet } from "../../services/ApiAdocao";
-import { ToastContainer, toast } from 'react-toastify';
+import {useContext, useRef, useState} from "react";
+import { createCachorro } from "../../services/ApiAdocao";
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from "../../contexts/AuthContext";
-
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import InputField from "../../components/FormFields/InputField";
+import SelectField from "../../components/FormFields/SelectField";
+import { Button } from "../../components/Button";
+import { petSchema } from "../../zod/petForms";
 
 const AddPet = () => {
-    const [nome, setNome] = useState("");
-    const [idade, setIdade] = useState("");
-    const [sexo, setSexo] = useState("");
-    const [porte, setPorte] = useState("");
-    const [pelagem, setPelagem] = useState("");
-    const [idealCasa, setIdealCasa] = useState(false);
-    const [gostaCrianca, setGostaCrianca] = useState(false);
-    const [caoGuarda, setCaoGuarda] = useState(false);
-    const [brincalhao, setBrincalhao] = useState(false);
-    const [necessidadeCorrer, setNecessidadeCorrer] = useState(false);
-    const [quedaPelo, setQuedaPelo] = useState(false);
-    const [tendeLatir, setTendeLatir] = useState(false);
-    const { authToken } = useContext(AuthContext)
-    const [imagePath, setImagePath] = useState("");
+    const { authToken } = useContext(AuthContext);
     const [imagePreSave, setImagePreSave] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const formRef = useRef();
 
-
-    const cadastrarPet = async (e) => {
-        e.preventDefault();
-
-        if (!nome || !idade || !sexo || !porte || !pelagem) {
-            toast.warning('Por favor, preencha todos os campos obrigatórios.');
-            return;
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isValid },
+        reset,
+        trigger
+    } = useForm({
+        mode: "all",
+        resolver: zodResolver(petSchema),
+        defaultValues: {
+            idealCasa: false,
+            gostaCrianca: false,
+            caoGuarda: false,
+            brincalhao: false,
+            necessidadeCorrer: false,
+            quedaPelo: false,
+            tendeLatir: false,
+            nome: "",
+            idade: "",
+            sexo: "MACHO",
+            porte: "PEQUENO",
+            pelagem: "CURTA",
         }
-    
-        try {
-            // Primeiro, envia a imagem
-            const resultImage = imagePreSave ? await uploadImagePet(imagePreSave, authToken) : null;
-    
-            const petData = {
-                nome,
-                idade,
-                sexo,
-                porte,
-                pelagem,
-                idealCasa,
-                gostaCrianca,
-                caoGuarda,
-                brincalhao,
-                necessidadeCorrer,
-                quedaPelo,
-                tendeLatir,
-                imagePath: resultImage ? resultImage : "" 
-            };
+    });
 
-            const result = await createCachorro(petData, authToken);
-            if (result) {
-                toast.success('Pet cadastrado com sucesso!');
-                resetFields();
-            } else {
-                toast.error('Erro ao cadastrar pet.');
-            }
-        } catch (error) {
-            toast.error("Erro ao salvar a imagem ou cadastrar o pet.");
-        }
-    };
-    
-    const resetFields = () => {
-        setNome("");
-        setIdade("");
-        setSexo("");
-        setPorte("");
-        setPelagem("");
-        setIdealCasa(false);
-        setGostaCrianca(false);
-        setCaoGuarda(false);
-        setBrincalhao(false);
-        setNecessidadeCorrer(false);
-        setQuedaPelo(false);
-        setTendeLatir(false);
-        setImagePath("");
-    };
-    
-    const uploadImage = async (e) => {
-        const file = e.target.files[0];
-        if (!file) {
-            toast.error("Nenhum arquivo selecionado.");
-            return;
-        }
-    
+    const cadastrarPet = (data) => {
+        setLoading(true);
+
         const formData = new FormData();
-        formData.append("file", file);
-    
-        // Atualiza o estado
-        setImagePreSave(formData);
+
+        Object.keys(data).forEach(key => {
+            if (key !== 'imagem') {
+                formData.append(key, data[key]);
+            }
+        });
+
+        if (imagePreSave) {
+            formData.append('imagem', imagePreSave);
+        }
+
+        createCachorro(formData, authToken)
+            .then((response) => {
+                toast.success('Pet cadastrado com sucesso!');
+                reset();
+                setImagePreSave(null);
+            })
+            .catch((error) => {
+                toast.error('Erro ao cadastrar pet.');
+                console.error(error);
+            }).finally(() => {
+                setLoading(false);
+            })
     };
 
-    const handleCheckboxChange = (setter) => (e) => {
-        setter(e.target.checked);
-    }
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+
+        if (file) {
+            setImagePreSave(file);
+        }
+    };
+
+    const handleClear = () => {
+        reset();
+        setImagePreSave(null);
+    };
 
     return (
-        <div>
-            <ToastContainer />
-            <div className="add_pet_area bg-white p-4 rounded">
-                <form onSubmit={ cadastrarPet}>
-                    <div>
-                        <h1 className="title_add_pet"> Adicionar Pet</h1>
-                        <div className="area_inputs mt-5">
-                            <input type="text" className="form-control" placeholder="Nome" value={nome}
-                                   onChange={(e) => setNome(e.target.value)}/>
-                            <input type="text" className="form-control" placeholder="Idade" value={idade}
-                                   onChange={(e) => setIdade(e.target.value)}/>
-                            <select
-                                id="sexo"
-                                className="form-control"
-                                value={sexo}
-                                onChange={(e) => setSexo(e.target.value)}
-                            >
-                                <option value="" disabled>- Selecione o Sexo: -</option>
-                                <option value="macho">Macho</option>
-                                <option value="femea">Fêmea</option>
-                            </select>
+        <div className="add_pet_area bg-white p-4 rounded">
+            <form ref={formRef} onSubmit={handleSubmit(cadastrarPet)}>
+                <h1 className="text-3xl font-extrabold text-gray-900">Adicionar PET</h1>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <InputField
+                        id="nome"
+                        type="text"
+                        name="nome"
+                        register={register}
+                        errors={errors}
+                        placeholder="Nome"
+                        label="Nome"
+                    />
+                    <InputField
+                        id="idade"
+                        type="text"
+                        name="idade"
+                        register={register}
+                        errors={errors}
+                        placeholder="Idade"
+                        label="Idade"
+                    />
+                    <SelectField
+                        id="sexo"
+                        register={register}
+                        errors={errors}
+                        label="Sexo"
+                        options={[
+                            {value: "MACHO", label: "Macho"},
+                            {value: "FEMEA", label: "Fêmea"}
+                        ]}
+                    />
 
-                            <input type="text" className="form-control" placeholder="Porte" value={porte}
-                                   onChange={(e) => setPorte(e.target.value)}/>
+                    <SelectField
+                        id="porte"
+                        register={register}
+                        errors={errors}
+                        label="Porte"
+                        options={[
+                            {value: "PEQUENO", label: "Pequeno"},
+                            {value: "MEDIO", label: "Médio"},
+                            {value: "GRANDE", label: "Grande"},
+                            {value: "GIGANTE", label: "Gigante"}
+                        ]}
+                    />
+                    <SelectField
+                        id="pelagem"
+                        register={register}
+                        errors={errors}
+                        label="Pelagem"
+                        options={[
+                            {value: "CURTA", label: "Curta"},
+                            {value: "MEDIA", label: "Média"},
+                            {value: "LONGA", label: "Longa"},
+                            {value: "ENCARACOLADA", label: "Encaracolada"},
+                            {value: "DURA", label: "Dura"},
+                            {value: "SEDOSA", label: "Sedosa"},
+                            {value: "LANOSA", label: "Lanosa"}
+                        ]}
+                    />
+                </div>
 
-                            <select
-                                id="pelagem"
-                                className="form-control myRed"
-                                value={pelagem}
-                                onChange={(e) => setPelagem(e.target.value)}
-                            >
-                                <option value="" disabled>- Selecione o tipo de pelagem: -</option>
-                                <option value="curta">Curta</option>
-                                <option value="media">Média</option>
-                                <option value="longa">Longa</option>
-                                <option value="encaracolada">Encaracolada</option>
-                                <option value="dura">Dura</option>
-                                <option value="sedosa">Sedosa</option>
-                                <option value="lanosa">Lanosa</option>
-                            </select>
-                        </div>
-
-                        <div style={{textAlign: "left"}} className="mt-3">
-                            <ul style={{listStyle: "none"}}>
-                                <li>
-                                    <input className="form-check-input" type="checkbox" checked={idealCasa}
-                                           onChange={(e) => setIdealCasa(e.target.checked)}/>
-                                    <label className="form-check-label" htmlFor="gridCheck1">
-                                        Ideal para casa?
-                                    </label>
-                                </li>
-                                <li>
-                                    <input className="form-check-input" type="checkbox" checked={gostaCrianca}
-                                           onChange={handleCheckboxChange(setGostaCrianca)}/>
-                                    <label className="form-check-label" htmlFor="gridCheck1">
-                                        Gosta de crianças?
-                                    </label>
-                                </li>
-                                <li>
-                                    <input className="form-check-input" type="checkbox" checked={caoGuarda}
-                                           onChange={handleCheckboxChange(setCaoGuarda)}/>
-                                    <label className="form-check-label" htmlFor="gridCheck1">
-                                        Cão de guarda?
-                                    </label>
-                                </li>
-                                <li>
-                                    <input className="form-check-input" type="checkbox" checked={brincalhao}
-                                           onChange={handleCheckboxChange(setBrincalhao)}/>
-                                    <label className="form-check-label" htmlFor="gridCheck1">
-                                        Gosta de brincar?
-                                    </label>
-                                </li>
-                                <li>
-                                    <input className="form-check-input" type="checkbox" checked={necessidadeCorrer}
-                                           onChange={handleCheckboxChange(setNecessidadeCorrer)}/>
-                                    <label className="form-check-label" htmlFor="gridCheck1">
-                                        Necessita de correr?
-                                    </label>
-                                </li>
-                                <li>
-                                    <input className="form-check-input" type="checkbox" checked={quedaPelo}
-                                           onChange={handleCheckboxChange(setQuedaPelo)}/>
-                                    <label className="form-check-label" htmlFor="gridCheck1">
-                                        Queda de pelo?
-                                    </label>
-                                </li>
-                                <li>
-                                    <input className="form-check-input" type="checkbox" checked={tendeLatir}
-                                           onChange={handleCheckboxChange(setTendeLatir)}/>
-                                    <label className="form-check-label" htmlFor="gridCheck1">
-                                        Tende a latir?
-                                    </label>
-                                </li>
-                                <br/>
-                                <li>
-                                    <div>
-                                        <h2>Imagem do Pet:</h2>
-                                        <input type="file" onChange={(e) => uploadImage(e)}/>
-                                        <img style={{width: 300}} src={imagePath}/>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                <div className="mt-4">
+                    <label className="mb-3 font-semibold">Selecione as características do PET</label>
+                    <div className="grid grid-cols-2 gap-3">
+                        {[
+                            {id: "idealCasa", label: "Ideal para apartamento/casa pequena"},
+                            {id: "gostaCrianca", label: "Se dá bem com crianças"},
+                            {id: "caoGuarda", label: "Tem instinto de guarda/proteção"},
+                            {id: "brincalhao", label: "Brincalhão e energético"},
+                            {id: "necessidadeCorrer", label: "Precisa de exercícios frequentes"},
+                            {id: "quedaPelo", label: "Solta muito pelo"},
+                            {id: "tendeLatir", label: "Late com frequência"}
+                        ].map((item) => (
+                            <div key={item.id} className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    id={item.id}
+                                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                    {...register(item.id)}
+                                />
+                                <label htmlFor={item.id} className="ml-2 block text-sm text-gray-900">
+                                    {item.label}
+                                </label>
+                            </div>
+                        ))}
                     </div>
-                    <div className="area_btn_add mt-3">
-                        <button className="btn btn-success">CADASTRAR</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+
+                <div className="mt-4">
+                    <label className="mb-2 font-semibold">Imagem do Pet</label>
+                    <input
+                        type="file"
+                        id="imagem"
+                        accept="image/png, image/jpeg"
+                        className="block w-full text-sm text-gray-500
+                                  file:mr-4 file:py-2 file:px-4
+                                  file:rounded-md file:border-0
+                                  file:text-sm file:font-semibold
+                                  file:bg-indigo-50 file:text-indigo-700
+                                  hover:file:bg-indigo-100"
+                        onChange={handleImageChange}
+                    />
+                    {errors.imagem && (
+                        <span className="text-red-500 text-sm">{errors.imagem}</span>
+                    )}
+
+                    {imagePreSave && (
+                        <img
+                            className="mt-2 rounded-md"
+                            style={{width: 300}}
+                            src={URL.createObjectURL(imagePreSave)}
+                            alt="Pré-visualização do pet"
+                        />
+                    )}
+                </div>
+
+                <div className="flex justify-end gap-3 mt-6">
+                    <Button
+                        text="Cancelar"
+                        onClick={handleClear}
+                        disabled={loading}
+                        type="button"
+                    />
+                    <Button
+                        text={loading ? "Cadastrando..." : "Cadastrar"}
+                        disabled={loading || !isValid}
+                        type="submit"
+                        confirm={true}
+                    />
+                </div>
+            </form>
         </div>
     );
 };

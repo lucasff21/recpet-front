@@ -6,10 +6,14 @@ import { loginUser } from "../../services/ApiUser";
 import { AuthContext } from "../../contexts/AuthContext";
 import { findByQuestionarioEmail } from "../../services/ApiAdocao";
 import { showToast } from "../../utils/toast";
+import InputField from "../../components/FormFields/InputField";
 
 const Login = () => {
     const [email, setEmail] = useState('');
+    const [erroEmail, setErroEmail] = useState("");
+    const [erroPassword, setErroPassword] = useState("");
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const userCreated = location.state?.userCreated;
@@ -19,14 +23,25 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault()
 
-        if (email && password) {
+        if (email.length > 10 && password.length) {
+            setLoading(true);
             loginUser(email, password)
                 .then((response) => {
                     login(response.data);
                 })
                 .catch(() =>  showToast("Erro ao realizar login",  'error'))
+                .finally(() => {
+                    setLoading(false);
+                });
         } else {
             showToast("Email ou senha não preenchidos",  'error')
+            if (!email.length) {
+                setErroEmail('Campo obrigatório');
+            }
+
+            if (!password.length) {
+                setErroPassword('Campo obrigatório');
+            }
         }
     };
 
@@ -71,42 +86,32 @@ const Login = () => {
                     </div>
                     <form className="mt-8 space-y-6" onSubmit={handleLogin}>
                         <div className="space-y-4">
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                                    E-mail
-                                </label>
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                                    placeholder="Seu e-mail"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                                    Senha
-                                </label>
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    autoComplete="current-password"
-                                    className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                                    placeholder="Sua senha"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </div>
+                            <InputField
+                                type="email"
+                                autoComplete="email"
+                                label="E-mail"
+                                placeholder="Seu e-mail"
+                                value={email}
+                                errors={erroEmail}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <InputField
+                                name="password"
+                                type="password"
+                                autoComplete="current-password"
+                                placeholder="Sua senha"
+                                label="Senha"
+                                value={password}
+                                errors={erroPassword}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
                         </div>
 
                         <div>
                             <button
                                 type="submit"
                                 className="bg-cyan-950 hover:bg-cyan-900 border-transparent px-4 py-2 rounded-md text-sm text-white transition-colors w-full"
+                                disabled={loading}
                             >
                                 Entrar
                             </button>
@@ -115,15 +120,21 @@ const Login = () => {
 
                     <div className="flex items-center justify-center mt-3">
                         <div className="text-sm">
-                            <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                            <Link to="#"
+                                  className="font-medium text-blue-600 hover:text-blue-500"
+                                  disabled={loading}
+                            >
                                 Esqueceu a senha?
-                            </a>
+                            </Link>
                         </div>
                     </div>
 
                     <div className="text-center text-sm mt-3">
                         <span className="text-gray-600">Não tem uma conta? </span>
-                        <Link to="/criar-conta" className="font-medium text-blue-600 hover:text-blue-500">
+                        <Link to="/criar-conta"
+                              className="font-medium text-blue-600 hover:text-blue-500"
+                                disabled={!loading}
+                        >
                             Registre-se
                         </Link>
                     </div>

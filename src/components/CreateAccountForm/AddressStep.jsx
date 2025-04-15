@@ -1,43 +1,36 @@
 import InputField from "../FormFields/InputField";
-import SelectField from "../FormFields/SelectField";
 
 const AddressStep = ({ register, errors, ufs, cities }) => {
     return (
         <>
             <InputField
-                id="address.zipCode"
+                id="zipCode"
                 label="CEP"
                 register={register}
                 errors={errors}
                 placeholder="CEP"
             />
 
-            <SelectField
-                id="address.state"
+            <InputField
+                id="state"
                 label="Estado"
                 register={register}
                 errors={errors}
-                options={ufs.map(uf => ({
-                    value: uf.sigla,
-                    label: uf.nome
-                }))}
-                placeholder="Selecione um Estado"
-            />
-
-            <SelectField
-                id="address.city"
-                label="Cidade"
-                register={register}
-                errors={errors}
-                options={cities.map(city => ({
-                    value: city.nome,
-                    label: city.nome
-                }))}
-                placeholder="Selecione uma cidade"
+                placeholder="Estado"
+                disabled
             />
 
             <InputField
-                id="address.street"
+                id="city"
+                label="Cidade"
+                register={register}
+                errors={errors}
+                placeholder="Cidade"
+                disabled
+            />
+
+            <InputField
+                id="street"
                 label="Logradouro"
                 register={register}
                 errors={errors}
@@ -45,7 +38,7 @@ const AddressStep = ({ register, errors, ufs, cities }) => {
             />
 
             <InputField
-                id="address.district"
+                id="district"
                 label="Bairro"
                 register={register}
                 errors={errors}
@@ -53,7 +46,7 @@ const AddressStep = ({ register, errors, ufs, cities }) => {
             />
 
             <InputField
-                id="address.complement"
+                id="complement"
                 label="Complemento"
                 register={register}
                 errors={errors}
