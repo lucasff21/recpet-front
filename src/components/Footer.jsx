@@ -29,8 +29,7 @@ const Footer = () => {
 
     return (
     <footer className="bg-cyan-900 text-white py-3 px-4 md:px-16">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between md:items-start space-y-6 md:space-y-0 md:gap-16">
-            <img src={logo} alt="Logo" className="w-12 h-12 mb-4 md:mb-0"/>
+        <div className="max-w-7xl mx-auto flex flex-wrap align-items-baseline md:flex-row justify-between md:items-start space-y-6 md:space-y-0 md:gap-16 md:max-w-[900px]">
             {sections.map((section, index) => (
                 <FooterSection
                     key={index}
