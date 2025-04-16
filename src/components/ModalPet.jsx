@@ -12,6 +12,16 @@ const ModalPet = ({show, onHide, pet: selectedPet, onAdopt, authToken}) => {
         { key: 'tendeLatir', label: 'Gosta de latir', color: 'red' }
     ];
 
+    const colorClasses = {
+        blue: 'bg-blue-100 text-blue-800',
+        green: 'bg-green-100 text-green-800',
+        yellow: 'bg-yellow-100 text-yellow-800',
+        purple: 'bg-purple-100 text-purple-800',
+        indigo: 'bg-indigo-100 text-indigo-800',
+        amber: 'bg-amber-100 text-amber-800',
+        red: 'bg-red-100 text-red-800'
+    };
+
     return (
         <Modal show={show} onHide={onHide} centered size="lg" className="max-w-full">
             <Modal.Header closeButton className="border-b p-4 bg-gray-50">
@@ -95,7 +105,7 @@ const ModalPet = ({show, onHide, pet: selectedPet, onAdopt, authToken}) => {
                                         selectedPet[trait.key] === true && (
                                             <span
                                                 key={trait.key}
-                                                className={`bg-${trait.color}-100 text-${trait.color}-800 px-2 py-1 rounded-full text-xs md:text-sm`}
+                                                className={`${colorClasses[trait.color]} px-2 py-1 rounded-full text-xs md:text-sm`}
                                             >
                                                 {trait.label}
                                             </span>
