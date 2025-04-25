@@ -113,7 +113,7 @@ const Login = () => {
                                 className="bg-cyan-950 hover:bg-cyan-900 border-transparent px-4 py-2 rounded-md text-sm text-white transition-colors w-full"
                                 disabled={loading}
                             >
-                                Entrar
+                                {loading ? 'Carregando' : 'Entrar'}
                             </button>
                         </div>
                     </form>
