@@ -34,16 +34,16 @@ const FeaturedPetCard = ({ pet, openModalPet }) => {
                     {pet.porte && (
                         <span
                             className="bg-white/90 text-gray-800 text-xs font-medium px-2 py-1 rounded-full backdrop-blur-sm">
-            {pet.porte}
-          </span>
+                            {pet.porte}
+                        </span>
                     )}
                     {pet.sexo && (
                         <span
                             className={`bg-white/90 text-gray-800 text-xs font-medium px-2 py-1 rounded-full backdrop-blur-sm ${
                                 pet.sexo.toLowerCase() === 'macho' ? 'text-blue-600' : 'text-pink-600'
                             }`}>
-            {pet.sexo}
-          </span>
+                            {pet.sexo}
+                        </span>
                     )}
                     {pet.brincalhao && (
                         <span
