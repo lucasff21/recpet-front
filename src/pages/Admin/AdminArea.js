@@ -1,43 +1,53 @@
-import {Link, Route, Routes, useNavigate} from "react-router-dom";
-import "../../styles/AdminPages.css";
-import AddPet from "./AddPet";
-import UserManagement from "./UserManagement";
-import {ToastContainer} from "react-toastify";
-import {useContext} from "react";
-import {AuthContext} from "../../contexts/AuthContext";
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import '../../styles/AdminPages.css';
+import AddPet from './AddPet';
+import UserManagement from './UserManagement';
+import { ToastContainer } from 'react-toastify';
+import { useContext, useState } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
+import AdocaoArea from './AdocaoArea';
+import Sidebar from '../../components/Sidebar';
 
 const AdminArea = () => {
-    useNavigate();
-    const { logout } = useContext(AuthContext);
+  useNavigate();
+  const { logout } = useContext(AuthContext);
+  const [expanded, setExpanded] = useState(true);
 
-    return (
-        <div style={{ display: 'flex' }}>
-            <ToastContainer />
-            <div className="barra-lateral bg-cyan-700">
-                <div className="list-group">
-                    <Link to="/" className="list-group-item list-group-item-action">Página inicial</Link>
-                    <Link to="pet/adicionar" className="list-group-item list-group-item-action">Adicionar Pet</Link>
-                    <Link to="usuarios/lista" className="list-group-item list-group-item-action">Gerenciar Usuários</Link>
-                    <Link to="adoptions" className="list-group-item list-group-item-action">Gerenciar Adoções</Link>
-                    <span className="list-group-item list-group-item-action disabled" aria-disabled="true">Export Data</span>
-                </div>
-                <button type="button" className="btn btn-danger" onClick={ logout }>Sair</button>
-            </div>
+  const menuItems = [
+    { text: 'Página inicial', to: '/' },
+    { text: 'Usuários', to: 'usuarios/lista' },
+    { text: 'Pets', to: 'pet/adicionar' },
+    { text: 'Solicitações', to: 'adocoes' },
+  ];
 
-            <div className="content">
-                <div>
-                    <Routes>
-                        <Route path="/*" element={
-                            <Routes>
-                                <Route path="pet/adicionar" element={<AddPet />} />
-                                <Route path="usuarios/*" element={<UserManagement />} />
-                            </Routes>
-                        } />
-                    </Routes>
-                </div>
-            </div>
-        </div>
-    );
-}
+  return (
+    <div className="flex h-screen bg-gray-50">
+      <ToastContainer />
+      <Sidebar menuItems={menuItems} title="Painel Admin" expanded={true}>
+        <button
+          onClick={logout}
+          className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition-colors"
+        >
+          Sair
+        </button>
+      </Sidebar>
+
+      <main className="flex-1 p-8 ml-24">
+        <Routes>
+          <Route
+            path="/*"
+            element={
+              <Routes>
+                <Route path="pet/adicionar" element={<AddPet />} />
+                <Route path="usuarios/*" element={<UserManagement />} />
+                <Route path="adocoes" element={<AdocaoArea />} />
+              </Routes>
+            }
+          />
+        </Routes>
+      </main>
+    </div>
+  );
+};
 
 export default AdminArea;

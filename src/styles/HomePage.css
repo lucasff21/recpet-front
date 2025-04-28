@@ -1,22 +1,21 @@
-
 .slick-prev:before {
-    color: rgb(0, 0, 0);
-    font-size: 30px;
-  }
-  
-  .slick-next:before {
-    color: rgb(0, 0, 0);
-    font-size: 30px;
-  }
+  color: rgb(0, 0, 0);
+  font-size: 30px;
+}
 
-  .labelPet{
-    font-weight: bolder;
-  }
+.slick-next:before {
+  color: rgb(0, 0, 0);
+  font-size: 30px;
+}
 
-.titleModalPet{
+.labelPet {
+  font-weight: bolder;
+}
+
+.titleModalPet {
   padding: 10px;
   border-radius: 5px;
   text-align: center;
-  height: 50px ;
-  background-image: linear-gradient(to right, #ECC891 , #A58F6F);
+  height: 50px;
+  background-image: linear-gradient(to right, #ecc891, #a58f6f);
 }

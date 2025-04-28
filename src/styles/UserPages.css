@@ -1,65 +1,62 @@
-#div-principal-customer{
-    text-align: center;
+#div-principal-customer {
+  text-align: center;
 }
 
 .card-login-account {
-    border: 1px solid #ddd; 
-    border-radius: 24px;
-    height: 45vh !important;
-    width: 50vh !important;
-    background-color: #ffffff; 
-    padding: 20px;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1); 
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  height: 45vh !important;
+  width: 50vh !important;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-
-
-.card-login-account{
-    margin-left: 1px;
+.card-login-account {
+  margin-left: 1px;
 }
 
-
-.card-login-account input{
-    margin-top: 15px;
+.card-login-account input {
+  margin-top: 15px;
 }
 
-.card-login-account input::placeholder{
-    font-size: 12px;
-    opacity: 0.5;
-    font-family: Arial, Helvetica, sans-serif
+.card-login-account input::placeholder {
+  font-size: 12px;
+  opacity: 0.5;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-.card-login-account ::placeholder{
-    font-style: italic;
+.card-login-account ::placeholder {
+  font-style: italic;
 }
 
-.img-pet{
-    width: 35%;
+.img-pet {
+  width: 35%;
 }
 
 #questionario-adotante select {
-    width: 50%;
+  width: 50%;
 }
 
 #questionario-adotante {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .text-link {
-    font-size: 16px;
-    color: #333; /* Cor do texto */
+  font-size: 16px;
+  color: #333; /* Cor do texto */
 }
 
 .text-link span {
-    font-weight: bold;
-    text-decoration: underline;
-    cursor: pointer;
-    color: #000; /* Cor do link */
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+  color: #000; /* Cor do link */
 }
 
 .text-link span:hover {
-    color: #007bff; /* Cor ao passar o mouse */
+  color: #007bff; /* Cor ao passar o mouse */
 }

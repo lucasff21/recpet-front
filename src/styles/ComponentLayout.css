@@ -1,12 +1,13 @@
-html, body {
-    height: 100%;
-    margin: 0;
-    font-family: 'Inter', serif !important;
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', serif !important;
 }
 
 main {
-    margin: 0 auto;
-    padding: 20px;
-    max-width: 1200px;
-    flex: 1;
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1200px;
+  flex: 1;
 }
