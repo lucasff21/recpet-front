@@ -1,8 +1,4 @@
 export const URL = {
-  baseUrl: 'http://localhost:8080',
-
-  deploymentUrl: 'https://recadoption.onrender.com',
-
-  base: 'https://recadoption.onrender.com',
-  api: 'https://recadoption.onrender.com/api',
+  base: process.env.REACT_APP_BASE_URL,
+  api: process.env.REACT_APP_API_URL,
 };
