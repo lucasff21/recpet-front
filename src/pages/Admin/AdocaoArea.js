@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { findAllAdocoes } from '../../services/ApiAdocao';
 import { showToast } from '../../utils/toast';
 import Panel from '../../components/Panel';
 import logo from '../../assets/logo-pet.png';
+import { Link } from 'react-router-dom';
 
 const AdocaoArea = () => {
   const [adocoes, setAdocoes] = useState([]);
@@ -121,7 +122,9 @@ const AdocaoArea = () => {
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
-                          {adocao.animal?.nome ?? '-'}
+                          <Link to={`/pets/${adocao.animal.id}`}>
+                            {adocao.animal?.nome ?? '-'}
+                          </Link>
                         </div>
                         <div className="text-sm text-gray-500">
                           {adocao.animal?.idade ?? ''}
