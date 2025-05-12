@@ -1,6 +1,6 @@
-import logo from '../../assets/vira-lata.png';
+import logo from '../../assets/logo-pet.png';
 
-const FeaturedPetCard = ({ pet, openModalPet }) => {
+const FeaturedPetCard = ({ pet, openPagePet }) => {
   const traits = [
     { key: 'brincalhao', label: 'Brincalhão', color: 'blue' },
     { key: 'gostaCrianca', label: 'Bom com crianças', color: 'green' },
@@ -83,7 +83,7 @@ const FeaturedPetCard = ({ pet, openModalPet }) => {
         </div>
 
         <button
-          onClick={() => openModalPet(pet.id)}
+          onClick={() => openPagePet(pet.id)}
           className="w-full bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-lg transition-colors"
         >
           Mais detalhes

@@ -1,29 +1,28 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import '../../styles/AdminPages.css';
-import AddPet from './AddPet';
 import UserManagement from './UserManagement';
 import { ToastContainer } from 'react-toastify';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import AdocaoArea from './AdocaoArea';
 import Sidebar from '../../components/Sidebar';
+import PetManagement from './PetManagement';
 
 const AdminArea = () => {
   useNavigate();
   const { logout } = useContext(AuthContext);
-  const [expanded, setExpanded] = useState(true);
 
   const menuItems = [
     { text: 'Página inicial', to: '/' },
     { text: 'Usuários', to: 'usuarios/lista' },
-    { text: 'Pets', to: 'pet/adicionar' },
+    { text: 'Pets', to: 'pets/lista' },
     { text: 'Solicitações', to: 'adocoes' },
   ];
 
   return (
     <div className="flex h-screen bg-gray-50">
       <ToastContainer />
-      <Sidebar menuItems={menuItems} title="Painel Admin" expanded={true}>
+      <Sidebar menuItems={menuItems} title="Painel Admin" expanded={false}>
         <button
           onClick={logout}
           className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition-colors"
@@ -38,7 +37,7 @@ const AdminArea = () => {
             path="/*"
             element={
               <Routes>
-                <Route path="pet/adicionar" element={<AddPet />} />
+                <Route path="pets/*" element={<PetManagement />} />
                 <Route path="usuarios/*" element={<UserManagement />} />
                 <Route path="adocoes" element={<AdocaoArea />} />
               </Routes>

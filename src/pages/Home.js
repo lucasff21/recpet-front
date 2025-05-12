@@ -1,11 +1,9 @@
 import Layout from '../components/Layout';
-import React, { useContext, useEffect, useState, useCallback } from 'react';
-import { adotarPet, cachorroFindAll } from '../services/ApiAdocao';
-import { AuthContext } from '../contexts/AuthContext';
+import React, { useEffect, useState, useCallback } from 'react';
+import { cachorroFindAll } from '../services/ApiAdocao';
 import { Spinner } from 'react-bootstrap';
 import PetCard from '../components/Cards/PetCard';
 import FeaturedPetCard from '../components/Cards/FeaturedPetCard';
-import ModalPet from '../components/ModalPet';
 import { useNavigate } from 'react-router-dom';
 import { showToast } from '../utils/toast';
 
@@ -13,40 +11,20 @@ const Home = () => {
   const [cachorros, setCachorros] = useState([]);
   const [featuredPets, setFeaturedPets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { authToken } = useContext(AuthContext);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedDog, setSelectedDog] = useState(null);
   const navigate = useNavigate();
 
-  const openModalPet = useCallback(
+  const openPagePet = useCallback(
     (id) => {
       if (featuredPets.length === 0 && cachorros.length === 0) return;
 
       const pet = [...featuredPets, ...cachorros].find((p) => p.id === id);
+
       if (pet) {
-        setSelectedDog(pet);
         navigate(`/pets/${pet.id}`);
       }
     },
-    [featuredPets, cachorros]
+    [featuredPets, cachorros, navigate]
   );
-
-  const interesseAdocao = useCallback(async () => {
-    if (!authToken) {
-      navigate('/login');
-    }
-
-    if (!selectedDog) return;
-
-    try {
-      await adotarPet({ status: 'PENDENTE', animalId: selectedDog.id });
-
-      setShowModal(false);
-      showToast('Interesse registrado! Entraremos em contato.');
-    } catch (error) {
-      showToast('Erro ao processar interesse', 'error');
-    }
-  }, [selectedDog]);
 
   useEffect(() => {
     let ignore = false;
@@ -95,7 +73,7 @@ const Home = () => {
                       <FeaturedPetCard
                         key={pet.id}
                         pet={pet}
-                        openModalPet={openModalPet}
+                        openPagePet={openPagePet}
                       />
                     ))}
                   </div>
@@ -115,7 +93,7 @@ const Home = () => {
             ) : cachorros.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {cachorros.map((pet) => (
-                  <PetCard key={pet.id} pet={pet} openModalPet={openModalPet} />
+                  <PetCard key={pet.id} pet={pet} openPagePet={openPagePet} />
                 ))}
               </div>
             ) : (

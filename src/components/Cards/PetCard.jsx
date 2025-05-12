@@ -1,7 +1,7 @@
-import logo from '../../assets/vira-lata.png';
+import logo from '../../assets/logo-pet.png';
 import React from 'react';
 
-const PetCard = ({ pet, openModalPet }) => {
+const PetCard = ({ pet, openPagePet }) => {
   return (
     <div className="w-64 bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
       <div className="h-48 bg-orange-100 flex items-center justify-center">
@@ -37,8 +37,8 @@ const PetCard = ({ pet, openModalPet }) => {
         </div>
 
         <button
-          className="mt-4 w-full w-full bg-amber-500 hover:bg-amber-600 text-white py-2 px-4 rounded transition-colors"
-          onClick={() => openModalPet(pet.id)}
+          className="mt-4 w-full bg-amber-500 hover:bg-amber-600 text-white py-2 px-4 rounded transition-colors"
+          onClick={() => openPagePet(pet.id)}
         >
           Mais detalhes
         </button>
