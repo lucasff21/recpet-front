@@ -7,7 +7,11 @@ export const cachorroFindAll = async () => {
 };
 
 export const createCachorro = (cachorroData) => {
-  return apiClient.post('/cachorro/create', cachorroData);
+  return apiClient.post('/cachorro/create', cachorroData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
 export const createQuestionario = async (questinarioData, token) => {
@@ -30,7 +34,7 @@ export const findByQuestionarioEmail = async (email, token) => {
   }
 };
 
-export const findByIdCachorro = async (id) => {
+export const findCachorroById = async (id) => {
   return apiClient.get(`/cachorro/${id}`);
 };
 
@@ -40,4 +44,12 @@ export const adotarPet = (data) => {
 
 export const findAllAdocoes = () => {
   return apiClient.get('/adocao');
+};
+
+export const updateCachorro = (id, data) => {
+  return apiClient.put(`/cachorro/${id}`, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };

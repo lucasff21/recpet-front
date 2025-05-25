@@ -1,22 +1,22 @@
-import React from 'react';
-import '../../styles/UserManagement.css';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
-import UserTable from '../../components/UserTable';
-import CreateUserAdmin from './CreateUserAdmin';
-import Panel from '../../components/Panel';
+import Panel from '../../../components/Panel';
+import AddPet from './AddPet';
+import PetsTable from './PetsTable';
+import EditPet from './EditPet';
 
-const UserManagement = () => {
+const PetManagement = () => {
   const location = useLocation();
+  const isCreatePage = /criar/.test(location.pathname);
+  const isSubPage = /criar|editar/.test(location.pathname);
 
-  const isCreatePage = location.pathname === '/admin/usuarios/criar';
   return (
     <Panel>
-      {!isCreatePage && (
+      {!isSubPage && (
         <header className="text-center">
-          <h1 className="text-3xl font-bold text-gray-800">Usuários</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Pets</h1>
         </header>
       )}
-      {isCreatePage && (
+      {isSubPage && (
         <nav aria-label="breadcrumb" className="flex">
           <ol className="inline-flex items-center space-x-1 p-0">
             <li className="inline-flex items-center">
@@ -24,7 +24,7 @@ const UserManagement = () => {
                 to="lista"
                 className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800"
               >
-                Usuários
+                Animais
               </Link>
             </li>
             <li className="inline-flex items-center">
@@ -41,7 +41,7 @@ const UserManagement = () => {
                 />
               </svg>
               <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2">
-                Criar
+                {isCreatePage ? 'Criar' : 'Editar'}
               </span>
             </li>
           </ol>
@@ -53,8 +53,9 @@ const UserManagement = () => {
           path="/*"
           element={
             <Routes>
-              <Route path="/lista" element={<UserTable />} />
-              <Route path="/criar" element={<CreateUserAdmin />} />
+              <Route path="/lista" element={<PetsTable />} />
+              <Route path="/criar" element={<AddPet />} />
+              <Route path="/:id/editar" element={<EditPet />} />
             </Routes>
           }
         />
@@ -63,4 +64,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default PetManagement;

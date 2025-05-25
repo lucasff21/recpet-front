@@ -1,12 +1,12 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import '../../styles/AdminPages.css';
-import UserManagement from './UserManagement';
+import UserManagement from './user/UserManagement';
 import { ToastContainer } from 'react-toastify';
 import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import AdocaoArea from './AdocaoArea';
 import Sidebar from '../../components/Sidebar';
-import PetManagement from './PetManagement';
+import PetManagement from './pet/PetManagement';
 
 const AdminArea = () => {
   useNavigate();
