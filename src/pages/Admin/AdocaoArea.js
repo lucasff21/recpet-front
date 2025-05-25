@@ -164,7 +164,7 @@ const AdocaoArea = () => {
                               : 'bg-gray-100 text-gray-800'
                       }`}
                     >
-                      {adocao.status ?? 'Pendente'}
+                      {adocao.status ?? 'Desconhecido'}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
@@ -172,13 +172,7 @@ const AdocaoArea = () => {
                       className="text-blue-600 hover:text-blue-900 mr-3"
                       onClick={() => handleEdit(adocao.id)}
                     >
-                      Editar
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-900"
-                      onClick={() => handleDelete(adocao.id)}
-                    >
-                      Excluir
+                      Ver mais
                     </button>
                   </td>
                 </tr>
