@@ -1,14 +1,14 @@
 import { useContext, useRef, useState } from 'react';
-import { createCachorro } from '../../services/ApiAdocao';
+import { createCachorro } from '../../../services/ApiAdocao';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from '../../../contexts/AuthContext';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import InputField from '../../components/FormFields/InputField';
-import SelectField from '../../components/FormFields/SelectField';
-import { Button } from '../../components/Button';
-import { petSchema } from '../../zod/petForms';
+import InputField from '../../../components/FormFields/InputField';
+import SelectField from '../../../components/FormFields/SelectField';
+import { Button } from '../../../components/Button';
+import { basePetSchema } from '../../../zod/petForms';
 
 const AddPet = () => {
   const { authToken } = useContext(AuthContext);
@@ -23,7 +23,7 @@ const AddPet = () => {
     reset,
   } = useForm({
     mode: 'all',
-    resolver: zodResolver(petSchema),
+    resolver: zodResolver(basePetSchema),
     defaultValues: {
       idealCasa: false,
       gostaCrianca: false,
@@ -56,14 +56,13 @@ const AddPet = () => {
     }
 
     createCachorro(formData, authToken)
-      .then((response) => {
+      .then(() => {
         toast.success('Pet cadastrado com sucesso!');
         reset();
         setImagePreSave(null);
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error('Erro ao cadastrar pet.');
-        console.error(error);
       })
       .finally(() => {
         setLoading(false);

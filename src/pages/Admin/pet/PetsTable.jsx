@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { cachorroFindAll } from '../../services/ApiAdocao';
-import { showToast } from '../../utils/toast';
-import logo from '../../assets/logo-pet.png';
-import { Link } from 'react-router-dom';
+import { cachorroFindAll } from '../../../services/ApiAdocao';
+import { showToast } from '../../../utils/toast';
+import logo from '../../../assets/logo-pet.png';
+import { Link, useNavigate } from 'react-router-dom';
 
 const PetsTable = () => {
   const [pets, setPets] = useState([]);
+  const navigate = useNavigate();
 
   const getPets = () => {
     cachorroFindAll()
@@ -21,7 +22,9 @@ const PetsTable = () => {
     getPets();
   }, []);
 
-  const handleEdit = (id) => {};
+  const handleEdit = (id) => {
+    navigate(`/admin/pets/${id}/editar`);
+  };
 
   const handleDelete = (id) => {};
 

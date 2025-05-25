@@ -1,17 +1,19 @@
+import React from 'react';
+import '../../../styles/UserManagement.css';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
-import Panel from '../../components/Panel';
-import AddPet from './AddPet';
-import PetsTable from './PetsTable';
+import UserTable from '../../../components/UserTable';
+import CreateUserAdmin from './CreateUserAdmin';
+import Panel from '../../../components/Panel';
 
-const PetManagement = () => {
+const UserManagement = () => {
   const location = useLocation();
 
-  const isCreatePage = location.pathname === '/admin/pets/criar';
+  const isCreatePage = location.pathname === '/admin/usuarios/criar';
   return (
     <Panel>
       {!isCreatePage && (
         <header className="text-center">
-          <h1 className="text-3xl font-bold text-gray-800">Pets</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Usuários</h1>
         </header>
       )}
       {isCreatePage && (
@@ -22,7 +24,7 @@ const PetManagement = () => {
                 to="lista"
                 className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800"
               >
-                Animais
+                Usuários
               </Link>
             </li>
             <li className="inline-flex items-center">
@@ -51,8 +53,8 @@ const PetManagement = () => {
           path="/*"
           element={
             <Routes>
-              <Route path="/lista" element={<PetsTable />} />
-              <Route path="/criar" element={<AddPet />} />
+              <Route path="/lista" element={<UserTable />} />
+              <Route path="/criar" element={<CreateUserAdmin />} />
             </Routes>
           }
         />
@@ -61,4 +63,4 @@ const PetManagement = () => {
   );
 };
 
-export default PetManagement;
+export default UserManagement;
