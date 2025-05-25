@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Spinner } from 'react-bootstrap';
 import logo from '../assets/logo-pet.png';
-import { adotarPet, findByIdCachorro } from '../services/ApiAdocao';
+import { adotarPet, findCachorroById } from '../services/ApiAdocao';
 import { showToast } from '../utils/toast';
 import { AuthContext } from '../contexts/AuthContext';
 import Layout from '../components/Layout';
@@ -19,7 +19,7 @@ const PetProfilePage = () => {
   useEffect(() => {
     const fetchPet = async () => {
       try {
-        const response = await findByIdCachorro(id);
+        const response = await findCachorroById(id);
         setSelectedPet(response.data || null);
       } catch (err) {
         setError('Pet não encontrado');
@@ -43,7 +43,7 @@ const PetProfilePage = () => {
 
     setAdoptionLoading(true);
     try {
-      await adotarPet({ status: 'PENDENTE', animalId: selectedPet.id });
+      await adotarPet({ animalId: selectedPet.id });
       showToast('Interesse registrado! Entraremos em contato.');
     } catch (error) {
       if (error.status === 401) {
@@ -109,8 +109,8 @@ const PetProfilePage = () => {
         </div>
 
         {selectedPet && (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="p-6 bg-gray-50 border-b">
+          <div className="overflow-hidden">
+            <div className="p-6">
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
                 {selectedPet.nome}
               </h1>
@@ -199,7 +199,7 @@ const PetProfilePage = () => {
               </div>
             </div>
 
-            <div className="bg-gray-50 border-t p-6 flex justify-end gap-4">
+            <div className="p-6 flex justify-end gap-4">
               <Button
                 variant="primary"
                 onClick={interesseAdocao}
