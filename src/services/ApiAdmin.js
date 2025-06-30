@@ -48,3 +48,27 @@ export const updateRole = async (id, data) => {
     },
   });
 };
+
+export const getAllAdoptions = (params) => {
+  return axios({
+    url: `${apiUrl}/admin/adocoes`,
+    method: 'GET',
+    params: params,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('Token_RecSys')}`,
+    },
+  });
+};
+
+export const updateAdoptionStatus = async (id, data) => {
+  return axios({
+    url: `${apiUrl}/admin/adocoes/${id}/status`,
+    method: 'PATCH',
+    data: data,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('Token_RecSys')}`,
+    },
+  });
+};
