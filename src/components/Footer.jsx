@@ -1,6 +1,4 @@
 import '../styles/ComponentLayout.css';
-import logo from '../assets/logo-pet.png';
-import { Link } from 'react-router-dom';
 import FooterSection from './FooterSection';
 
 const Footer = () => {
