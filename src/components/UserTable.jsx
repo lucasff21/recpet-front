@@ -104,7 +104,7 @@ const UserTable = () => {
 
   return (
     <div>
-      <div className="p-4 border-b">
+      <div className="py-4 border-b">
         <div className="mt-2 flex justify-between items-center">
           <div className="relative w-64">
             <input

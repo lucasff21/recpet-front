@@ -14,12 +14,12 @@ const PetCard = ({ pet, openPagePet }) => {
 
       <div className="p-4 ">
         <div className="flex justify-between items-start divide-x-2 divide-gray-100">
-          <div>
+          <div className="flex flex-col gap-2 justify-between">
             <p className="text-xl font-bold text-gray-800">{pet.nome}</p>
             <p className="text-sm text-gray-600 m-0">Raça indefinida</p>
           </div>
 
-          <div className="flex-column justify-between items-center pl-2">
+          <div className="flex flex-col gap-2 justify-between items-center pl-2">
             <p>
               <span
                 className={`${pet.sexo.toLowerCase() === 'macho' ? 'bg-sky-100 text-sky-800' : 'bg-pink-50 text-pink-800'}

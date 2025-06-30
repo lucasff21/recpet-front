@@ -3,6 +3,7 @@ import { cachorroFindAll } from '../../../services/ApiAdocao';
 import { showToast } from '../../../utils/toast';
 import logo from '../../../assets/logo-pet.png';
 import { Link, useNavigate } from 'react-router-dom';
+import { calculateAge } from '../../../utils/pet';
 
 const PetsTable = () => {
   const [pets, setPets] = useState([]);
@@ -11,7 +12,13 @@ const PetsTable = () => {
   const getPets = () => {
     cachorroFindAll()
       .then((response) => {
-        setPets(response.data);
+        const pets = response.data.content.map((pet) => ({
+          ...pet,
+          idade: pet.dataNascimentoAproximada
+            ? calculateAge(pet.dataNascimentoAproximada)
+            : 'Desconhecido',
+        }));
+        setPets(pets);
       })
       .catch((error) => {
         showToast('Erro ao carregar pets', 'error');
@@ -30,7 +37,7 @@ const PetsTable = () => {
 
   return (
     <div>
-      <div className="p-4 border-b">
+      <div className="py-4 border-b">
         <div className="mt-2 flex justify-between items-center">
           <div className="relative w-64">
             <input
