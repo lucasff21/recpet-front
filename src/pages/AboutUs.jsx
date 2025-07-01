@@ -3,7 +3,7 @@ import Layout from '../components/Layout';
 const AboutUs = () => {
   return (
     <Layout>
-      <div>
+      <div className="max-w-3xl mx-auto p-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-4 text-center">
           Quem somos
         </h1>
@@ -50,6 +50,7 @@ const AboutUs = () => {
               href="https://wa.me/551199999999"
               className="text-orange-500 hover:text-orange-600"
               target="_blank"
+              rel="noreferrer"
             >
               (11) 99999-9999
             </a>
@@ -60,6 +61,7 @@ const AboutUs = () => {
               href="mailto:contato@empresa.com"
               className="text-orange-500 hover:text-orange-600"
               target="_blank"
+              rel="noreferrer"
             >
               contato@example.com
             </a>

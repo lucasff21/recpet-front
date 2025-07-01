@@ -46,12 +46,12 @@ const PetForm = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <h1 className="text-3xl font-extrabold text-gray-800 text-center">
-        {isEdit ? 'Editar animal' : 'Adicionar animal'}
+      <h1 className="text-3xl font-bold text-gray-800 text-center">
+        {isEdit ? 'Editar ' + defaultValues.nome : 'Adicionar animal'}
       </h1>
 
       <div className="mt-4">
-        <label className="mb-2 font-semibold">Imagem do Pet</label>
+        <label className="mb-2 font-semibold">Imagem do animal</label>
 
         {isEdit && currentImage && !imagePreSave && (
           <div className="mb-4">
@@ -158,10 +158,8 @@ const PetForm = ({
       </div>
 
       <div className="mt-4">
-        <label className="mb-3 font-semibold">
-          Selecione as características do PET
-        </label>
-        <div className="grid grid-cols-2 gap-3">
+        <label className="font-semibold">Características do animal</label>
+        <div className="grid grid-cols-2 gap-3 mt-3">
           {[
             { id: 'idealCasa', label: 'Ideal para apartamento/casa pequena' },
             { id: 'gostaCrianca', label: 'Se dá bem com crianças' },

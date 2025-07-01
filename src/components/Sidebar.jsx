@@ -1,83 +1,52 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Icon from './Icon';
 
 const Sidebar = ({
-  menuItems = [],
-  title = 'Dashboard',
-  children,
-  expanded: initialExpanded = true,
+  title,
+  navigationItems,
+  isSidebarOpen,
+  setIsSidebarOpen,
+  activeView,
+  handleItemClick,
 }) => {
-  const [expanded, setExpanded] = useState(initialExpanded);
-
-  const toggleSidebar = () => setExpanded(!expanded);
+  const getNavItemClass = (viewName) => {
+    return `flex items-center px-2 py-2 rounded-md text-sm font-medium w-full ${
+      activeView === viewName
+        ? 'bg-blue-600 text-white shadow-md'
+        : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+    } transition duration-150 ease-in-out`;
+  };
 
   return (
     <aside
-      className={`bg-slate-700 text-white ${expanded ? 'w-96' : 'w-16'} 
-      transition-all duration-300 ease-in-out flex flex-col fixed h-full z-10 
-      rounded-tr-2xl rounded-br-2xl shadow-lg`}
+      className={`fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-md p-6 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0 lg:w-64 lg:flex-shrink-0 transition-transform duration-300 ease-in-out overflow-y-auto`}
     >
-      <div className="p-4 flex justify-between items-center border-b border-gray-400">
-        {expanded ? (
-          <h1 className="font-bold text-lg m-0">{title}</h1>
-        ) : (
-          <div className="w-6"></div>
-        )}
-
+      <div className="flex justify-between items-center mb-8 lg:hidden">
+        <h2 className="text-2xl font-bold text-gray-800">Menu</h2>
         <button
-          onClick={toggleSidebar}
-          className="text-white focus:outline-none hover:bg-blue-700 p-1 rounded"
-          aria-label={expanded ? 'Recolher menu' : 'Expandir menu'}
+          onClick={() => setIsSidebarOpen(false)}
+          className="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
         >
-          {expanded ? (
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path
-                strokeWidth="2"
-                strokeLinecap="round"
-                d="M18 6L6 18M6 6l12 12"
-              />
-            </svg>
-          ) : (
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path
-                strokeWidth="2"
-                strokeLinecap="round"
-                d="M3 12h18M3 6h18M3 18h18"
-              />
-            </svg>
-          )}
+          <Icon name="close" className="h-6 w-6" />
         </button>
       </div>
+      <h2 className="text-2xl font-bold text-gray-800 mb-8 hidden lg:block">
+        {title}
+      </h2>
 
-      <nav className="mt-4 flex-1">
-        {menuItems.map((item, index) => (
-          <Link
+      <nav className="space-y-2">
+        {navigationItems.map((item, index) => (
+          <button
             key={index}
-            to={item.to}
-            className="flex items-center px-4 py-3 hover:bg-slate-600 transition-colors no-underline text-white"
-            onClick={() => setExpanded(false)}
+            onClick={() => handleItemClick(item)}
+            className={getNavItemClass(item.viewName || item.label)}
           >
-            {item.icon && <div className="mr-3">{item.icon}</div>}
-            {expanded && <span>{item.text}</span>}
-          </Link>
+            {item.iconName && (
+              <Icon name={item.iconName} className="h-5 w-5 mr-3" />
+            )}
+            {item.label}
+          </button>
         ))}
       </nav>
-
-      {expanded && children && (
-        <div className="p-4 border-t border-gray-400">{children}</div>
-      )}
     </aside>
   );
 };

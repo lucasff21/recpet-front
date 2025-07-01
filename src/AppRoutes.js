@@ -10,6 +10,7 @@ import CreateAccountForm from './pages/User/CreateAccount';
 import AboutUs from './pages/AboutUs';
 import Blog from './pages/Blog';
 import PetProfilePage from './pages/PetProfilePage';
+import DashboardPage from './pages/User/painel/DashboardPage';
 
 const PrivateRoute = ({ element: Element }) => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -54,6 +55,10 @@ const AppRoutes = () => (
       <Route
         path="/questionario"
         element={<PrivateRoute element={QuestionarioAdotante} />}
+      />
+      <Route
+        path="/painel"
+        element={<PrivateRoute element={DashboardPage} />}
       />
 
       {/* ROTAS PROTEGIDA ADMIN */}

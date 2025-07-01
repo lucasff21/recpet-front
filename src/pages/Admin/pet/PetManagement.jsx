@@ -24,7 +24,7 @@ const PetManagement = () => {
                 to="lista"
                 className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800"
               >
-                Animais
+                Pets
               </Link>
             </li>
             <li className="inline-flex items-center">

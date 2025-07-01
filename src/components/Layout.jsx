@@ -7,7 +7,9 @@ const Layout = ({ children, showNavBar = true, showFooter = true }) => {
     <div className="flex flex-col min-h-screen">
       <ToastContainer />
       {showNavBar && <Header />}
-      <main>{children}</main>
+
+      <main className={`flex-grow align-self-center w-screen`}>{children}</main>
+
       {showFooter && <Footer />}
     </div>
   );

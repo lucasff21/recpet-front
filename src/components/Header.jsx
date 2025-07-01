@@ -3,6 +3,7 @@ import logo from '../assets/logo-pet.png';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import Icon from './Icon';
 
 const Header = () => {
   const { user, logout, isAdmin } = useContext(AuthContext);
@@ -18,10 +19,9 @@ const Header = () => {
 
   const USER_MENU = [
     ...(isAdmin
-      ? [{ path: '/admin/pets/lista', label: 'Dashboard', icon: 'grid' }]
+      ? [{ path: '/admin/pets/lista', label: 'Painel', icon: 'grid' }]
       : []),
-    { path: '#', label: 'Meu Perfil', icon: 'user' },
-    { path: '#', label: 'Configurações', icon: 'settings' },
+    { path: '/painel', label: 'Minha conta', icon: 'user' },
     {
       action: () => {
         logout();
@@ -92,40 +92,14 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-4 py-2 bg-white shadow-md md:relative">
+    <header className="fixed top-0 left-0 right-0 z-1 flex justify-between items-center px-4 py-2 bg-white shadow-md md:relative">
       <img src={logo} alt="Logo" className="w-10 h-10" />
 
       <button className="md:hidden" onClick={toggleMenu}>
         {menuOpen ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M4 4l8 8m0-8l-8 8"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
+          <Icon name="close" className="h-6 w-6" />
         ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M2 4h12M2 8h12M2 12h12"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
+          <Icon name="menu" className="h-6 w-6" />
         )}
       </button>
 

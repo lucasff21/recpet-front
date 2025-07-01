@@ -2,8 +2,8 @@ import apiClient from './api/axios';
 import axios from 'axios';
 import { URL } from '../helpers/apiRoutes';
 
-export const cachorroFindAll = async () => {
-  return await axios.get(`${URL.api}/cachorro/findall`);
+export const cachorroFindAll = async (params = {}) => {
+  return await axios.get(`${URL.api}/cachorro/findall`, { params });
 };
 
 export const createCachorro = (cachorroData) => {
@@ -42,8 +42,8 @@ export const adotarPet = (data) => {
   return apiClient.post('/adocao/create', data);
 };
 
-export const findAllAdocoes = () => {
-  return apiClient.get('/adocao');
+export const findAllAdocoes = (id) => {
+  return apiClient.get(`/adocao/usuario/${id}`);
 };
 
 export const updateCachorro = (id, data) => {

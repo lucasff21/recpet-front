@@ -92,7 +92,7 @@ const Login = () => {
 
   return (
     <Layout>
-      <div className="my-16 md:w-[380px]">
+      <div className="align-content-center flex justify-center my-16">
         <div className="space-y-8 bg-white p-8 rounded-lg shadow-md border border-gray-200">
           <div className="text-center">
             <h2 className="text-3xl font-extrabold text-gray-900">Login</h2>
