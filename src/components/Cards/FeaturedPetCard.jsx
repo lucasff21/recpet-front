@@ -28,7 +28,7 @@ const FeaturedPetCard = ({ pet, openPagePet }) => {
     <div className="relative bg-white rounded-xl shadow-lg overflow-hidden border-2 border-amber-400 hover:shadow-xl transition-all duration-300">
       <div className="relative h-48 md:h-56 overflow-hidden">
         <img
-          src={pet.imagePath || logo}
+          src={pet.imagemPath || logo}
           alt={pet.nome}
           className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
         />

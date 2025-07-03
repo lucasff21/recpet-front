@@ -51,7 +51,7 @@ const AdminArea = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex bg-gray-50 h-screen">
       <ToastContainer />
       <Sidebar
         title="Painel Admin"
@@ -72,7 +72,7 @@ const AdminArea = () => {
         </button>
       )}
 
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-8 font-sans">
         <Routes>
           <Route
             path="/*"

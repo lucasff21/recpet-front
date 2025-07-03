@@ -6,7 +6,13 @@ export const basePetSchema = z.object({
     .min(1, { message: 'Nome não pode ser vazio' })
     .max(100, { message: 'Nome deve ter no máximo 100 caracteres' }),
 
-  idade: z.string().min(1, { message: 'Idade não pode ser vazia' }),
+  tipo: z.enum(['CACHORRO', 'GATO'], {
+    errorMap: () => ({ message: 'Tipo inválido' }),
+  }),
+
+  dataNascimentoAproximada: z
+    .string()
+    .min(1, { message: 'Idade não pode ser vazia' }),
 
   sexo: z.enum(['MACHO', 'FEMEA'], {
     errorMap: () => ({ message: 'Sexo deve ser MACHO ou FEMEA' }),

@@ -50,7 +50,7 @@ const ModalPet = ({ show, onHide, pet: selectedPet, onAdopt, authToken }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
               <div className="hidden md:block h-48 md:h-80 flex items-center justify-center p-4 md:p-6">
                 <img
-                  src={selectedPet.imagePath || logo}
+                  src={selectedPet.imagemPath || logo}
                   alt={selectedPet.nome}
                   className="w-full h-full max-h-80 object-cover border-2 border-amber-400 rounded-lg shadow-md"
                 />

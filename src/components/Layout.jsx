@@ -8,7 +8,11 @@ const Layout = ({ children, showNavBar = true, showFooter = true }) => {
       <ToastContainer />
       {showNavBar && <Header />}
 
-      <main className={`flex-grow align-self-center w-screen`}>{children}</main>
+      <main
+        className={`font-sans flex-grow align-self-center justify-items-center w-screen`}
+      >
+        {children}
+      </main>
 
       {showFooter && <Footer />}
     </div>

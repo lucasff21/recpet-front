@@ -133,7 +133,7 @@ const DashboardPage = () => {
 
   return (
     <Layout className="w-screen">
-      <div className="min-h-screen font-sans flex flex-col">
+      <div className="min-h-screen flex flex-col w-full">
         <div className="flex flex-1">
           <Sidebar
             title="Painel do Usuário"

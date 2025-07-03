@@ -63,7 +63,7 @@ export const getAllAdoptions = (params) => {
 
 export const updateAdoptionStatus = async (id, data) => {
   return axios({
-    url: `${apiUrl}/admin/adocoes/${id}/status`,
+    url: `${apiUrl}/admin/adocoes/${id}`,
     method: 'PATCH',
     data: data,
     headers: {

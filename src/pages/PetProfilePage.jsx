@@ -123,7 +123,7 @@ const PetProfilePage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
               <div className="h-64 md:h-96 lg:h-[500px] flex items-center justify-center p-4 md:p-6 bg-gray-100">
                 <img
-                  src={selectedPet.imagePath || logo}
+                  src={selectedPet.imagemPath || logo}
                   alt={selectedPet.nome}
                   className="w-full h-full max-h-[500px] object-cover border-2 border-amber-400 rounded-lg shadow-md"
                 />
@@ -206,8 +206,9 @@ const PetProfilePage = () => {
               <Button
                 confirm={true}
                 onClick={interesseAdocao}
-                className="px-6 py-2 text-base"
+                className="px-6 py-2 text-base w-64"
                 disabled={adoptionLoading || !selectedPet}
+                size={'medium'}
               >
                 {isAuthenticated ? 'Tenho Interesse' : 'Faça login para adotar'}
               </Button>

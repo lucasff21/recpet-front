@@ -9,6 +9,7 @@ import InputField from '../../../components/FormFields/InputField';
 import SelectField from '../../../components/FormFields/SelectField';
 import { Button } from '../../../components/Button';
 import { basePetSchema } from '../../../zod/petForms';
+import DateField from '../../../components/FormFields/DateField';
 
 const AddPet = () => {
   const { authToken } = useContext(AuthContext);
@@ -32,8 +33,9 @@ const AddPet = () => {
       necessidadeCorrer: false,
       quedaPelo: false,
       tendeLatir: false,
+      tipo: 'CACHORRO',
       nome: '',
-      idade: '',
+      dataNascimentoAproximada: '',
       sexo: 'MACHO',
       porte: 'PEQUENO',
       pelagem: 'CURTA',
@@ -97,14 +99,12 @@ const AddPet = () => {
           placeholder="Nome"
           label="Nome"
         />
-        <InputField
-          id="idade"
-          type="text"
-          name="idade"
+        <DateField
+          id="dataNascimentoAproximada"
+          label="Data de nascimento aproximada"
           register={register}
           errors={errors}
-          placeholder="Idade"
-          label="Idade"
+          max={new Date().toISOString().split('T')[0]}
         />
         <SelectField
           id="sexo"
@@ -116,7 +116,16 @@ const AddPet = () => {
             { value: 'FEMEA', label: 'Fêmea' },
           ]}
         />
-
+        <SelectField
+          id="tipo"
+          register={register}
+          errors={errors}
+          label="Tipo"
+          options={[
+            { value: 'CACHORRO', label: 'Cachorro' },
+            { value: 'GATO', label: 'Gato' },
+          ]}
+        />
         <SelectField
           id="porte"
           register={register}
