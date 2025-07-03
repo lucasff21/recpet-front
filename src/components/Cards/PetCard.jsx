@@ -6,7 +6,7 @@ const PetCard = ({ pet, openPagePet }) => {
     <div className="w-64 bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
       <div className="h-48 bg-orange-100 flex items-center justify-center">
         <img
-          src={pet.imagePath || logo}
+          src={pet.imagemPath || logo}
           alt={pet.nome || 'pet'}
           className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
         />

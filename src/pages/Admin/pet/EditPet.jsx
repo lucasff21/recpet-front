@@ -23,7 +23,7 @@ const EditPet = () => {
         const response = await findCachorroById(id);
         const petData = response.data;
         setDefaultValues({ ...petData });
-        setCurrentImage(petData.imagePath || null);
+        setCurrentImage(petData.imagemPath || null);
       } catch (error) {
         toast.error('Erro ao carregar dados do pet');
         navigate('/admin/pets');

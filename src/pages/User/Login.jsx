@@ -7,6 +7,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { findByQuestionarioEmail } from '../../services/ApiAdocao';
 import { showToast } from '../../utils/toast';
 import InputField from '../../components/FormFields/InputField';
+import { Button } from '../../components/Button';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -78,7 +79,7 @@ const Login = () => {
 
       await handlePostLogin();
     } catch (error) {
-      showToast('Erro ao realizar login', 'error');
+      showToast('E-mail ou senha inválidos', 'error');
     } finally {
       setLoading(false);
     }
@@ -121,13 +122,15 @@ const Login = () => {
             </div>
 
             <div>
-              <button
-                type="submit"
+              <Button
                 className="bg-cyan-950 hover:bg-cyan-900 border-transparent px-4 py-2 rounded-md text-sm text-white transition-colors w-full"
                 disabled={loading}
+                loading={loading}
+                onClick={handleLogin}
+                confirm={true}
               >
                 Entrar
-              </button>
+              </Button>
             </div>
           </form>
 

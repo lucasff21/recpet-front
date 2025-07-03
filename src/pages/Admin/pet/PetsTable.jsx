@@ -121,7 +121,7 @@ const PetsTable = () => {
                   <div className="flex items-center">
                     <img
                       className="h-10 w-10 rounded-full"
-                      src={pet.imagePath || logo}
+                      src={pet.imagemPath || logo}
                       alt={pet.nome || 'Animal'}
                     />
                     <div className="ml-4">

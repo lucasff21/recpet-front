@@ -138,7 +138,7 @@ const Adoptions = () => {
                       <div className="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
                         <img
                           className="h-10 w-10 object-cover"
-                          src={solicitacao.animal.imagePath}
+                          src={solicitacao.animal.imagemPath}
                           alt={solicitacao.animal.nome}
                           onError={(e) =>
                             (e.target.src =

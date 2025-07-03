@@ -9,7 +9,7 @@ const ProgressIndicator = ({ currentStep, goToStep }) => {
     <div className="relative mb-10">
       {/* Desktop version */}
       <div className="hidden md:flex justify-between relative">
-        <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 -translate-y-1/2"></div>
+        <div className="absolute top-16 left-0 right-0 h-0.5 bg-gray-200 -translate-y-1/2"></div>
         <div
           className="absolute top-1/2 left-0 h-0.5 bg-green-600 -translate-y-1/2 transition-all duration-300"
           style={{

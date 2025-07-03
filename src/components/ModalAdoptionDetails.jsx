@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 const ModalAdoptionDetails = ({ onClose, request, onUpdateStatus }) => {
   const [newStatus, setNewStatus] = useState(request.status);
-  const [adminNotes, setAdminNotes] = useState(request.observacoes_admin || '');
+  const [adminNotes, setAdminNotes] = useState(request.observacoes || '');
 
   const getStatusDisplay = (status) => {
     switch (status) {
