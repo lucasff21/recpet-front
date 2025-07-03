@@ -41,7 +41,10 @@ const AdoptionsManagement = () => {
   const handleUpdateStatus = (requestId, newStatus, adminNotes) => {
     if (!newStatus) return;
 
-    updateAdoptionStatus(requestId, { status: newStatus })
+    updateAdoptionStatus(requestId, {
+      status: newStatus,
+      observacoes: adminNotes,
+    })
       .then(() => {
         showToast(`Solicitação atualizada com sucesso`);
       })
@@ -165,9 +168,9 @@ const AdoptionsManagement = () => {
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-nowrap"
                 >
-                  Data
+                  Data de conclusão
                 </th>
                 <th
                   scope="col"
@@ -194,7 +197,7 @@ const AdoptionsManagement = () => {
                       <div className="flex-shrink-0 h-10 w-10">
                         <img
                           className="h-10 w-10 rounded-full"
-                          src={adocao.animal?.imagePath || logo}
+                          src={adocao.animal?.imagemPath || logo}
                           alt={adocao.animal?.nome || 'Animal'}
                         />
                       </div>
