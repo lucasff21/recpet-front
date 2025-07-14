@@ -196,7 +196,7 @@ const Home = () => {
 
         <div className="flex flex-col lg:flex-row lg:space-x-6">
           <aside
-            className={`fixed inset-y-0 left-0 z-40 w-64 bg-white p-6 lg:p-2 transform ${
+            className={`fixed inset-y-0 left-0 z-40 bg-white p-6 lg:p-2 transform ${
               isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
             } lg:relative lg:translate-x-0 lg:flex-shrink-0 transition-transform duration-300 ease-in-out overflow-y-auto`}
           >
