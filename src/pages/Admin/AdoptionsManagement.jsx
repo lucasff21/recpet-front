@@ -187,7 +187,7 @@ const AdoptionsManagement = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {adocoes.map(({ adocao }) => (
+              {adocoes.map((adocao) => (
                 <tr key={adocao.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {adocao.id ?? '-'}
@@ -215,15 +215,15 @@ const AdoptionsManagement = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {adocao.user?.nome ?? '-'}
+                      {adocao.usuario?.nome ?? '-'}
                     </div>
                     <div className="text-sm text-gray-500">
-                      {adocao.user?.email ?? ''}
+                      {adocao.usuario?.email ?? ''}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {adocao.dataAdocao
-                      ? new Date(adocao.dataAdocao).toLocaleDateString(
+                    {adocao.concluidoEm
+                      ? new Date(adocao.concluidoEm).toLocaleDateString(
                           'pt-BR',
                           {
                             year: 'numeric',

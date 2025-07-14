@@ -10,6 +10,23 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { calculateAge } from '../utils/pet';
 import Breadcrumb from '../components/Breadcrumb';
 
+const predefinedColors = [
+  'bg-blue-100 text-blue-800',
+  'bg-green-100 text-green-800',
+  'bg-yellow-100 text-yellow-800',
+  'bg-purple-100 text-purple-800',
+  'bg-indigo-100 text-indigo-800',
+  'bg-amber-100 text-amber-800',
+  'bg-red-100 text-red-800',
+  'bg-pink-100 text-pink-800',
+  'bg-teal-100 text-teal-800',
+  'bg-lime-100 text-lime-800',
+];
+
+const getPredefinedColorClass = (index) => {
+  return predefinedColors[index % predefinedColors.length];
+};
+
 const PetProfilePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -49,7 +66,8 @@ const PetProfilePage = () => {
       await adotarPet({ animalId: selectedPet.id });
       showToast('Interesse registrado! Entraremos em contato.');
     } catch (error) {
-      if (error.status === 401) {
+      const statusCode = error.status || error.response?.status;
+      if (statusCode === 401) {
         showToast('Você já solicitou adoção desse pet', 'error');
       } else {
         showToast('Erro ao processar interesse', 'error');
@@ -57,30 +75,6 @@ const PetProfilePage = () => {
     } finally {
       setAdoptionLoading(false);
     }
-  };
-
-  const traits = [
-    { key: 'brincalhao', label: 'Brincalhão', color: 'blue' },
-    { key: 'gostaCrianca', label: 'Bom com crianças', color: 'green' },
-    { key: 'caoGuarda', label: 'Cão de guarda', color: 'yellow' },
-    { key: 'idealCasa', label: 'Ideal para casa', color: 'purple' },
-    {
-      key: 'necessidadeCorrer',
-      label: 'Precisa de exercícios',
-      color: 'indigo',
-    },
-    { key: 'quedaPelo', label: 'Solta muito pelo', color: 'amber' },
-    { key: 'tendeLatir', label: 'Gosta de latir', color: 'red' },
-  ];
-
-  const colorClasses = {
-    blue: 'bg-blue-100 text-blue-800',
-    green: 'bg-green-100 text-green-800',
-    yellow: 'bg-yellow-100 text-yellow-800',
-    purple: 'bg-purple-100 text-purple-800',
-    indigo: 'bg-indigo-100 text-indigo-800',
-    amber: 'bg-amber-100 text-amber-800',
-    red: 'bg-red-100 text-red-800',
   };
 
   if (pageLoading) {
@@ -121,14 +115,6 @@ const PetProfilePage = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-              <div className="h-64 md:h-96 lg:h-[500px] flex items-center justify-center p-4 md:p-6 bg-gray-100">
-                <img
-                  src={selectedPet.imagemPath || logo}
-                  alt={selectedPet.nome}
-                  className="w-full h-full max-h-[500px] object-cover border-2 border-amber-400 rounded-lg shadow-md"
-                />
-              </div>
-
               <div className="p-6 space-y-6">
                 <div className="space-y-4">
                   <h2 className="text-xl font-bold text-gray-800 border-b pb-2">
@@ -187,26 +173,38 @@ const PetProfilePage = () => {
                     Personalidade
                   </h2>
                   <div className="flex flex-wrap gap-3 mt-3">
-                    {traits.map(
-                      (trait) =>
-                        selectedPet[trait.key] === true && (
+                    {selectedPet.caracteristicas &&
+                    selectedPet.caracteristicas.length > 0 ? (
+                      selectedPet.caracteristicas.map(
+                        (caracteristica, index) => (
                           <span
-                            key={trait.key}
-                            className={`${colorClasses[trait.color]} px-3 py-1.5 rounded-full text-sm md:text-base`}
+                            key={caracteristica.id || index}
+                            className={`${getPredefinedColorClass(index)} px-3 py-1.5 rounded-full text-sm md:text-base`}
                           >
-                            {trait.label}
+                            {caracteristica.nome}
                           </span>
                         )
+                      )
+                    ) : (
+                      <p className="text-gray-600 text-sm">
+                        Nenhuma característica de personalidade cadastrada.
+                      </p>
                     )}
                   </div>
                 </div>
+              </div>
+              <div className="h-[400px] w-[400px] justify-self-end">
+                <img
+                  src={selectedPet.imagemPath || logo}
+                  alt={selectedPet.nome}
+                  className="w-full h-full max-h-[500px] object-contain"
+                />
               </div>
             </div>
             <div className="p-6 flex justify-end gap-4">
               <Button
                 confirm={true}
                 onClick={interesseAdocao}
-                className="px-6 py-2 text-base w-64"
                 disabled={adoptionLoading || !selectedPet}
                 size={'medium'}
               >
