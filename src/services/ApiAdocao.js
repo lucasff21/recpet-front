@@ -53,3 +53,7 @@ export const updateCachorro = (id, data) => {
     },
   });
 };
+
+export const findAllCaracteristicas = () => {
+  return apiClient.get('/cachorro/caracteristicas');
+};
