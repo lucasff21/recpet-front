@@ -7,7 +7,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import AdoptionsManagement from './AdoptionsManagement';
 import Sidebar from '../../components/Sidebar';
 import PetManagement from './pet/PetManagement';
-import Icon from '../../components/Icon';
+import { GoSidebarExpand } from 'react-icons/go';
 
 const AdminArea = () => {
   document.title = 'Painel Admin';
@@ -62,17 +62,18 @@ const AdminArea = () => {
         handleItemClick={handleItemClick}
       ></Sidebar>
 
-      {!isSidebarOpen && (
-        <button
-          onClick={() => setIsSidebarOpen(true)}
-          className="fixed top-16 left-0 lg:hidden bg-blue-600 text-white p-3 pl-4 rounded-r-full shadow-lg z-50 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform -translate-x-1/2"
-          aria-label="Abrir Menu"
-        >
-          <Icon name="menu" className="h-6 w-6" />
-        </button>
-      )}
-
-      <main className="flex-1 p-8 font-sans">
+      <main className="flex-1 p-8 font-sans overflow-auto">
+        <div className="flex">
+          {!isSidebarOpen && (
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="fixed top-16 left-0 lg:hidden bg-blue-600 text-white p-3 pl-4 rounded-r-full shadow-lg z-50 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform -translate-x-1/2"
+              aria-label="Abrir Menu"
+            >
+              <GoSidebarExpand onClick={() => setIsSidebarOpen(true)} />
+            </button>
+          )}
+        </div>
         <Routes>
           <Route
             path="/*"
