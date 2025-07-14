@@ -8,6 +8,7 @@ import PetForm from './PetForm';
 import { petUpdateSchema } from '../../../zod/petForms';
 
 const EditPet = () => {
+  document.title = 'Editar Pet | ADMIN ';
   const { id } = useParams();
   const navigate = useNavigate();
   const { authToken } = useContext(AuthContext);
@@ -40,31 +41,26 @@ const EditPet = () => {
     const formData = new FormData();
 
     Object.keys(data).forEach((key) => {
-      if (
-        data[key] !== undefined &&
-        data[key] !== null &&
-        key !== 'novaImagem'
-      ) {
-        formData.append(key, data[key]);
+      const value = data[key];
+
+      if (value !== undefined && value !== null) {
+        if (key === 'caracteristicasIds' && Array.isArray(value)) {
+          value.forEach((id) => {
+            formData.append(key, id);
+          });
+        } else {
+          formData.append(key, value);
+        }
       }
     });
-
-    if (imagePreSave) {
-      formData.append('novaImagem', imagePreSave);
-    }
-
-    for (const value of formData.values()) {
-      console.log(value);
-    }
 
     updateCachorro(id, formData)
       .then(() => {
         toast.success('Pet atualizado com sucesso!');
         navigate(`/admin/pets/lista`);
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error('Erro ao atualizar pet.');
-        console.error(error);
       })
       .finally(() => setLoading(false));
   };
