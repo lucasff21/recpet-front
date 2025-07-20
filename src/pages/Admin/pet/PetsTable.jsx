@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { cachorroFindAll } from '../../../services/ApiAdocao';
+import { findAllAnimals } from '../../../services/ApiAdocao';
 import { showToast } from '../../../utils/toast';
 import logo from '../../../assets/logo-pet.png';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ const PetsTable = () => {
   const navigate = useNavigate();
 
   const getPets = () => {
-    cachorroFindAll()
+    findAllAnimals()
       .then((response) => {
         const pets = response.data.content.map((pet) => ({
           ...pet,

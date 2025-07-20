@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo-pet.png';
-import { adotarPet, findCachorroById } from '../services/ApiAdocao';
+import { adotarPet, findAnimalById } from '../services/ApiAdocao';
 import { showToast } from '../utils/toast';
 import { AuthContext } from '../contexts/AuthContext';
 import Layout from '../components/Layout';
@@ -39,7 +39,7 @@ const PetProfilePage = () => {
   useEffect(() => {
     const fetchPet = async () => {
       try {
-        const response = await findCachorroById(id);
+        const response = await findAnimalById(id);
         setSelectedPet(response.data || null);
       } catch (err) {
         setError('Pet não encontrado');
