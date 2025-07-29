@@ -2,11 +2,11 @@ import apiClient from './api/axios';
 import axios from 'axios';
 import { URL } from '../helpers/apiRoutes';
 
-export const cachorroFindAll = async (params = {}) => {
+export const findAllAnimals = async (params = {}) => {
   return await axios.get(`${URL.api}/cachorro/findall`, { params });
 };
 
-export const createCachorro = (cachorroData) => {
+export const createAnimal = (cachorroData) => {
   return apiClient.post('/cachorro/create', cachorroData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -34,7 +34,7 @@ export const findByQuestionarioEmail = async (email, token) => {
   }
 };
 
-export const findCachorroById = async (id) => {
+export const findAnimalById = async (id) => {
   return apiClient.get(`/cachorro/${id}`);
 };
 
@@ -46,7 +46,7 @@ export const findAllAdocoes = (id) => {
   return apiClient.get(`/adocao/usuario/${id}`);
 };
 
-export const updateCachorro = (id, data) => {
+export const updateAnimal = (id, data) => {
   return apiClient.put(`/cachorro/${id}`, data, {
     headers: {
       'Content-Type': 'multipart/form-data',

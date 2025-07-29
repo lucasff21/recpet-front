@@ -13,7 +13,6 @@ const Header = () => {
 
   const LINKS = [
     { path: '/', label: 'Home' },
-    { path: '/blog', label: 'Blog' },
     { path: '/quem-somos', label: 'Quem somos' },
   ];
 

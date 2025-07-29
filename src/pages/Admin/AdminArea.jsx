@@ -4,7 +4,7 @@ import UserManagement from './user/UserManagement';
 import { ToastContainer } from 'react-toastify';
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
-import AdoptionsManagement from './AdoptionsManagement';
+import AdoptionsTable from './adoptions/AdoptionsTable';
 import Sidebar from '../../components/Sidebar';
 import PetManagement from './pet/PetManagement';
 import { GoSidebarExpand } from 'react-icons/go';
@@ -81,7 +81,7 @@ const AdminArea = () => {
               <Routes>
                 <Route path="pets/*" element={<PetManagement />} />
                 <Route path="usuarios/*" element={<UserManagement />} />
-                <Route path="adocoes" element={<AdoptionsManagement />} />
+                <Route path="adocoes" element={<AdoptionsTable />} />
               </Routes>
             }
           />

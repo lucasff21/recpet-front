@@ -5,18 +5,11 @@ const Footer = () => {
   const sections = [
     {
       title: 'Institucional',
-      items: [
-        { to: '#', label: 'Quem somos' },
-        { to: '#', label: 'Transparência' },
-      ],
+      items: [{ to: '#', label: 'Quem somos' }],
     },
     {
       title: 'Navegação',
-      items: [
-        { to: '#', label: 'Adote' },
-        { to: '#', label: 'Dúvidas Frequentes' },
-        { to: '#', label: 'Blog' },
-      ],
+      items: [{ to: '#', label: 'Adote' }],
     },
     {
       title: 'Contato',

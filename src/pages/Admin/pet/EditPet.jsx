@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { updateCachorro, findCachorroById } from '../../../services/ApiAdocao';
+import { updateAnimal, findAnimalById } from '../../../services/ApiAdocao';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from '../../../contexts/AuthContext';
@@ -21,7 +21,7 @@ const EditPet = () => {
     const loadPetData = async () => {
       try {
         setLoading(true);
-        const response = await findCachorroById(id);
+        const response = await findAnimalById(id);
         const petData = response.data;
         setDefaultValues({ ...petData });
         setCurrentImage(petData.imagemPath || null);
@@ -54,7 +54,7 @@ const EditPet = () => {
       }
     });
 
-    updateCachorro(id, formData)
+    updateAnimal(id, formData)
       .then(() => {
         toast.success('Pet atualizado com sucesso!');
         navigate(`/admin/pets/lista`);

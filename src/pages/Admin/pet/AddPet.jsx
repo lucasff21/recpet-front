@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useContext } from 'react';
-import { createCachorro } from '../../../services/ApiAdocao';
+import { createAnimal } from '../../../services/ApiAdocao';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from '../../../contexts/AuthContext';
@@ -32,7 +32,7 @@ const AddPet = () => {
     }
 
     try {
-      await createCachorro(formData, authToken);
+      await createAnimal(formData, authToken);
       toast.success('Pet cadastrado com sucesso!');
     } catch (error) {
       console.error(
