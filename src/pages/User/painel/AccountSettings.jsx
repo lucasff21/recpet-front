@@ -1,168 +1,282 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
+import { showToast } from '../../../utils/toast';
+import { updateUserProfile } from '../../../services/ApiUser';
+import { getAddressByZipCode } from '../../../services/addressService';
+import { AuthContext } from '../../../contexts/AuthContext';
+
+import InputField from '../../../components/FormFields/InputField';
+import SelectField from '../../../components/FormFields/SelectField';
+import DateField from '../../../components/FormFields/DateField';
+import { Button } from '../../../components/Button';
 
 const AccountSettings = () => {
+  const { user, updateUserContext } = useContext(AuthContext);
+
   const [userData, setUserData] = useState({
-    nome: 'Milena',
-    telefone: '(XX) XXXXX-XXXX',
-    cpf: 'XXX.XXX.XXX-XX',
+    nome: '',
+    telefone: '',
+    genero: '',
+    dataNascimento: '',
+    cpf: '',
+    email: '',
+    endereco: {
+      cep: '',
+      logradouro: '',
+      complemento: '',
+      bairro: '',
+      cidade: '',
+      estado: '',
+    },
   });
 
+  const [initialUserData, setInitialUserData] = useState(null);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-  const [saveError, setSaveError] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      const formattedUser = {
+        ...user,
+        dataNascimento: user.dataNascimento
+          ? user.dataNascimento.split('T')[0]
+          : '',
+        endereco: {
+          cep: user.endereco?.cep || '',
+          logradouro: user.endereco?.logradouro || '',
+          complemento: user.endereco?.complemento || '',
+          bairro: user.endereco?.bairro || '',
+          cidade: user.endereco?.localidade || '',
+          estado: user.endereco?.uf || '',
+        },
+      };
+
+      setUserData(formattedUser);
+      setInitialUserData(formattedUser);
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
-  };
-
-  const handleSave = async () => {
-    setSaving(true);
-    setSaveSuccess(false);
-    setSaveError(null);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      setSaveSuccess(true);
-      setEditing(false);
-    } catch (err) {
-      setSaveError('Erro ao salvar as configurações. Tente novamente.');
-    } finally {
-      setSaving(false);
+    if (Object.keys(userData.endereco).includes(name)) {
+      setUserData((prev) => ({
+        ...prev,
+        endereco: { ...prev.endereco, [name]: value },
+      }));
+    } else {
+      setUserData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
+  const handleCepBlur = useCallback((e) => {
+    const cep = e.target.value.replace(/\D/g, '');
+    if (cep.length !== 8) return;
+
+    getAddressByZipCode(cep)
+      .then((response) => {
+        const { data } = response;
+        if (data.erro) {
+          showToast('CEP não encontrado.', 'error');
+          return;
+        }
+        setUserData((prev) => ({
+          ...prev,
+          endereco: {
+            ...prev.endereco,
+            cep: data.cep,
+            logradouro: data.logradouro,
+            bairro: data.bairro,
+            cidade: data.localidade,
+            estado: data.uf,
+          },
+        }));
+      })
+      .catch(() => {
+        showToast('Erro ao buscar o CEP.', 'error');
+      });
+  }, []);
+
+  const handleSave = () => {
+    setSaving(true);
+
+    const payload = {
+      nome: userData.nome,
+      telefone: userData.telefone,
+      genero: userData.genero,
+      dataNascimento: userData.dataNascimento,
+      endereco: {
+        cep: userData.endereco.cep,
+        logradouro: userData.endereco.logradouro,
+        complemento: userData.endereco.complemento,
+        bairro: userData.endereco.bairro,
+        cidade: userData.endereco.cidade,
+        estado: userData.endereco.estado,
+      },
+    };
+
+    updateUserProfile(payload)
+      .then((response) => {
+        const { data: updatedUser } = response;
+        showToast('Suas configurações foram salvas com sucesso!', 'success');
+        updateUserContext(updatedUser);
+        setEditing(false);
+      })
+      .catch(() => {
+        showToast('Erro ao salvar as configurações. Tente novamente.', 'error');
+      })
+      .finally(() => {
+        setSaving(false);
+      });
+  };
+
+  const handleCancel = () => {
+    setUserData(initialUserData);
+    setEditing(false);
+  };
+
+  if (!user) {
+    return <div className="text-center p-10">Carregando seus dados...</div>;
+  }
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+    <div className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">
         Configurações da Conta
       </h2>
 
-      {saveSuccess && (
-        <div
-          className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
-          role="alert"
-        >
-          <strong className="font-bold">Sucesso!</strong>
-          <span className="block sm:inline">
-            {' '}
-            Suas configurações foram salvas.
-          </span>
-        </div>
-      )}
-      {saveError && (
-        <div
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
-          role="alert"
-        >
-          <strong className="font-bold">Erro:</strong>
-          <span className="block sm:inline"> {saveError}</span>
-        </div>
-      )}
+      <form onSubmit={(e) => e.preventDefault()}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-700">
+              Dados Pessoais
+            </h3>
+            <InputField
+              id="nome"
+              name="nome"
+              label="Nome Completo"
+              value={userData.nome}
+              onChange={handleChange}
+              disabled={!editing}
+            />
+            <InputField
+              id="email"
+              name="email"
+              label="Email"
+              value={userData.email}
+              disabled
+            />
+            <InputField
+              id="cpf"
+              name="cpf"
+              label="CPF"
+              value={userData.cpf}
+              disabled
+            />
+            <InputField
+              id="telefone"
+              name="telefone"
+              label="Telefone"
+              value={userData.telefone}
+              onChange={handleChange}
+              disabled={!editing}
+            />
+            <DateField
+              id="dataNascimento"
+              name="dataNascimento"
+              label="Data de Nascimento"
+              value={userData.dataNascimento}
+              onChange={handleChange}
+              disabled={!editing}
+            />
+            <SelectField
+              id="genero"
+              name="genero"
+              label="Gênero"
+              value={userData.genero.toUpperCase()}
+              onChange={handleChange}
+              disabled={!editing}
+              options={[
+                { value: 'MASCULINO', label: 'Masculino' },
+                { value: 'FEMININO', label: 'Feminino' },
+                { value: 'OUTRO', label: 'Outro' },
+              ]}
+            />
+          </div>
 
-      <div className="space-y-4">
-        <div>
-          <label
-            htmlFor="nome"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Nome
-          </label>
-          <input
-            type="text"
-            id="nome"
-            name="nome"
-            value={userData.nome}
-            onChange={handleChange}
-            disabled={!editing}
-            className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2 ${editing ? 'focus:border-blue-500 focus:ring-blue-500' : 'bg-gray-50 cursor-not-allowed'}`}
-          />
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-700">Endereço</h3>
+            <InputField
+              id="cep"
+              name="cep"
+              label="CEP"
+              value={userData.endereco.cep}
+              onChange={handleChange}
+              onBlur={handleCepBlur}
+              disabled={!editing}
+            />
+            <InputField
+              id="logradouro"
+              name="logradouro"
+              label="Logradouro"
+              value={userData.endereco.logradouro}
+              onChange={handleChange}
+              disabled={!editing}
+            />
+            <InputField
+              id="bairro"
+              name="bairro"
+              label="Bairro"
+              value={userData.endereco.bairro}
+              onChange={handleChange}
+              disabled={!editing}
+            />
+            <InputField
+              id="complemento"
+              name="complemento"
+              label="Complemento"
+              value={userData.endereco.complemento}
+              onChange={handleChange}
+              disabled={!editing}
+              required={false}
+            />
+            <InputField
+              id="cidade"
+              name="cidade"
+              label="Cidade"
+              value={userData.endereco.cidade}
+              onChange={handleChange}
+              disabled
+            />
+            <InputField
+              id="estado"
+              name="estado"
+              label="Estado"
+              value={userData.endereco.estado}
+              onChange={handleChange}
+              disabled
+            />
+          </div>
         </div>
-        <div>
-          <label
-            htmlFor="telefone"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Telefone
-          </label>
-          <input
-            type="text"
-            id="telefone"
-            name="telefone"
-            value={userData.telefone}
-            onChange={handleChange}
-            disabled={!editing}
-            className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2 ${editing ? 'focus:border-blue-500 focus:ring-blue-500' : 'bg-gray-50 cursor-not-allowed'}`}
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="cpf"
-            className="block text-sm font-medium text-gray-700"
-          >
-            CPF
-          </label>
-          <input
-            type="text"
-            id="cpf"
-            name="cpf"
-            value={userData.cpf}
-            disabled
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2 bg-gray-50 cursor-not-allowed"
-          />
-        </div>
-      </div>
+      </form>
 
-      <div className="mt-6 flex justify-end space-x-3">
+      <div className="mt-8 pt-6 border-t flex justify-end space-x-3">
         {!editing ? (
-          <button
+          <Button
+            text="Editar Perfil"
             onClick={() => setEditing(true)}
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
-          >
-            Editar Perfil
-          </button>
+            confirm={true}
+            size="small"
+          />
         ) : (
           <>
-            <button
-              onClick={() => {
-                setEditing(false);
-                setSaveError(null);
-                setSaveSuccess(false);
-              }}
-              className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
-            >
-              Cancelar
-            </button>
-            <button
+            <Button text="Cancelar" onClick={handleCancel} size="small" />
+            <Button
+              text="Salvar Alterações"
               onClick={handleSave}
               disabled={saving}
-              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out"
-            >
-              {saving ? (
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              ) : (
-                'Salvar Alterações'
-              )}
-            </button>
+              loading={saving}
+              confirm={true}
+              size="small"
+            />
           </>
         )}
       </div>
