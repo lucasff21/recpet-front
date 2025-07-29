@@ -1,32 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { findAllAnimals } from '../../../services/ApiAdocao';
 import { showToast } from '../../../utils/toast';
 import logo from '../../../assets/logo-pet.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { calculateAge } from '../../../utils/pet';
+import Pagination from '../../../components/Pagination';
+import { GoPlus } from 'react-icons/go';
 
 const PetsTable = () => {
   const [pets, setPets] = useState([]);
+  const [pageData, setPageData] = useState({ totalPages: 0, number: 0 });
+  const [currentPage, setCurrentPage] = useState(0);
   const navigate = useNavigate();
 
-  const getPets = () => {
-    findAllAnimals()
+  const getPets = useCallback((page = 0) => {
+    findAllAnimals({ page })
       .then((response) => {
-        const pets = response.data.content.map((pet) => ({
+        const pageResponse = response.data;
+        const petsData = pageResponse.content.map((pet) => ({
           ...pet,
           idade: pet.dataNascimentoAproximada
             ? calculateAge(pet.dataNascimentoAproximada)
             : 'Desconhecido',
         }));
-        setPets(pets);
+        setPets(petsData);
+        setPageData({
+          totalPages: pageResponse.totalPages,
+          number: pageResponse.number,
+        });
       })
       .catch((error) => {
         showToast('Erro ao carregar pets', 'error');
       });
-  };
+  }, []);
 
   useEffect(() => {
-    getPets();
+    getPets(currentPage);
+  }, [currentPage, getPets]);
+
+  const handlePageChange = useCallback((page) => {
+    setCurrentPage(page - 1);
   }, []);
 
   const handleEdit = (id) => {
@@ -63,14 +76,15 @@ const PetsTable = () => {
             </div>
           </div>
           <div className="flex space-x-2">
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-              <Link
-                to="../criar"
-                className="list-group-item list-group-item-action"
-              >
-                + Novo Pet
-              </Link>
-            </button>
+            <Link
+              to="../criar"
+              className="list-group-item list-group-item-action"
+            >
+              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+                <GoPlus className="h-5 w-5" />
+                Novo Pet
+              </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -134,13 +148,11 @@ const PetsTable = () => {
                 <td className="px-6 py-4 whitespace-nowrap">{pet.idade}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
-                    className={`${pet.sexo.toLowerCase() === 'macho' ? 'bg-sky-100 text-sky-800' : 'bg-pink-50 text-pink-800'}
-                                  rounded-full px-3 py-1 text-xs font-bold`}
+                    className={`${pet.sexo.toLowerCase() === 'macho' ? 'bg-sky-100 text-sky-800' : 'bg-pink-50 text-pink-800'} rounded-full px-3 py-1 text-xs font-bold`}
                   >
                     {pet.sexo.toUpperCase()}
                   </span>
                 </td>
-
                 <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                   <button
                     className="text-blue-600 hover:text-blue-900 mr-3"
@@ -160,6 +172,16 @@ const PetsTable = () => {
           </tbody>
         </table>
       </div>
+
+      {pageData.totalPages > 1 && (
+        <div className="flex justify-center mt-6">
+          <Pagination
+            currentPage={pageData.number + 1}
+            totalPageCount={pageData.totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
     </div>
   );
 };
