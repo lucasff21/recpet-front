@@ -3,6 +3,8 @@ import { URL } from '../helpers/apiRoutes';
 
 const apiUrl = URL.base;
 
+console.log(apiUrl)
+
 export const loginUser = async (email, password) => {
   return axios({
     url: `${apiUrl}/users/login`,
