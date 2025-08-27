@@ -51,10 +51,10 @@ const ModalAdoptionDetails = ({ onClose, request, onUpdateStatus }) => {
 
   const details = [
     { label: 'Animal', value: request.animal.nome },
-    { label: 'Usuário', value: request.user.nome },
+    { label: 'Usuário', value: request.usuario.nome },
     {
-      label: 'Data de Adoção',
-      value: new Date(request.dataAdocao).toLocaleDateString('pt-BR'),
+      label: 'Data da solicitação',
+      value: new Date(request.createdAt).toLocaleDateString('pt-BR'),
     },
     { label: 'Status', value: getStatusDisplay(request.status) },
   ];

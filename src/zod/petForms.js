@@ -29,13 +29,16 @@ export const basePetSchema = z.object({
     }
   ),
 
-  idealCasa: z.boolean(),
-  gostaCrianca: z.boolean(),
-  caoGuarda: z.boolean(),
-  brincalhao: z.boolean(),
-  necessidadeCorrer: z.boolean(),
-  quedaPelo: z.boolean(),
-  tendeLatir: z.boolean(),
+  descricao: z
+    .string()
+    .max(1000, { message: 'Descrição deve ter no máximo 500 caracteres' })
+    .optional()
+    .nullable(),
+
+  caracteristicasIds: z
+    .array(z.string().transform(Number))
+    .optional()
+    .nullable(),
 });
 
 export const petSchema = basePetSchema.extend();

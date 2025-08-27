@@ -1,32 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { showToast } from '../../utils/toast';
-import Panel from '../../components/Panel';
-import logo from '../../assets/logo-pet.png';
+import React, { useEffect, useState, useCallback } from 'react';
+import { showToast } from '../../../utils/toast';
+import Panel from '../../../components/Panel';
+import logo from '../../../assets/logo-pet.png';
 import { Link } from 'react-router-dom';
-import ModalAdoptionDetails from '../../components/ModalAdoptionDetails';
-import { getAllAdoptions, updateAdoptionStatus } from '../../services/ApiAdmin';
+import ModalAdoptionDetails from '../../../components/ModalAdoptionDetails';
+import Pagination from '../../../components/Pagination'; // 1. Importar o componente
+import {
+  getAllAdoptions,
+  updateAdoptionStatus,
+} from '../../../services/ApiAdmin';
+import { GoPlus } from 'react-icons/go';
 
-const AdoptionsManagement = () => {
+const AdoptionsTable = () => {
   const [adocoes, setAdocoes] = useState([]);
+  const [pageData, setPageData] = useState({ totalPages: 0, number: 0 }); // 2. Estado para dados da página
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
+
+  const [filters, setFilters] = useState({
+    query: '',
+    status: '',
+    page: 0,
+  });
+
+  const findAdocoes = useCallback(async () => {
+    try {
+      const response = await getAllAdoptions(filters);
+      const pageResponse = response.data;
+      setAdocoes(pageResponse.content);
+      setPageData({
+        totalPages: pageResponse.totalPages,
+        number: pageResponse.number,
+      });
+    } catch (error) {
+      showToast('Erro ao buscar adoções', 'error');
+    }
+  }, [filters]);
 
   useEffect(() => {
-    const findAdocoes = async () => {
-      try {
-        const response = await getAllAdoptions();
-        setAdocoes(response.data.content);
-      } catch (error) {
-        showToast('Erro ao buscar adoções', 'error');
-      }
-    };
-
     findAdocoes();
-  }, []);
+  }, [findAdocoes]);
 
-  const handleEdit = (id) => {};
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value, page: 0 }));
+  };
+
+  const handlePageChange = useCallback((page) => {
+    setFilters((prev) => ({ ...prev, page: page - 1 }));
+  }, []);
 
   const openDetailsModal = (request) => {
     setSelectedRequest(request);
@@ -47,6 +69,7 @@ const AdoptionsManagement = () => {
     })
       .then(() => {
         showToast(`Solicitação atualizada com sucesso`);
+        findAdocoes(); // Atualiza a lista para refletir a mudança de status
       })
       .catch(() => {
         showToast(`Erro ao atualizar as informações`, 'error');
@@ -102,18 +125,19 @@ const AdoptionsManagement = () => {
       <header className="text-center">
         <h1 className="text-3xl font-bold text-gray-800">Adoções</h1>
       </header>
-      <div className="text-end">
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-          + Nova Adoção
+      <div className="flex justify-end">
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+          <GoPlus className="h-5 w-5" /> Nova Adoção
         </button>
       </div>
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="relative flex-grow">
           <input
             type="text"
+            name="query"
             placeholder="Buscar por pet, adotante ou e-mail..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={filters.query}
+            onChange={handleFilterChange}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -131,8 +155,9 @@ const AdoptionsManagement = () => {
           </div>
         </div>
         <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
+          name="status"
+          value={filters.status}
+          onChange={handleFilterChange}
           className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="">Todos os Status</option>
@@ -187,7 +212,7 @@ const AdoptionsManagement = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {adocoes.map(({ adocao }) => (
+              {adocoes.map((adocao) => (
                 <tr key={adocao.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {adocao.id ?? '-'}
@@ -215,21 +240,17 @@ const AdoptionsManagement = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {adocao.user?.nome ?? '-'}
+                      {adocao.usuario?.nome ?? '-'}
                     </div>
                     <div className="text-sm text-gray-500">
-                      {adocao.user?.email ?? ''}
+                      {adocao.usuario?.email ?? ''}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {adocao.dataAdocao
-                      ? new Date(adocao.dataAdocao).toLocaleDateString(
+                    {adocao.concluidoEm
+                      ? new Date(adocao.concluidoEm).toLocaleDateString(
                           'pt-BR',
-                          {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                          }
+                          { year: 'numeric', month: '2-digit', day: '2-digit' }
                         )
                       : '-'}
                   </td>
@@ -249,6 +270,16 @@ const AdoptionsManagement = () => {
             </tbody>
           </table>
         </div>
+
+        {pageData.totalPages > 1 && (
+          <div className="flex justify-center mt-6">
+            <Pagination
+              currentPage={pageData.number + 1}
+              totalPageCount={pageData.totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
       </div>
 
       {isModalOpen && selectedRequest && (
@@ -263,4 +294,4 @@ const AdoptionsManagement = () => {
   );
 };
 
-export default AdoptionsManagement;
+export default AdoptionsTable;

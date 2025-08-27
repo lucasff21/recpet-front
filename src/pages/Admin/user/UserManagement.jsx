@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../../styles/UserManagement.css';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
-import UserTable from '../../../components/UserTable';
+import UserTable from './UserTable';
 import CreateUserAdmin from './CreateUserAdmin';
 import Panel from '../../../components/Panel';
 
