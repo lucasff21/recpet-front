@@ -11,6 +11,8 @@ import AboutUs from './pages/AboutUs';
 import Blog from './pages/Blog';
 import PetProfilePage from './pages/PetProfilePage';
 import DashboardPage from './pages/User/painel/DashboardPage';
+import RequestRecoveryPassword from './pages/User/RecoveryPassword.tsx';
+import ResetPassword from './pages/User/ResetPassword.tsx';
 
 const PrivateRoute = ({ element: Element }) => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -50,6 +52,17 @@ const AppRoutes = () => (
         path="/criar-conta"
         element={<PublicRoute element={CreateAccountForm} />}
       />
+
+      <Route
+        path="/solicitar-senha"
+        element={<PublicRoute element={RequestRecoveryPassword} />}
+      />
+
+      <Route
+        path="/recuperar-senha"
+        element={<PublicRoute element={ResetPassword} />}
+      />
+
 
       {/* ROTAS PROTEGIDA */}
       <Route

@@ -49,3 +49,15 @@ export const findByUserEmail = async (email, token) => {
 export const updateUserProfile = async (data) => {
   return apiClient.put(`${apiUrl}/users/me`, data);
 };
+
+export const sendEMailResetPassword = async (formData) => {
+  const url = `${apiUrl}/users/password-reset/request`;
+  const response = await axios.post(url, formData);
+  return response;
+}
+
+export const sendNewPassword = async (formData) => {
+  const url = `${apiUrl}/users/new-password`;
+  const response = await axios.put(url, formData);
+  return response;
+};

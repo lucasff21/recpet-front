@@ -137,7 +137,7 @@ const Login = () => {
           <div className="flex items-center justify-center mt-3">
             <div className="text-sm">
               <Link
-                to="#"
+                to="/solicitar-senha"
                 className="font-medium text-blue-600 hover:text-blue-500"
                 disabled={loading}
               >
