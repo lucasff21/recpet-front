@@ -10,6 +10,7 @@ import {
   updateAdoptionStatus,
 } from '../../../services/ApiAdmin';
 import { GoPlus } from 'react-icons/go';
+import AdocaoStatusBadge from '../../../components/AdocaoStatusBadge';
 
 const AdoptionsTable = () => {
   const [adocoes, setAdocoes] = useState([]);
@@ -77,47 +78,6 @@ const AdoptionsTable = () => {
       .finally(() => {
         closeDetailsModal();
       });
-  };
-
-  const getStatusDisplay = (status) => {
-    switch (status) {
-      case 'PENDENTE':
-        return (
-          <span className="px-3 py-1 text-sm font-semibold text-blue-800 bg-blue-100 rounded-full">
-            PENDENTE
-          </span>
-        );
-      case 'EM_ANALISE':
-        return (
-          <span className="px-3 py-1 text-sm font-semibold text-yellow-800 bg-yellow-100 rounded-full">
-            EM ANÁLISE
-          </span>
-        );
-      case 'APROVADA':
-        return (
-          <span className="px-3 py-1 text-sm font-semibold text-green-800 bg-green-100 rounded-full">
-            APROVADA
-          </span>
-        );
-      case 'RECUSADA':
-        return (
-          <span className="px-3 py-1 text-sm font-semibold text-red-800 bg-red-100 rounded-full">
-            RECUSADA
-          </span>
-        );
-      case 'ADOTADO':
-        return (
-          <span className="px-3 py-1 text-sm font-semibold text-purple-800 bg-purple-100 rounded-full">
-            ADOTADO
-          </span>
-        );
-      default:
-        return (
-          <span className="px-3 py-1 text-sm font-semibold text-gray-800 bg-gray-100 rounded-full">
-            DESCONHECIDO
-          </span>
-        );
-    }
   };
 
   return (
@@ -255,7 +215,7 @@ const AdoptionsTable = () => {
                       : '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {getStatusDisplay(adocao.status)}
+                    <AdocaoStatusBadge status={adocao.status} />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                     <button

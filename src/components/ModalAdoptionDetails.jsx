@@ -1,49 +1,9 @@
 import { useState } from 'react';
+import AdocaoStatusBadge from './AdocaoStatusBadge';
 
 const ModalAdoptionDetails = ({ onClose, request, onUpdateStatus }) => {
   const [newStatus, setNewStatus] = useState(request.status);
   const [adminNotes, setAdminNotes] = useState(request.observacoes || '');
-
-  const getStatusDisplay = (status) => {
-    switch (status) {
-      case 'PENDENTE':
-        return (
-          <span className="px-3 py-1 text-sm font-semibold text-blue-800 bg-blue-100 rounded-full">
-            PENDENTE
-          </span>
-        );
-      case 'EM_ANALISE':
-        return (
-          <span className="px-3 py-1 text-sm font-semibold text-yellow-800 bg-yellow-100 rounded-full">
-            EM ANÁLISE
-          </span>
-        );
-      case 'APROVADA':
-        return (
-          <span className="px-3 py-1 text-sm font-semibold text-green-800 bg-green-100 rounded-full">
-            APROVADA
-          </span>
-        );
-      case 'RECUSADA':
-        return (
-          <span className="px-3 py-1 text-sm font-semibold text-red-800 bg-red-100 rounded-full">
-            RECUSADA
-          </span>
-        );
-      case 'ADOTADO':
-        return (
-          <span className="px-3 py-1 text-sm font-semibold text-purple-800 bg-purple-100 rounded-full">
-            ADOTADO
-          </span>
-        );
-      default:
-        return (
-          <span className="px-3 py-1 text-sm font-semibold text-gray-800 bg-gray-100 rounded-full">
-            DESCONHECIDO
-          </span>
-        );
-    }
-  };
 
   const handleStatusChange = () => {
     onUpdateStatus(request.id, newStatus, adminNotes);
@@ -56,7 +16,7 @@ const ModalAdoptionDetails = ({ onClose, request, onUpdateStatus }) => {
       label: 'Data da solicitação',
       value: new Date(request.createdAt).toLocaleDateString('pt-BR'),
     },
-    { label: 'Status', value: getStatusDisplay(request.status) },
+    { label: 'Status', value: <AdocaoStatusBadge status={request.status} /> },
   ];
 
   return (
@@ -106,6 +66,7 @@ const ModalAdoptionDetails = ({ onClose, request, onUpdateStatus }) => {
           </label>
           <select
             id="newStatus"
+            disabled={!!request.concluidoEm}
             name="newStatus"
             value={newStatus}
             onChange={(e) => setNewStatus(e.target.value)}

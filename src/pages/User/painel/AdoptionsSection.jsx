@@ -3,6 +3,7 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { findAllAdocoes } from '../../../services/ApiAdocao';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { showToast } from '../../../utils/toast';
+import AdocaoStatusBadge from '../../../components/AdocaoStatusBadge';
 
 const Adoptions = () => {
   const { user } = useContext(AuthContext);
@@ -23,15 +24,6 @@ const Adoptions = () => {
         setLoading(false);
       });
   }, []);
-
-  const statusColorClasses = {
-    PENDENTE: 'bg-blue-100 text-blue-800',
-    EM_ANALISE: 'bg-yellow-100 text-yellow-800',
-    APROVADA: 'bg-green-100 text-green-800',
-    RECUSADA: 'bg-red-100 text-red-800',
-    ADOTADO: 'bg-purple-100 text-purple-800',
-    DEFAULT: 'bg-gray-100 text-gray-800',
-  };
 
   const statusDetails = {
     PENDENTE: {
@@ -61,18 +53,6 @@ const Adoptions = () => {
       observation:
         'Status desconhecido. Entre em contato para mais informações.',
     },
-  };
-
-  const getStatusDisplay = (status) => {
-    const details = statusDetails[status] || statusDetails.DESCONHECIDO;
-    const colorClass = statusColorClasses[status] || statusColorClasses.DEFAULT;
-    return (
-      <span
-        className={`px-3 py-1 text-sm font-semibold rounded-full ${colorClass}`}
-      >
-        {details.label}
-      </span>
-    );
   };
 
   return (
@@ -161,7 +141,7 @@ const Adoptions = () => {
                       : 'Desconhecida'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {getStatusDisplay(solicitacao.status)}
+                    <AdocaoStatusBadge status={solicitacao.status} />
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
                     {statusDetails[solicitacao.status]?.observation ||
