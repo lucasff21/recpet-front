@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { URL } from '../helpers/apiRoutes';
+import apiClient from './api/axios';
 
 const apiUrl = URL.base;
 
@@ -71,4 +72,8 @@ export const updateAdoptionStatus = async (id, data) => {
       Authorization: `Bearer ${localStorage.getItem('Token_RecSys')}`,
     },
   });
+};
+
+export const findAllAnimals = async (params = {}) => {
+  return await apiClient.get(`${apiUrl}/admin/animais`, { params });
 };
