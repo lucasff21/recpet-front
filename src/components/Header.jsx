@@ -14,11 +14,12 @@ const Header = () => {
   const LINKS = [
     { path: '/', label: 'Home' },
     { path: '/quem-somos', label: 'Quem somos' },
+    { path: '/contato', label: 'Contato' },
   ];
 
   const USER_MENU = [
     ...(isAdmin
-      ? [{ path: '/admin/pets/lista', label: 'Painel', icon: 'grid' }]
+      ? [{ path: '/admin/pets', label: 'Painel', icon: 'grid' }]
       : []),
     { path: '/painel', label: 'Minha conta', icon: 'user' },
     {
