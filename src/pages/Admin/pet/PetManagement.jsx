@@ -21,7 +21,7 @@ const PetManagement = () => {
           <ol className="inline-flex items-center space-x-1 p-0">
             <li className="inline-flex items-center">
               <Link
-                to="lista"
+                to="/"
                 className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800"
               >
                 Pets
@@ -53,7 +53,7 @@ const PetManagement = () => {
           path="/*"
           element={
             <Routes>
-              <Route path="/lista" element={<PetsTable />} />
+              <Route path="/" element={<PetsTable />} />
               <Route path="/criar" element={<AddPet />} />
               <Route path="/:id/editar" element={<EditPet />} />
             </Routes>

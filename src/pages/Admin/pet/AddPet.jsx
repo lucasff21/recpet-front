@@ -36,7 +36,7 @@ const AddPet = () => {
     try {
       await createAnimal(formData, authToken);
       toast.success('Pet cadastrado com sucesso!');
-      navigate('/admin/pets/lista');
+      navigate('/admin/pets');
     } catch (error) {
       toast.error('Erro ao cadastrar pet. Verifique os dados.');
     } finally {

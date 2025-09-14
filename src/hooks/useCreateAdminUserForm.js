@@ -45,7 +45,7 @@ export const useCreateAdminUserForm = () => {
     createUser(payload)
       .then((response) => {
         if (response.status === 201) {
-          navigate('/admin/usuarios/lista');
+          navigate('/admin/usuarios');
         }
         showToast('Usuário criado com sucesso');
       })

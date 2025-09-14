@@ -4,7 +4,7 @@ import Panel from '../../../components/Panel';
 import logo from '../../../assets/logo-pet.png';
 import { Link } from 'react-router-dom';
 import ModalAdoptionDetails from '../../../components/ModalAdoptionDetails';
-import Pagination from '../../../components/Pagination'; // 1. Importar o componente
+import Pagination from '../../../components/Pagination';
 import {
   getAllAdoptions,
   updateAdoptionStatus,
@@ -70,7 +70,7 @@ const AdoptionsTable = () => {
     })
       .then(() => {
         showToast(`Solicitação atualizada com sucesso`);
-        findAdocoes(); // Atualiza a lista para refletir a mudança de status
+        findAdocoes();
       })
       .catch(() => {
         showToast(`Erro ao atualizar as informações`, 'error');
