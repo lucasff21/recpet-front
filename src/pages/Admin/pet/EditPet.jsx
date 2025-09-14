@@ -57,7 +57,7 @@ const EditPet = () => {
     updateAnimal(id, formData)
       .then(() => {
         toast.success('Pet atualizado com sucesso!');
-        navigate(`/admin/pets/lista`);
+        navigate(`/admin/pets`);
       })
       .catch(() => {
         toast.error('Erro ao atualizar pet.');

@@ -312,7 +312,7 @@ const PetForm = ({
           text="Cancelar"
           onClick={() => {
             if (isEdit) {
-              navigate(`/admin/pets/lista`);
+              navigate(`/admin/pets`);
             } else {
               reset();
               setImagePreSave(null);

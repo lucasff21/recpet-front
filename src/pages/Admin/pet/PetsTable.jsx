@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { findAllAnimals } from '../../../services/ApiAdocao';
+import { findAllAnimals } from '../../../services/ApiAdmin';
 import { showToast } from '../../../utils/toast';
 import logo from '../../../assets/logo-pet.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { calculateAge } from '../../../utils/pet';
 import Pagination from '../../../components/Pagination';
 import { GoPlus } from 'react-icons/go';
+import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6';
 
 const PetsTable = () => {
   const [pets, setPets] = useState([]);
@@ -121,6 +122,12 @@ const PetsTable = () => {
                 scope="col"
                 className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
+                Disponível para adoção
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Ações
               </th>
             </tr>
@@ -151,6 +158,15 @@ const PetsTable = () => {
                     className={`${pet.sexo.toLowerCase() === 'macho' ? 'bg-sky-100 text-sky-800' : 'bg-pink-50 text-pink-800'} rounded-full px-3 py-1 text-xs font-bold`}
                   >
                     {pet.sexo.toUpperCase()}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className="flex justify-center">
+                    {pet.disponivelParaAdocao ? (
+                      <FaCircleCheck color="green" />
+                    ) : (
+                      <FaCircleXmark color="red" />
+                    )}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">

@@ -19,8 +19,8 @@ const AdminArea = () => {
 
   const adminMenuItems = [
     { viewName: '/', label: 'Página Inicial', iconName: 'home' },
-    { viewName: 'usuarios/lista', label: 'Usuários', iconName: 'user' },
-    { viewName: 'pets/lista', label: 'Pets', iconName: 'paw' },
+    { viewName: 'usuarios', label: 'Usuários', iconName: 'user' },
+    { viewName: 'pets', label: 'Pets', iconName: 'paw' },
     { viewName: 'adocoes', label: 'Solicitações', iconName: 'adoptions' },
     { label: 'Sair', iconName: 'logout', action: logout },
   ];
@@ -40,9 +40,9 @@ const AdminArea = () => {
     let currentView = 'adocoes';
 
     if (pathSegments.includes('pets')) {
-      currentView = 'pets/lista';
+      currentView = 'pets';
     } else if (pathSegments.includes('usuarios')) {
-      currentView = 'usuarios/lista';
+      currentView = 'usuarios';
     } else if (pathSegments.includes('adocoes')) {
       currentView = 'adocoes';
     }

@@ -8,11 +8,11 @@ import Login from './pages/User/Login';
 import QuestionarioAdotante from './pages/User/QuestionarioAdotante';
 import CreateAccountForm from './pages/User/CreateAccount';
 import AboutUs from './pages/AboutUs';
-import Blog from './pages/Blog';
 import PetProfilePage from './pages/PetProfilePage';
 import DashboardPage from './pages/User/painel/DashboardPage';
+import Contact from './pages/Contact';
 import RequestRecoveryPassword from './pages/User/RecoveryPassword.tsx';
-import ResetPassword from './pages/User/ResetPassword.tsx';
+import ResetPassword from './pages/User/ResetPassword';
 
 const PrivateRoute = ({ element: Element }) => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -43,7 +43,7 @@ const AppRoutes = () => (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/quem-somos" element={<AboutUs />} />
-      <Route path="/blog" element={<Blog />} />
+      <Route path="/contato" element={<Contact />} />
       <Route path="/pets/:id" element={<PetProfilePage />} />
 
       {/* ROTAS PROTEGIDAS PARA USUÁRIO LOGADO */}
@@ -62,7 +62,6 @@ const AppRoutes = () => (
         path="/recuperar-senha"
         element={<PublicRoute element={ResetPassword} />}
       />
-
 
       {/* ROTAS PROTEGIDA */}
       <Route

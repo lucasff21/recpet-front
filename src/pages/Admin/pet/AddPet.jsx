@@ -5,11 +5,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { basePetSchema } from '../../../zod/petForms';
 import PetForm from './PetForm';
+import { useNavigate } from 'react-router-dom';
 
 const AddPet = () => {
   document.title = 'Adicionar Pet | ADMIN ';
   const { authToken } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const cadastrarPet = async (data) => {
     setLoading(true);
@@ -34,11 +36,8 @@ const AddPet = () => {
     try {
       await createAnimal(formData, authToken);
       toast.success('Pet cadastrado com sucesso!');
+      navigate('/admin/pets');
     } catch (error) {
-      console.error(
-        'Erro ao cadastrar pet:',
-        error.response?.data || error.message
-      );
       toast.error('Erro ao cadastrar pet. Verifique os dados.');
     } finally {
       setLoading(false);
