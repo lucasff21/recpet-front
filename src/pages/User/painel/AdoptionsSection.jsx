@@ -1,19 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { findAllAdocoes } from '../../../services/ApiAdocao';
-import { AuthContext } from '../../../contexts/AuthContext';
 import { showToast } from '../../../utils/toast';
 import AdocaoStatusBadge from '../../../components/AdocaoStatusBadge';
 
 const Adoptions = () => {
-  const { user } = useContext(AuthContext);
   const [solicitacoes, setSolicitacoes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     setLoading(true);
-    findAllAdocoes(user.id)
+    findAllAdocoes()
       .then((response) => {
         setSolicitacoes(response.data);
       })
@@ -35,18 +33,14 @@ const Adoptions = () => {
       observation: 'Questionário em análise pela equipe.',
     },
     APROVADA: {
-      label: 'APROVADA',
+      label: 'APROVADO',
       observation:
         'Parabéns! Sua solicitação foi aprovada. Entraremos em contato para os próximos passos.',
     },
     RECUSADA: {
-      label: 'RECUSADA',
+      label: 'RECUSADO',
       observation:
         'Agradecemos seu interesse, mas no momento não foi possível prosseguir com a adoção.',
-    },
-    ADOTADO: {
-      label: 'ADOTADO',
-      observation: 'Que alegria! Ele encontrou um lar feliz!',
     },
     DESCONHECIDO: {
       label: 'DESCONHECIDO',
@@ -97,7 +91,7 @@ const Adoptions = () => {
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Cachorro
+                  Animal
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Data da Solicitação
