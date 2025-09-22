@@ -20,6 +20,7 @@ const PersonalStep = ({ register, errors, minDate }) => {
         register={register}
         errors={errors}
         placeholder="CPF"
+        mask="cpf"
       />
 
       <SelectField

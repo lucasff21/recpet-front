@@ -6,7 +6,7 @@ export const schemaForm = z
     fullName: z.string().nonempty('Nome completo é obrigatório'),
     cpf: z
       .string()
-      .length(11, 'CPF deve ter 11 dígitos')
+      //.length(11, 'CPF deve ter 11 dígitos')
       .refine((value) => validateCPF(value), 'CPF inválido'),
     gender: z.string().nonempty('Gênero é obrigatório'),
     birthDate: z.string().nonempty('Data de nascimento é obrigatória'),
