@@ -90,7 +90,7 @@ export const usePersonalForm = () => {
       setValue('complement', data.complemento || '');
       setUf({ sigla: data.uf });
     },
-    [setValue, loading]
+    [setValue]
   );
 
   useEffect(() => {
