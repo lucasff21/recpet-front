@@ -12,8 +12,8 @@ const AdocaoStatusBadge = ({ status }) => {
       textColor = 'text-yellow-800';
       bgColor = 'bg-yellow-100';
       break;
-    case 'APROVADA':
-      text = 'APROVADA';
+    case 'APROVADO':
+      text = 'APROVADO';
       textColor = 'text-green-800';
       bgColor = 'bg-green-100';
       break;

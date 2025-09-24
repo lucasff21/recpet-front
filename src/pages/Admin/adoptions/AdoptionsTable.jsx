@@ -123,9 +123,9 @@ const AdoptionsTable = () => {
           <option value="">Todos os Status</option>
           <option value="PENDENTE">PENDENTE</option>
           <option value="EM_ANALISE">EM ANÁLISE</option>
-          <option value="APROVADA">APROVADA</option>
-          <option value="RECUSADA">RECUSADA</option>
-          <option value="ADOTADO">ADOTADO</option>
+          <option value="APROVADO">APROVADO</option>
+          <option value="RECUSADO">RECUSADO</option>
+          <option value="FINALIZADO">FINALIZADO</option>
         </select>
       </div>
       <div>
