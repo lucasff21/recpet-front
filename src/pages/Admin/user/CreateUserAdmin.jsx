@@ -55,7 +55,7 @@ const CreateUserAdmin = () => {
           label="Selecione o tipo de usuário"
           options={[
             { value: 'ADMIN', label: 'Administrador' },
-            { value: 'MODERATOR', label: 'Moderador' },
+            { value: 'ADOTANTE', label: 'Adotante' },
           ]}
         />
 
