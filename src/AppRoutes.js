@@ -69,7 +69,7 @@ const AppRoutes = () => (
         element={<PrivateRoute element={QuestionarioAdotante} />}
       />
       <Route
-        path="/painel"
+        path="/painel/*"
         element={<PrivateRoute element={DashboardPage} />}
       />
 
