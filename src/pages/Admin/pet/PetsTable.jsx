@@ -47,8 +47,6 @@ const PetsTable = () => {
     navigate(`/admin/pets/${id}/editar`);
   };
 
-  const handleDelete = (id) => {};
-
   return (
     <div>
       <div className="py-4 border-b">
@@ -175,12 +173,6 @@ const PetsTable = () => {
                     onClick={() => handleEdit(pet.id)}
                   >
                     Editar
-                  </button>
-                  <button
-                    className="text-red-600 hover:text-red-900"
-                    onClick={() => handleDelete(pet.id)}
-                  >
-                    Excluir
                   </button>
                 </td>
               </tr>
