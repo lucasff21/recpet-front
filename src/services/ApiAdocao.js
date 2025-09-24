@@ -54,6 +54,10 @@ export const updateAnimal = (id, data) => {
   });
 };
 
+export const deletarAdocao = (id) => {
+  return apiClient.put(`/adocao/${id}`);
+};
+
 export const findAllCaracteristicas = () => {
   return apiClient.get('/cachorro/caracteristicas');
 };
