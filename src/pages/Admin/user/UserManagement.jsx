@@ -21,7 +21,7 @@ const UserManagement = () => {
           <ol className="inline-flex items-center space-x-1 p-0">
             <li className="inline-flex items-center">
               <Link
-                to="lista"
+                to="./"
                 className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800"
               >
                 Usuários

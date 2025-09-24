@@ -51,13 +51,9 @@ const QuestionarioAdotante = () => {
       tendeLatir: Boolean(tendeLatir),
     };
 
-    console.log(role);
-
     try {
       if (role.includes('ADOTANTE')) {
         const result = await createQuestionario(formData, authToken);
-
-        console.log(result);
 
         if (result) {
           toast.success('Questionário enviado com sucesso!', {

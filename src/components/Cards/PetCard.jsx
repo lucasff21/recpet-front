@@ -16,7 +16,7 @@ const PetCard = ({ pet, openPagePet }) => {
         <div className="flex justify-between items-start divide-x-2 divide-gray-100">
           <div className="flex flex-col gap-2 justify-between">
             <p className="text-xl font-bold text-gray-800">{pet.nome}</p>
-            <p className="text-sm text-gray-600 m-0">Raça indefinida</p>
+            <p className="text-sm text-gray-600 m-0">{pet.porte}</p>
           </div>
 
           <div className="flex flex-col gap-2 justify-between items-center pl-2">

@@ -42,8 +42,8 @@ export const adotarPet = (data) => {
   return apiClient.post('/adocao/create', data);
 };
 
-export const findAllAdocoes = (id) => {
-  return apiClient.get(`/adocao/usuario/${id}`);
+export const findAllAdocoes = () => {
+  return apiClient.get(`/adocao`);
 };
 
 export const updateAnimal = (id, data) => {
@@ -52,6 +52,10 @@ export const updateAnimal = (id, data) => {
       'Content-Type': 'multipart/form-data',
     },
   });
+};
+
+export const deletarAdocao = (id) => {
+  return apiClient.put(`/adocao/${id}`);
 };
 
 export const findAllCaracteristicas = () => {
