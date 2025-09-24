@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { findAllAdocoes } from '../../../services/ApiAdocao';
+import { deletarAdocao, findAllAdocoes } from '../../../services/ApiAdocao';
 import { showToast } from '../../../utils/toast';
 import AdocaoStatusBadge from '../../../components/AdocaoStatusBadge';
 
@@ -32,21 +32,40 @@ const Adoptions = () => {
       label: 'EM ANÁLISE',
       observation: 'Questionário em análise pela equipe.',
     },
-    APROVADA: {
+    APROVADO: {
       label: 'APROVADO',
       observation:
         'Parabéns! Sua solicitação foi aprovada. Entraremos em contato para os próximos passos.',
     },
-    RECUSADA: {
+    RECUSADO: {
       label: 'RECUSADO',
       observation:
         'Agradecemos seu interesse, mas no momento não foi possível prosseguir com a adoção.',
+    },
+    FINALIZADO: {
+      label: 'FINALIZADO',
+      observation:
+        'Parabéns! Seu processo de adoção foi aprovado, entraremos em contato em breve para mais detalhes!',
     },
     DESCONHECIDO: {
       label: 'DESCONHECIDO',
       observation:
         'Status desconhecido. Entre em contato para mais informações.',
     },
+  };
+
+  const handleDelete = (id) => {
+    deletarAdocao(id)
+      .then(() => {
+        showToast('Solicitação excluída com sucesso');
+      })
+      .catch(() => {
+        showToast('Erro ao carregar solicitações de adoção', 'error');
+      })
+      .finally(() => {
+        setLoading(false);
+        window.location.reload();
+      });
   };
 
   return (
@@ -67,7 +86,6 @@ const Adoptions = () => {
           className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
           role="alert"
         >
-          <strong className="font-bold">Erro:</strong>
           <span className="block sm:inline"> {error}</span>
         </div>
       )}
@@ -102,6 +120,9 @@ const Adoptions = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Observações
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Ações
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -128,8 +149,8 @@ const Adoptions = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {solicitacao.created_at
-                      ? new Date(solicitacao.created_at).toLocaleDateString(
+                    {solicitacao.createdAt
+                      ? new Date(solicitacao.createdAt).toLocaleDateString(
                           'pt-BR'
                         )
                       : 'Desconhecida'}
@@ -140,6 +161,14 @@ const Adoptions = () => {
                   <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
                     {statusDetails[solicitacao.status]?.observation ||
                       statusDetails.DESCONHECIDO.observation}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
+                    <button
+                      className="text-red-600 hover:text-red-900"
+                      onClick={() => handleDelete(solicitacao.id)}
+                    >
+                      Excluir
+                    </button>
                   </td>
                 </tr>
               ))}
