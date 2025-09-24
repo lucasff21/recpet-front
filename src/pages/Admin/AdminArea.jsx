@@ -15,40 +15,14 @@ const AdminArea = () => {
   const { logout } = useContext(AuthContext);
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeView, setActiveView] = useState('adocoes');
 
   const adminMenuItems = [
-    { viewName: '/', label: 'Página Inicial', iconName: 'home' },
-    { viewName: 'usuarios', label: 'Usuários', iconName: 'user' },
-    { viewName: 'pets', label: 'Pets', iconName: 'paw' },
-    { viewName: 'adocoes', label: 'Solicitações', iconName: 'adoptions' },
+    { path: '/', label: 'Página Inicial', iconName: 'home' },
+    { path: './usuarios', label: 'Usuários', iconName: 'user' },
+    { path: './pets', label: 'Pets', iconName: 'paw' },
+    { path: './adocoes', label: 'Solicitações', iconName: 'adoptions' },
     { label: 'Sair', iconName: 'logout', action: logout },
   ];
-
-  const handleItemClick = (item) => {
-    if (item.viewName) {
-      setActiveView(item.viewName);
-      navigate(item.viewName);
-    } else if (item.action) {
-      item.action();
-    }
-    setIsSidebarOpen(false);
-  };
-
-  useEffect(() => {
-    const pathSegments = location.pathname.split('/').filter(Boolean);
-    let currentView = 'adocoes';
-
-    if (pathSegments.includes('pets')) {
-      currentView = 'pets';
-    } else if (pathSegments.includes('usuarios')) {
-      currentView = 'usuarios';
-    } else if (pathSegments.includes('adocoes')) {
-      currentView = 'adocoes';
-    }
-
-    setActiveView(currentView);
-  }, [location.pathname]);
 
   return (
     <div className="flex bg-gray-50 h-screen">
@@ -58,8 +32,6 @@ const AdminArea = () => {
         navigationItems={adminMenuItems}
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
-        activeView={activeView}
-        handleItemClick={handleItemClick}
       ></Sidebar>
 
       <main className="flex-1 p-8 font-sans overflow-auto">
