@@ -4,8 +4,6 @@ import apiClient from './api/axios';
 
 const apiUrl = URL.base;
 
-console.log(apiUrl)
-
 export const loginUser = async (email, password) => {
   return axios({
     url: `${apiUrl}/users/login`,
@@ -54,7 +52,7 @@ export const sendEMailResetPassword = async (formData) => {
   const url = `${apiUrl}/users/password-reset/request`;
   const response = await axios.post(url, formData);
   return response;
-}
+};
 
 export const sendNewPassword = async (formData) => {
   const url = `${apiUrl}/users/new-password`;

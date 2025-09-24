@@ -13,13 +13,10 @@ const NavBar = () => {
   }, [userEmail]);
 
   const getUser = async () => {
-    console.log('ENTROU');
-
     if (userEmail && authToken) {
       const userGet = await findByUserEmail(userEmail, authToken);
 
       if (userGet) {
-        console.log(userGet.email);
         setUser(userGet);
       }
     }
