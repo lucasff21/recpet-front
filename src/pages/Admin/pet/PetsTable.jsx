@@ -7,14 +7,17 @@ import { calculateAge } from '../../../utils/pet';
 import Pagination from '../../../components/Pagination';
 import { GoPlus } from 'react-icons/go';
 import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const PetsTable = () => {
   const [pets, setPets] = useState([]);
   const [pageData, setPageData] = useState({ totalPages: 0, number: 0 });
   const [currentPage, setCurrentPage] = useState(0);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const getPets = useCallback((page = 0) => {
+    setLoading(true);
     findAllAnimals({ page })
       .then((response) => {
         const pageResponse = response.data;
@@ -30,9 +33,10 @@ const PetsTable = () => {
           number: pageResponse.number,
         });
       })
-      .catch((error) => {
+      .catch(() => {
         showToast('Erro ao carregar pets', 'error');
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -130,54 +134,62 @@ const PetsTable = () => {
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {pets.map((pet) => (
-              <tr key={pet.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {pet.id ?? '-'}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <img
-                      className="h-10 w-10 rounded-full"
-                      src={pet.imagemPath || logo}
-                      alt={pet.nome || 'Animal'}
-                    />
-                    <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">
-                        <Link to={`/pets/${pet.id}`}>{pet.nome}</Link>
+          {!loading ? (
+            <tbody className="bg-white divide-y divide-gray-200">
+              {pets.map((pet) => (
+                <tr key={pet.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {pet.id ?? '-'}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <img
+                        className="h-10 w-10 rounded-full"
+                        src={pet.imagemPath || logo}
+                        alt={pet.nome || 'Animal'}
+                      />
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-gray-900">
+                          <Link to={`/pets/${pet.id}`}>{pet.nome}</Link>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">{pet.idade}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`${pet.sexo.toLowerCase() === 'macho' ? 'bg-sky-100 text-sky-800' : 'bg-pink-50 text-pink-800'} rounded-full px-3 py-1 text-xs font-bold`}
-                  >
-                    {pet.sexo.toUpperCase()}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="flex justify-center">
-                    {pet.disponivelParaAdocao ? (
-                      <FaCircleCheck color="green" />
-                    ) : (
-                      <FaCircleXmark color="red" />
-                    )}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                  <button
-                    className="text-blue-600 hover:text-blue-900 mr-3"
-                    onClick={() => handleEdit(pet.id)}
-                  >
-                    Editar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{pet.idade}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`${pet.sexo.toLowerCase() === 'macho' ? 'bg-sky-100 text-sky-800' : 'bg-pink-50 text-pink-800'} rounded-full px-3 py-1 text-xs font-bold`}
+                    >
+                      {pet.sexo.toUpperCase()}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="flex justify-center">
+                      {pet.disponivelParaAdocao ? (
+                        <FaCircleCheck color="green" />
+                      ) : (
+                        <FaCircleXmark color="red" />
+                      )}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                    <button
+                      className="text-blue-600 hover:text-blue-900 mr-3"
+                      onClick={() => handleEdit(pet.id)}
+                    >
+                      Editar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          ) : (
+            <td colSpan="6" className="py-10">
+              <div className="flex justify-center items-center">
+                <AiOutlineLoading3Quarters className="animate-spin w-8 h-8 text-gray-500" />
+              </div>
+            </td>
+          )}
         </table>
       </div>
 
