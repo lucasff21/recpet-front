@@ -47,16 +47,9 @@ const AdminArea = () => {
           )}
         </div>
         <Routes>
-          <Route
-            path="/*"
-            element={
-              <Routes>
-                <Route path="pets/*" element={<PetManagement />} />
-                <Route path="usuarios/*" element={<UserManagement />} />
-                <Route path="adocoes" element={<AdoptionsTable />} />
-              </Routes>
-            }
-          />
+          <Route path="pets/*" element={<PetManagement />} />
+          <Route path="usuarios/*" element={<UserManagement />} />
+          <Route path="adocoes" element={<AdoptionsTable />} />
         </Routes>
       </main>
     </div>
