@@ -11,12 +11,14 @@ import {
 } from '../../../services/ApiAdmin';
 import { GoPlus } from 'react-icons/go';
 import AdocaoStatusBadge from '../../../components/AdocaoStatusBadge';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const AdoptionsTable = () => {
   const [adocoes, setAdocoes] = useState([]);
   const [pageData, setPageData] = useState({ totalPages: 0, number: 0 }); // 2. Estado para dados da página
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [filters, setFilters] = useState({
     query: '',
@@ -25,6 +27,7 @@ const AdoptionsTable = () => {
   });
 
   const findAdocoes = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await getAllAdoptions(filters);
       const pageResponse = response.data;
@@ -35,6 +38,8 @@ const AdoptionsTable = () => {
       });
     } catch (error) {
       showToast('Erro ao buscar adoções', 'error');
+    } finally {
+      setLoading(false);
     }
   }, [filters]);
 
@@ -171,63 +176,75 @@ const AdoptionsTable = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {adocoes.map((adocao) => (
-                <tr key={adocao.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {adocao.id ?? '-'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10">
-                        <img
-                          className="h-10 w-10 rounded-full"
-                          src={adocao.animal?.imagemPath || logo}
-                          alt={adocao.animal?.nome || 'Animal'}
-                        />
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          <Link to={`/pets/${adocao.animal.id}`}>
-                            {adocao.animal?.nome ?? '-'}
-                          </Link>
+            {!loading ? (
+              <tbody className="bg-white divide-y divide-gray-200">
+                {adocoes.map((adocao) => (
+                  <tr key={adocao.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {adocao.id ?? '-'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 h-10 w-10">
+                          <img
+                            className="h-10 w-10 rounded-full"
+                            src={adocao.animal?.imagemPath || logo}
+                            alt={adocao.animal?.nome || 'Animal'}
+                          />
                         </div>
-                        <div className="text-sm text-gray-500">
-                          {adocao.animal?.idade ?? ''}
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            <Link to={`/pets/${adocao.animal.id}`}>
+                              {adocao.animal?.nome ?? '-'}
+                            </Link>
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {adocao.animal?.idade ?? ''}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {adocao.usuario?.nome ?? '-'}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {adocao.usuario?.email ?? ''}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {adocao.concluidoEm
-                      ? new Date(adocao.concluidoEm).toLocaleDateString(
-                          'pt-BR',
-                          { year: 'numeric', month: '2-digit', day: '2-digit' }
-                        )
-                      : '-'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <AdocaoStatusBadge status={adocao.status} />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                    <button
-                      className="text-blue-600 hover:text-blue-900 mr-3"
-                      onClick={() => openDetailsModal(adocao)}
-                    >
-                      Ver mais
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {adocao.usuario?.nome ?? '-'}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {adocao.usuario?.email ?? ''}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {adocao.concluidoEm
+                        ? new Date(adocao.concluidoEm).toLocaleDateString(
+                            'pt-BR',
+                            {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                            }
+                          )
+                        : '-'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <AdocaoStatusBadge status={adocao.status} />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                      <button
+                        className="text-blue-600 hover:text-blue-900 mr-3"
+                        onClick={() => openDetailsModal(adocao)}
+                      >
+                        Ver mais
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            ) : (
+              <td colSpan="6" className="py-10">
+                <div className="flex justify-center items-center">
+                  <AiOutlineLoading3Quarters className="animate-spin w-8 h-8 text-gray-500" />
+                </div>
+              </td>
+            )}
           </table>
         </div>
 

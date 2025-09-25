@@ -49,16 +49,9 @@ const PetManagement = () => {
       )}
 
       <Routes>
-        <Route
-          path="/*"
-          element={
-            <Routes>
-              <Route path="/" element={<PetsTable />} />
-              <Route path="/criar" element={<AddPet />} />
-              <Route path="/:id/editar" element={<EditPet />} />
-            </Routes>
-          }
-        />
+        <Route path="/" element={<PetsTable />} />
+        <Route path="/criar" element={<AddPet />} />
+        <Route path="/:id/editar" element={<EditPet />} />
       </Routes>
     </Panel>
   );

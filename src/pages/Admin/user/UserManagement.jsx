@@ -49,15 +49,8 @@ const UserManagement = () => {
       )}
 
       <Routes>
-        <Route
-          path="/*"
-          element={
-            <Routes>
-              <Route path="/" element={<UserTable />} />
-              <Route path="/criar" element={<CreateUserAdmin />} />
-            </Routes>
-          }
-        />
+        <Route path="/" element={<UserTable />} />
+        <Route path="/criar" element={<CreateUserAdmin />} />
       </Routes>
     </Panel>
   );
