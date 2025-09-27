@@ -9,7 +9,6 @@ import {
   getAllAdoptions,
   updateAdoptionStatus,
 } from '../../../services/ApiAdmin';
-import { GoPlus } from 'react-icons/go';
 import AdocaoStatusBadge from '../../../components/AdocaoStatusBadge';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
@@ -90,11 +89,6 @@ const AdoptionsTable = () => {
       <header className="text-center">
         <h1 className="text-3xl font-bold text-gray-800">Adoções</h1>
       </header>
-      <div className="flex justify-end">
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
-          <GoPlus className="h-5 w-5" /> Nova Adoção
-        </button>
-      </div>
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="relative flex-grow">
           <input
