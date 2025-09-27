@@ -1,8 +1,8 @@
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import '../../styles/AdminPages.css';
 import UserManagement from './user/UserManagement';
 import { ToastContainer } from 'react-toastify';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import AdoptionsTable from './adoptions/AdoptionsTable';
 import Sidebar from '../../components/Sidebar';
@@ -11,16 +11,14 @@ import { GoSidebarExpand } from 'react-icons/go';
 
 const AdminArea = () => {
   document.title = 'Painel Admin';
-  const navigate = useNavigate();
   const { logout } = useContext(AuthContext);
-  const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const adminMenuItems = [
-    { path: '/', label: 'Página Inicial', iconName: 'home' },
-    { path: './usuarios', label: 'Usuários', iconName: 'user' },
-    { path: './pets', label: 'Pets', iconName: 'paw' },
-    { path: './adocoes', label: 'Solicitações', iconName: 'adoptions' },
+    { path: '/admin', label: 'Página Inicial', iconName: 'home' },
+    { path: '/admin/usuarios', label: 'Usuários', iconName: 'user' },
+    { path: '/admin/pets', label: 'Pets', iconName: 'paw' },
+    { path: '/admin/adocoes', label: 'Solicitações', iconName: 'adoptions' },
     { label: 'Sair', iconName: 'logout', action: logout },
   ];
 
@@ -49,7 +47,7 @@ const AdminArea = () => {
         <Routes>
           <Route path="pets/*" element={<PetManagement />} />
           <Route path="usuarios/*" element={<UserManagement />} />
-          <Route path="adocoes" element={<AdoptionsTable />} />
+          <Route path="adocoes/*" element={<AdoptionsTable />} />
         </Routes>
       </main>
     </div>
