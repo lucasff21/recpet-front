@@ -11,6 +11,7 @@ import { findAllCaracteristicas } from '../../../services/ApiAdocao';
 import { showToast } from '../../../utils/toast';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import DateField from '../../../components/FormFields/DateField';
+import RadioGroupField from '../../../components/FormFields/RadioGroupField';
 
 const PetForm = ({
   onSubmit,
@@ -48,6 +49,7 @@ const PetForm = ({
           tipo: 'CACHORRO',
           descricao: '',
           caracteristicasIds: [],
+          disponivelParaAdocao: 'true',
         },
   });
 
@@ -80,6 +82,8 @@ const PetForm = ({
           defaultValues.caracteristicas?.map((c) => String(c.id)) || [],
         dataNascimentoAproximada: defaultValues.dataNascimentoAproximada || '',
         tipo: defaultValues.tipo || 'CACHORRO',
+        disponivelParaAdocao:
+          String(defaultValues.disponivelParaAdocao) || 'true',
       });
       setLocalCurrentImage(defaultValues.imagemPath || null);
       hasDefaultValuesBeenSet.current = true;
@@ -92,6 +96,7 @@ const PetForm = ({
         pelagem: 'CURTA',
         tipo: 'CACHORRO',
         descricao: '',
+        disponivelParaAdocao: 'true',
         caracteristicasIds: [],
       });
       setImagePreSave(null);
@@ -277,8 +282,20 @@ const PetForm = ({
         />
       </div>
 
+      <RadioGroupField
+        id="disponivelParaAdocao"
+        name="disponivelParaAdocao"
+        label="Disponível para Adoção"
+        options={[
+          { value: 'true', label: 'Sim' },
+          { value: 'false', label: 'Não' },
+        ]}
+        register={register}
+        errors={errors}
+      />
+
       <div className="mt-4">
-        <label className="block mb-3 font-semibold">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
           Selecione as características do animal
         </label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
