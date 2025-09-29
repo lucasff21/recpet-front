@@ -34,7 +34,6 @@ const PetForm = ({
     handleSubmit,
     formState: { errors, isValid },
     reset,
-    setValue,
   } = useForm({
     mode: 'all',
     resolver: zodResolver(validationSchema),
