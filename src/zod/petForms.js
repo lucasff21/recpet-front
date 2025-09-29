@@ -5,40 +5,34 @@ export const basePetSchema = z.object({
     .string()
     .min(1, { message: 'Nome não pode ser vazio' })
     .max(100, { message: 'Nome deve ter no máximo 100 caracteres' }),
-
   tipo: z.enum(['CACHORRO', 'GATO'], {
     errorMap: () => ({ message: 'Tipo inválido' }),
   }),
-
   dataNascimentoAproximada: z
     .string()
     .min(1, { message: 'Idade não pode ser vazia' }),
-
   sexo: z.enum(['MACHO', 'FEMEA'], {
     errorMap: () => ({ message: 'Sexo deve ser MACHO ou FEMEA' }),
   }),
-
   porte: z.enum(['PEQUENO', 'MEDIO', 'GRANDE', 'GIGANTE'], {
     errorMap: () => ({ message: 'Porte inválido' }),
   }),
-
   pelagem: z.enum(
     ['CURTA', 'MEDIA', 'LONGA', 'ENCARACOLADA', 'DURA', 'SEDOSA', 'LANOSA'],
     {
       errorMap: () => ({ message: 'Pelagem inválida' }),
     }
   ),
-
   descricao: z
     .string()
     .max(1000, { message: 'Descrição deve ter no máximo 500 caracteres' })
     .optional()
     .nullable(),
-
   caracteristicasIds: z
     .array(z.string().transform(Number))
     .optional()
     .nullable(),
+  disponivelParaAdocao: z.coerce.boolean(),
 });
 
 export const petSchema = basePetSchema.extend();

@@ -15,7 +15,7 @@ const AdminArea = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const adminMenuItems = [
-    { path: '/admin', label: 'Página Inicial', iconName: 'home' },
+    { path: '/', label: 'Página Inicial', iconName: 'home' },
     { path: '/admin/usuarios', label: 'Usuários', iconName: 'user' },
     { path: '/admin/pets', label: 'Pets', iconName: 'paw' },
     { path: '/admin/adocoes', label: 'Solicitações', iconName: 'adoptions' },

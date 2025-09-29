@@ -216,58 +216,66 @@ const UserTable = () => {
           </thead>
           {!loading ? (
             <tbody className="bg-white divide-y divide-gray-200">
-              {accounts.map((account) => (
-                <tr key={account.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
-                        <span className="text-gray-600 text-sm font-medium">
-                          {account.nome.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          {account.nome}
+              {accounts.length > 0 ? (
+                accounts.map((account) => (
+                  <tr key={account.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
+                          <span className="text-gray-600 text-sm font-medium">
+                            {account.nome.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            {account.nome}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {account.email}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <select
-                      disabled={account.id === user.id}
-                      value={account.tipoUsuario}
-                      onChange={(e) =>
-                        handleRoleChange(account.id, e.target.value)
-                      }
-                      className={`px-2 py-1 rounded-md text-xs font-medium ${account.id === user.id ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'}`}
-                    >
-                      {Object.entries(tipos).map(([key, value]) => (
-                        <option key={key} value={key}>
-                          {value}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                    <button
-                      className="text-blue-600 hover:text-blue-900 mr-3"
-                      onClick={() => handleEdit(account.id)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-900"
-                      onClick={() => handleDelete(account.id)}
-                      disabled={account.id === user.id}
-                    >
-                      Excluir
-                    </button>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {account.email}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <select
+                        disabled={account.id === user.id}
+                        value={account.tipoUsuario}
+                        onChange={(e) =>
+                          handleRoleChange(account.id, e.target.value)
+                        }
+                        className={`px-2 py-1 rounded-md text-xs font-medium ${account.id === user.id ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'}`}
+                      >
+                        {Object.entries(tipos).map(([key, value]) => (
+                          <option key={key} value={key}>
+                            {value}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                      <button
+                        className="text-blue-600 hover:text-blue-900 mr-3"
+                        onClick={() => handleEdit(account.id)}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="text-red-600 hover:text-red-900"
+                        onClick={() => handleDelete(account.id)}
+                        disabled={account.id === user.id}
+                      >
+                        Excluir
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="py-8 text-center text-gray-500">
+                    Nenhuma usuário encontrado.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           ) : (
             <td colSpan="6" className="py-10">

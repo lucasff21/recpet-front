@@ -114,8 +114,15 @@ const PetProfilePage = () => {
               </h1>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-              <div className="p-6 space-y-6">
+            <div className="flex flex-col md:flex-row md:gap-8">
+              <div className="h-auto max-w-96 md:h-[400px] w-full md:w-[400px] mb-6 md:mb-0">
+                <img
+                  src={selectedPet.imagemPath || logo}
+                  alt={selectedPet.nome}
+                  className="w-full h-full object-cover rounded-lg shadow-md"
+                />
+              </div>
+              <div className="w-full md:w-3/5 space-y-6">
                 <div className="space-y-4">
                   <h2 className="text-xl font-bold text-gray-800 border-b pb-2">
                     Sobre
@@ -193,15 +200,8 @@ const PetProfilePage = () => {
                   </div>
                 </div>
               </div>
-              <div className="h-[400px] w-[400px] justify-self-end">
-                <img
-                  src={selectedPet.imagemPath || logo}
-                  alt={selectedPet.nome}
-                  className="w-full h-full max-h-[500px] object-contain"
-                />
-              </div>
             </div>
-            <div className="p-6 flex justify-end gap-4">
+            <div className="pt-6 flex justify-end">
               <Button
                 confirm={true}
                 onClick={interesseAdocao}
