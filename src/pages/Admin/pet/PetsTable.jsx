@@ -15,10 +15,13 @@ const PetsTable = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [filters, setFilters] = useState({
+    nome: '',
+  });
 
-  const getPets = useCallback((page = 0) => {
+  const getPets = useCallback((page, nome) => {
     setLoading(true);
-    findAllAnimals({ page })
+    findAllAnimals({ page, nome })
       .then((response) => {
         const pageResponse = response.data;
         const petsData = pageResponse.content.map((pet) => ({
@@ -40,8 +43,14 @@ const PetsTable = () => {
   }, []);
 
   useEffect(() => {
-    getPets(currentPage);
-  }, [currentPage, getPets]);
+    const handler = setTimeout(() => {
+      getPets(currentPage, filters.nome);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [currentPage, filters.nome, getPets]);
 
   const handlePageChange = useCallback((page) => {
     setCurrentPage(page - 1);
@@ -49,6 +58,15 @@ const PetsTable = () => {
 
   const handleEdit = (id) => {
     navigate(`/admin/pets/${id}/editar`);
+  };
+
+  const handleFilterChange = (event) => {
+    const { name, value } = event.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+    setCurrentPage(0);
   };
 
   return (
@@ -59,6 +77,9 @@ const PetsTable = () => {
             <input
               type="text"
               placeholder="Buscar animais..."
+              name="nome"
+              value={filters.nome}
+              onChange={handleFilterChange}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <div className="absolute left-3 top-2.5 text-gray-400">
@@ -136,52 +157,60 @@ const PetsTable = () => {
           </thead>
           {!loading ? (
             <tbody className="bg-white divide-y divide-gray-200">
-              {pets.map((pet) => (
-                <tr key={pet.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {pet.id ?? '-'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src={pet.imagemPath || logo}
-                        alt={pet.nome || 'Animal'}
-                      />
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          <Link to={`/pets/${pet.id}`}>{pet.nome}</Link>
+              {pets.length > 0 ? (
+                pets.map((pet) => (
+                  <tr key={pet.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {pet.id ?? '-'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <img
+                          className="h-10 w-10 rounded-full"
+                          src={pet.imagemPath || logo}
+                          alt={pet.nome || 'Animal'}
+                        />
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            <Link to={`/pets/${pet.id}`}>{pet.nome}</Link>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{pet.idade}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`${pet.sexo.toLowerCase() === 'macho' ? 'bg-sky-100 text-sky-800' : 'bg-pink-50 text-pink-800'} rounded-full px-3 py-1 text-xs font-bold`}
-                    >
-                      {pet.sexo.toUpperCase()}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="flex justify-center">
-                      {pet.disponivelParaAdocao ? (
-                        <FaCircleCheck color="green" />
-                      ) : (
-                        <FaCircleXmark color="red" />
-                      )}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                    <button
-                      className="text-blue-600 hover:text-blue-900 mr-3"
-                      onClick={() => handleEdit(pet.id)}
-                    >
-                      Editar
-                    </button>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">{pet.idade}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`${pet.sexo.toLowerCase() === 'macho' ? 'bg-sky-100 text-sky-800' : 'bg-pink-50 text-pink-800'} rounded-full px-3 py-1 text-xs font-bold`}
+                      >
+                        {pet.sexo.toUpperCase()}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="flex justify-center">
+                        {pet.disponivelParaAdocao ? (
+                          <FaCircleCheck color="green" />
+                        ) : (
+                          <FaCircleXmark color="red" />
+                        )}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                      <button
+                        className="text-blue-600 hover:text-blue-900 mr-3"
+                        onClick={() => handleEdit(pet.id)}
+                      >
+                        Editar
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="py-8 text-center text-gray-500">
+                    Nenhuma animal encontrado.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           ) : (
             <td colSpan="6" className="py-10">
