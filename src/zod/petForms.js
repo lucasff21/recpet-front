@@ -32,7 +32,9 @@ export const basePetSchema = z.object({
     .array(z.string().transform(Number))
     .optional()
     .nullable(),
-  disponivelParaAdocao: z.coerce.boolean(),
+  disponivelParaAdocao: z.string().transform((str) => {
+    return str.toLowerCase() !== 'false';
+  }),
 });
 
 export const petSchema = basePetSchema.extend();

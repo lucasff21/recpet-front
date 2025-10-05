@@ -22,7 +22,7 @@ const Sidebar = ({
       } lg:relative lg:translate-x-0 lg:w-64 lg:flex-shrink-0 transition-transform duration-300 ease-in-out overflow-y-auto`}
     >
       <div className="flex justify-between items-center mb-8 lg:hidden">
-        <h2 className="text-2xl font-bold text-gray-800">Menu</h2>
+        <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
         <button
           onClick={() => setIsSidebarOpen(false)}
           className="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
