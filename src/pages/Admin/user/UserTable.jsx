@@ -8,6 +8,7 @@ import { showToast } from '../../../utils/toast';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { GoPlus } from 'react-icons/go';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import Panel from '../../../components/Panel';
 
 const UserTable = () => {
   const [accounts, setAccounts] = useState([]);
@@ -114,7 +115,10 @@ const UserTable = () => {
   };
 
   return (
-    <div>
+    <Panel>
+      <header className="text-center">
+        <h1 className="text-3xl font-bold text-gray-800">Usuários</h1>
+      </header>
       <div className="pb-4 border-b">
         <div className="flex-shrink-0 flex justify-end py-4">
           <Link to="../criar">
@@ -304,7 +308,7 @@ const UserTable = () => {
           onCancel={() => setModal({ isOpen: false, userId: null })}
         />
       )}
-    </div>
+    </Panel>
   );
 };
 
