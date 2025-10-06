@@ -8,6 +8,7 @@ import Pagination from '../../../components/Pagination';
 import { GoPlus } from 'react-icons/go';
 import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import Panel from '../../../components/Panel';
 
 const PetsTable = () => {
   const [pets, setPets] = useState([]);
@@ -70,7 +71,10 @@ const PetsTable = () => {
   };
 
   return (
-    <div>
+    <Panel>
+      <header className="text-center">
+        <h1 className="text-3xl font-bold text-gray-800">Pets</h1>
+      </header>
       <div className="py-4 border-b">
         <div className="mt-2 flex justify-between items-center">
           <div className="relative w-64">
@@ -171,8 +175,8 @@ const PetsTable = () => {
                           alt={pet.nome || 'Animal'}
                         />
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">
-                            <Link to={`/pets/${pet.id}`}>{pet.nome}</Link>
+                          <div className="text-sm font-medium text-blue-600">
+                            <Link to={`/admin/pets/${pet.id}`}>{pet.nome}</Link>
                           </div>
                         </div>
                       </div>
@@ -231,7 +235,7 @@ const PetsTable = () => {
           />
         </div>
       )}
-    </div>
+    </Panel>
   );
 };
 

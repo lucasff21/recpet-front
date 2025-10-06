@@ -1,4 +1,3 @@
-// Pagination.js
 import React from 'react';
 import { usePagination, DOTS } from '../hooks/usePagination';
 import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from 'react-icons/md';

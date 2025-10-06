@@ -24,7 +24,7 @@ const DashboardHome = () => {
             Acompanhe o status das suas solicitações de adoção.
           </p>
           <button
-            onClick={() => navigate('/painel/adocoes')} // Navegação direta
+            onClick={() => navigate('/painel/adocoes')}
             className="mt-2 text-blue-600 hover:underline"
           >
             Ver solicitações

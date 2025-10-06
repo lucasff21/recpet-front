@@ -77,3 +77,7 @@ export const updateAdoptionStatus = async (id, data) => {
 export const findAllAnimals = async (params = {}) => {
   return await apiClient.get(`${apiUrl}/admin/animais`, { params });
 };
+
+export const getAdocoesByAnimalId = async (id) => {
+  return await apiClient.get(`${apiUrl}/admin/animais/${id}/adocoes`);
+};
