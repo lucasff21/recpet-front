@@ -27,31 +27,31 @@ const PetDetails = () => {
   const [pageData, setPageData] = useState({ totalPages: 0, number: 0 });
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    page: 0,
+  });
 
   const findAdoptions = useCallback(
     async (page = 0) => {
       try {
-        const response = await getAdocoesByAnimalId(petId, page);
+        const response = await getAdocoesByAnimalId(petId, filters);
         const pageResponse = response.data;
         setAdoptions(pageResponse?.content);
         setPageData({
-          totalPages: pageResponse?.paginate?.totalPages,
-          number: pageResponse?.paginate?.currentPage - 1,
+          totalPages: pageResponse?.totalPages,
+          number: pageResponse?.pageable?.pageNumber,
         });
       } catch (err) {
         showToast('Erro ao buscar as adoções do pet.', 'error');
         setError('Erro ao buscar as adoções.');
       }
     },
-    [petId]
+    [petId, filters]
   );
 
-  const handlePageChange = useCallback(
-    (page) => {
-      findAdoptions(page);
-    },
-    [findAdoptions]
-  );
+  const handlePageChange = useCallback((page) => {
+    setFilters((prev) => ({ ...prev, page: page - 1 }));
+  }, []);
 
   const openDetailsModal = (request) => {
     setSelectedRequest(request);

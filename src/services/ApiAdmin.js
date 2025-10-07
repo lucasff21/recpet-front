@@ -78,6 +78,8 @@ export const findAllAnimals = async (params = {}) => {
   return await apiClient.get(`${apiUrl}/admin/animais`, { params });
 };
 
-export const getAdocoesByAnimalId = async (id) => {
-  return await apiClient.get(`${apiUrl}/admin/animais/${id}/adocoes`);
+export const getAdocoesByAnimalId = async (id, params = {}) => {
+  return await apiClient.get(`${apiUrl}/admin/animais/${id}/adocoes`, {
+    params,
+  });
 };
