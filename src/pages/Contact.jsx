@@ -1,42 +1,65 @@
+import { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
+import { getPaginaPublicaPorNome } from '../services/ApiPagina';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const Contact = () => {
+  document.title = 'Contato';
+  const [pagina, setPagina] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const nomePagina = process.env.REACT_APP_PAGINA_CONTATO || 'contato';
+
+    const fetchPagina = async () => {
+      try {
+        const response = await getPaginaPublicaPorNome(nomePagina);
+        setPagina(response.data);
+      } catch (err) {
+        setError('Não foi possível carregar as informações de contato.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPagina();
+  }, []);
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center h-64">
+          <AiOutlineLoading3Quarters className="animate-spin text-4xl text-blue-600" />
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div className="text-center my-10 p-8 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-600 mt-2">{error}</p>
+        </div>
+      );
+    }
+
+    if (pagina) {
+      return (
+        <>
+          <h1 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+            {pagina.titulo}
+          </h1>
+          <div dangerouslySetInnerHTML={{ __html: pagina.conteudo }} />
+        </>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <Layout>
-      <div className="max-w-3xl mx-auto p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-          Contato
-        </h1>
-        <div className="flex flex-col gap-2 text-gray-700">
-          <p>
-            <span className="font-bold">📍 Endereço:</span> Avenida Milton
-            Santos, s/n - Campus de Ondina, PAF 2 - Salvador - Bahia, CEP
-            40.170-110
-          </p>
-          <p>
-            <span className="font-bold">📞 Telefone:</span>{' '}
-            <a
-              href="https://wa.me/551199999999"
-              className="text-orange-500 hover:text-orange-600"
-              target="_blank"
-              rel="noreferrer"
-            >
-              (11) 99999-9999
-            </a>
-          </p>
-          <p>
-            <span className="font-bold">✉️ E-mail:</span>{' '}
-            <a
-              href="mailto:contato@empresa.com"
-              className="text-orange-500 hover:text-orange-600"
-              target="_blank"
-              rel="noreferrer"
-            >
-              contato@example.com
-            </a>
-          </p>
-        </div>
-      </div>
+      <div className="max-w-3xl mx-auto p-6">{renderContent()}</div>
     </Layout>
   );
 };
