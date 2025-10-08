@@ -78,6 +78,24 @@ export const findAllAnimals = async (params = {}) => {
   return await apiClient.get(`${apiUrl}/admin/animais`, { params });
 };
 
-export const getAdocoesByAnimalId = async (id) => {
-  return await apiClient.get(`${apiUrl}/admin/animais/${id}/adocoes`);
+export const getAdocoesByAnimalId = async (id, params = {}) => {
+  return await apiClient.get(`${apiUrl}/admin/animais/${id}/adocoes`, {
+    params,
+  });
+};
+
+export const findAllPaginas = ({ page = 0, size = 10 }) => {
+  return apiClient.get(`${apiUrl}/admin/paginas?page=${page}&size=${size}`);
+};
+
+export const findPaginaById = (id) => {
+  return apiClient.get(`${apiUrl}/admin/paginas/${id}`);
+};
+
+export const createPagina = (data) => {
+  return apiClient.post(`${apiUrl}/admin/paginas`, data);
+};
+
+export const updatePagina = (id, data) => {
+  return apiClient.put(`${apiUrl}/admin/paginas/${id}`, data);
 };

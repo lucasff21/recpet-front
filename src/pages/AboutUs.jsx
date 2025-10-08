@@ -1,41 +1,77 @@
+import { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
+import { getPaginaPublicaPorNome } from '../services/ApiPagina';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const AboutUs = () => {
+  document.title = 'Quem Somos';
+  const [pagina, setPagina] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const nomePagina = process.env.REACT_APP_PAGINA_QUEM_SOMOS || 'quem_somos';
+
+    const fetchPagina = async () => {
+      try {
+        const response = await getPaginaPublicaPorNome(nomePagina);
+        setPagina(response.data);
+      } catch (err) {
+        setError(
+          'Não foi possível carregar o conteúdo. Tente novamente mais tarde.'
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPagina();
+  }, []);
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center h-64">
+          <AiOutlineLoading3Quarters className="animate-spin text-4xl text-blue-600" />
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div className="text-center my-10 p-8 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-600 mt-2">{error}</p>
+        </div>
+      );
+    }
+
+    if (pagina) {
+      return (
+        <article>
+          <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">
+            {pagina.titulo}
+          </h1>
+          <div
+            className="prose max-w-none"
+            dangerouslySetInnerHTML={{ __html: pagina.conteudo }}
+          />
+        </article>
+      );
+    } else {
+      return (
+        <article>
+          <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">
+            Conteúdo não encontrado
+          </h1>
+          <p>Conteúdo não encontrado.</p>
+        </article>
+      );
+    }
+  };
+
   return (
     <Layout>
-      <div className="max-w-3xl mx-auto p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-          Quem somos
-        </h1>
-        <p className="text-sm text-gray-600 text-center">
-          "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
-          consectetur, adipisci velit..."
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. In viverra
-          diam at nunc sagittis volutpat et at nisl. Mauris dictum, nulla sit
-          amet varius tristique, mauris lectus tristique sapien, vel faucibus
-          lorem nulla vitae metus. Curabitur non tortor fringilla, ornare ex
-          quis, bibendum tellus. Integer imperdiet justo a leo pharetra blandit.
-          Nam feugiat tempus sollicitudin. Sed semper magna ac eros luctus,
-          consectetur interdum diam interdum. Cras varius pellentesque
-          facilisis. In id vehicula nibh.
-        </p>
-
-        <p>
-          Donec eu fringilla nibh, a varius tortor. Duis convallis et nisi vel
-          maximus. Etiam vitae massa elit. Sed vestibulum turpis ut fermentum
-          ultrices. Aliquam euismod elit vitae pellentesque pulvinar. Integer
-          quam neque, sollicitudin luctus eros a, vehicula placerat urna. Cras
-          hendrerit, turpis quis hendrerit porta, orci mauris ullamcorper metus,
-          id interdum tortor elit vel purus. Curabitur tincidunt, magna vel
-          tristique eleifend, quam lectus consectetur ipsum, eget commodo sapien
-          neque vel urna. Nunc pretium convallis libero sed sagittis. Vivamus
-          mattis blandit congue. Aliquam varius metus at leo fermentum, eu
-          condimentum lectus ultricies. In a nisl sit amet nulla eleifend
-          gravida. Pellentesque consequat enim sed turpis tempus malesuada.
-        </p>
-      </div>
+      <div className="max-w-3xl mx-auto p-6">{renderContent()}</div>
     </Layout>
   );
 };
