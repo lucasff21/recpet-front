@@ -9,6 +9,8 @@ import Breadcrumb from '../../../components/Breadcrumb';
 import Layout from '../../../components/Layout';
 import Sidebar from '../../../components/Sidebar';
 import { GoSidebarExpand } from 'react-icons/go';
+import { IoMdHome, IoMdSettings } from 'react-icons/io';
+import { PiFilesFill } from 'react-icons/pi';
 
 const DashboardPage = () => {
   document.title = 'Minha conta';
@@ -17,12 +19,20 @@ const DashboardPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const painelMenuItems = [
-    { path: '/painel', label: 'Início', iconName: 'home' },
-    { path: '/painel/adocoes', label: 'Minhas adoções', iconName: 'adoptions' },
+    {
+      path: '/painel',
+      label: 'Início',
+      icon: <IoMdHome className="h-5 w-5 mr-3" />,
+    },
+    {
+      path: '/painel/adocoes',
+      label: 'Minhas adoções',
+      icon: <PiFilesFill className="h-5 w-5 mr-3" />,
+    },
     {
       path: '/painel/configuracoes',
       label: 'Editar conta',
-      iconName: 'settings',
+      icon: <IoMdSettings className="h-5 w-5 mr-3" />,
     },
   ];
 

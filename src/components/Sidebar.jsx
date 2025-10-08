@@ -44,9 +44,7 @@ const Sidebar = ({
               onClick={() => setIsSidebarOpen(false)}
               end
             >
-              {item.iconName && (
-                <Icon name={item.iconName} className="h-5 w-5 mr-3" />
-              )}
+              {item.icon && item.icon}
               {item.label}
             </NavLink>
           ) : (
@@ -58,9 +56,7 @@ const Sidebar = ({
               }}
               className="flex items-center px-2 py-2 rounded-md text-sm font-medium w-full text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition duration-150 ease-in-out"
             >
-              {item.iconName && (
-                <Icon name={item.iconName} className="h-5 w-5 mr-3" />
-              )}
+              {item.icon && item.icon}
               {item.label}
             </button>
           )
