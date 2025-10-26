@@ -62,7 +62,7 @@ const DashboardPage = () => {
             setIsSidebarOpen={setIsSidebarOpen}
           />
 
-          <main className="flex-1 p-4 sm:p-6 transition-all duration-300 ease-in-out bg-gray-50">
+          <main className="flex-1 p-4 sm:p-6 transition-all duration-300 ease-in-out">
             <div className="flex">
               {!isSidebarOpen && (
                 <button
@@ -74,7 +74,7 @@ const DashboardPage = () => {
                 </button>
               )}
             </div>
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto mt-14">
               {location.pathname !== '/painel' && (
                 <Breadcrumb
                   items={ITEMS_BREADCRUMB}
