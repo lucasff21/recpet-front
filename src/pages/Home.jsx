@@ -168,18 +168,25 @@ const Home = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row lg:space-x-6">
-          <FilterSidebar
-            isSidebarOpen={isSidebarOpen}
-            setIsSidebarOpen={setIsSidebarOpen}
-            tempFilters={tempFilters}
-            handleTempFilterChange={handleTempFilterChange}
-            handleTemperamentChange={handleTemperamentChange}
-            applyFilters={applyFilters}
-            clearFilters={clearFilters}
-            allTemperaments={allTemperaments}
-            temperamentsLoading={temperamentsLoading}
-            temperamentsError={temperamentsError}
-          />
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              applyFilters();
+            }}
+          >
+            <FilterSidebar
+              isSidebarOpen={isSidebarOpen}
+              setIsSidebarOpen={setIsSidebarOpen}
+              tempFilters={tempFilters}
+              handleTempFilterChange={handleTempFilterChange}
+              handleTemperamentChange={handleTemperamentChange}
+              applyFilters={applyFilters}
+              clearFilters={clearFilters}
+              allTemperaments={allTemperaments}
+              temperamentsLoading={temperamentsLoading}
+              temperamentsError={temperamentsError}
+            />
+          </form>
 
           <div className="flex-1">
             <div className="flex justify-end pb-4">
