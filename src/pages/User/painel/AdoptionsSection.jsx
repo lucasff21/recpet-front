@@ -69,7 +69,7 @@ const Adoptions = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <div className="max-w-4xl mx-auto bg-white p-6 rounded-ld shadow-sm">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
         Minhas Solicitações de Adoção
       </h2>

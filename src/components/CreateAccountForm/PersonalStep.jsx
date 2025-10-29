@@ -12,6 +12,7 @@ const PersonalStep = ({ register, errors, minDate }) => {
         errors={errors}
         colSpan={2}
         placeholder="Nome Completo"
+        minLength={5}
       />
 
       <InputField
