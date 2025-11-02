@@ -14,7 +14,7 @@ const UserManagement = () => {
       {isCreatePage && (
         <Breadcrumb
           items={[
-            { label: 'Usuario', href: '/admin/usuarios' },
+            { label: 'Usuários', href: '/admin/usuarios' },
             { label: 'Criar' },
           ]}
         />

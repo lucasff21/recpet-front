@@ -96,7 +96,7 @@ const Adoptions = () => {
           <p>
             Que tal explorar nossos{' '}
             <a href="/" className="text-blue-600 hover:underline">
-              cãezinhos disponíveis
+              pets disponíveis
             </a>
             ?
           </p>
