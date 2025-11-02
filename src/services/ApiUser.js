@@ -17,7 +17,7 @@ export const loginUser = async (email, password) => {
 
 export const createUser = async (payload) => {
   return axios({
-    url: `${apiUrl}/users/create`,
+    url: `${apiUrl}/users`,
     method: 'POST',
     data: payload,
     headers: {

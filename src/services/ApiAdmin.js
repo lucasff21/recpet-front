@@ -6,7 +6,7 @@ const apiUrl = URL.base;
 
 export const createUser = async (data) => {
   return axios({
-    url: `${apiUrl}/admin/create`,
+    url: `${apiUrl}/admin`,
     method: 'POST',
     data: data,
     headers: {
