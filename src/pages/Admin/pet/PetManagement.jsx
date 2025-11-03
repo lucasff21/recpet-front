@@ -6,7 +6,7 @@ import PetDetails from './PetDetails';
 import Breadcrumb from '../../../components/Breadcrumb';
 
 const PetManagement = () => {
-  document.title = 'Pets | ADMIN ';
+  document.title = 'Pets | ADMIN';
   const location = useLocation();
   const isSubPage = /criar|editar/.test(location.pathname);
 

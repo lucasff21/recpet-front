@@ -23,7 +23,7 @@ const RecoveryPassword = () => {
         showToast(
           'Se o e-mail estiver cadastrado, você receberá um link para redefinir sua senha.'
         );
-        setTimeout(() => navigate('/'), 500);
+        setTimeout(() => navigate('/'), 2000);
       })
       .catch(() => {
         showToast('Erro ao solicitar recuperação de senha.', 'error');

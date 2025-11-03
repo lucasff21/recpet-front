@@ -11,9 +11,11 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import Panel from '../../../components/Panel';
 
 const UserTable = () => {
+  document.title = 'Usuários | ADMIN';
   const [accounts, setAccounts] = useState([]);
   const [pageData, setPageData] = useState({ totalPages: 0, number: 0 });
   const [loading, setLoading] = useState(false);
+
   const [filters, setFilters] = useState({
     valor: '',
     tipoBusca: 'NOME',
@@ -22,8 +24,12 @@ const UserTable = () => {
     page: 0,
   });
 
-  const [searchType, setSearchType] = useState('NOME');
-  const [searchValue, setSearchValue] = useState('');
+  const [localFilters, setLocalFilters] = useState({
+    valor: filters.valor,
+    tipoBusca: filters.tipoBusca,
+    role: filters.role,
+    sortByDate: filters.sortByDate,
+  });
 
   const [modal, setModal] = useState({ isOpen: false, userId: null });
   const { user } = useContext(AuthContext);
@@ -62,9 +68,9 @@ const UserTable = () => {
     fetchUsers(filters);
   }, [filters, fetchUsers]);
 
-  const handleSelectFilterChange = (e) => {
+  const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value, page: 0 }));
+    setLocalFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePageChange = useCallback((page) => {
@@ -74,10 +80,15 @@ const UserTable = () => {
   const handleSearch = () => {
     setFilters((prev) => ({
       ...prev,
-      valor: searchValue,
-      tipoBusca: searchType,
+      ...localFilters,
       page: 0,
     }));
+  };
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   const handleDelete = (id) => setModal({ isOpen: true, userId: id });
@@ -114,77 +125,105 @@ const UserTable = () => {
     ADOTANTE: 'ADOTANTE',
   };
 
+  const inputStyle =
+    'h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500';
+  const labelStyle = 'block text-sm font-medium text-gray-700 mb-1';
+
   return (
     <Panel>
       <header className="text-center">
         <h1 className="text-3xl font-bold text-gray-800">Usuários</h1>
       </header>
-      <div className="pb-4 border-b">
-        <div className="flex-shrink-0 flex justify-end py-4">
+
+      <div className="py-4 border-b">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-700">Filtros</h2>
           <Link to="../criar">
             <button
               type="button"
-              className="w-full lg:w-auto h-10 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center gap-2"
+              className="h-10 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center gap-2"
             >
               <GoPlus className="h-5 w-5" />
               Criar usuário
             </button>
           </Link>
         </div>
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div className="flex flex-col sm:flex-row flex-wrap items-center gap-4 flex-grow justify-end">
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <select
-                value={searchType}
-                onChange={(e) => setSearchType(e.target.value)}
-                className="h-10 px-3 w-32 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                aria-label="Tipo de busca"
-              >
-                <option value="NOME">Nome</option>
-                <option value="EMAIL">Email</option>
-              </select>
-              <input
-                type="text"
-                placeholder="Buscar..."
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                className="h-10 w-full sm:w-48 pl-4 pr-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <select
-                name="role"
-                value={filters.role}
-                onChange={handleSelectFilterChange}
-                className="h-10 px-3 w-full sm:w-48 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Todos os Tipos</option>
-                {Object.entries(tipos).map(([key, value]) => (
-                  <option key={key} value={key}>
-                    {value}
-                  </option>
-                ))}
-              </select>
-              <select
-                name="sortByDate"
-                value={filters.sortByDate}
-                onChange={handleSelectFilterChange}
-                className="h-10 px-3 w-full sm:w-48 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="desc">Mais Recentes</option>
-                <option value="asc">Mais Antigos</option>
-              </select>
-            </div>
-
-            <button
-              onClick={handleSearch}
-              className="h-10 px-4 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors shadow-sm"
+        <div className="flex flex-wrap items-end gap-4">
+          <div>
+            <label htmlFor="tipoBusca" className={labelStyle}>
+              Buscar por
+            </label>
+            <select
+              id="tipoBusca"
+              name="tipoBusca"
+              value={localFilters.tipoBusca}
+              onChange={handleFilterChange}
+              className={`${inputStyle} w-32`}
             >
-              Buscar
-            </button>
+              <option value="NOME">Nome</option>
+              <option value="EMAIL">Email</option>
+            </select>
           </div>
+
+          <div>
+            <label htmlFor="valor" className={labelStyle}>
+              Termo
+            </label>
+            <input
+              type="text"
+              id="valor"
+              name="valor"
+              placeholder="Buscar..."
+              value={localFilters.valor}
+              onChange={handleFilterChange}
+              onKeyDown={handleSearchKeyDown}
+              className={`${inputStyle} w-full sm:w-48`}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="role" className={labelStyle}>
+              Tipo
+            </label>
+            <select
+              id="role"
+              name="role"
+              value={localFilters.role}
+              onChange={handleFilterChange}
+              className={`${inputStyle} w-full sm:w-48`}
+            >
+              <option value="">Todos</option>
+              {Object.entries(tipos).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="sortByDate" className={labelStyle}>
+              Ordenar por
+            </label>
+            <select
+              id="sortByDate"
+              name="sortByDate"
+              value={localFilters.sortByDate}
+              onChange={handleFilterChange}
+              className={`${inputStyle} w-full sm:w-48`}
+            >
+              <option value="desc">Mais Recentes</option>
+              <option value="asc">Mais Antigos</option>
+            </select>
+          </div>
+
+          <button
+            onClick={handleSearch}
+            className="h-10 px-4 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors shadow-sm"
+          >
+            Buscar
+          </button>
         </div>
       </div>
 
@@ -258,12 +297,6 @@ const UserTable = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                       <button
-                        className="text-blue-600 hover:text-blue-900 mr-3"
-                        onClick={() => handleEdit(account.id)}
-                      >
-                        Editar
-                      </button>
-                      <button
                         className="text-red-600 hover:text-red-900"
                         onClick={() => handleDelete(account.id)}
                         disabled={account.id === user.id}
@@ -276,7 +309,7 @@ const UserTable = () => {
               ) : (
                 <tr>
                   <td colSpan="6" className="py-8 text-center text-gray-500">
-                    Nenhuma usuário encontrado.
+                    Nenhum usuário encontrado.
                   </td>
                 </tr>
               )}

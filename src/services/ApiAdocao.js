@@ -3,7 +3,11 @@ import axios from 'axios';
 import { URL } from '../helpers/apiRoutes';
 
 export const findAllAnimals = async (params = {}) => {
-  return await axios.get(`${URL.api}/animais`, { params });
+  return axios.get(`${URL.api}/animais`, { params });
+};
+
+export const findAllCaracteristicas = () => {
+  return axios.get(`${URL.api}/animais/caracteristicas`);
 };
 
 export const createAnimal = (animal) => {
@@ -56,8 +60,4 @@ export const updateAnimal = (id, data) => {
 
 export const deletarAdocao = (id) => {
   return apiClient.put(`/adocao/${id}`);
-};
-
-export const findAllCaracteristicas = () => {
-  return apiClient.get('/animais/caracteristicas');
 };

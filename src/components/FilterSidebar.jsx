@@ -115,7 +115,7 @@ const FilterSidebar = ({
           </FilterAccordion>
 
           <FilterAccordion
-            title="GÊNERO"
+            title="SEXO"
             isOpen={accordionOpen.genero}
             toggleOpen={() => toggleAccordion('genero')}
           >

@@ -51,13 +51,13 @@ export const usePersonalForm = () => {
   const handleFormSubmit = async (data) => {
     const payload = {
       nome: data.fullName,
-      cpf: data.cpf,
+      cpf: data.cpf?.replace(/\D/g, ''),
       genero: data.gender,
       dataNascimento: data.birthDate,
-      telefone: data.phone,
+      telefone: data.phone?.replace(/\D/g, ''),
       email: data.email,
       senha: data.password,
-      cep: data.zipCode,
+      cep: data.zipCode?.replace(/\D/g, ''),
       logradouro: data.street,
       complemento: data.complement || '',
       bairro: data.district,
@@ -73,8 +73,8 @@ export const usePersonalForm = () => {
           navigate('/login', { state: { userCreated: true } });
         }
       })
-      .catch(() => {
-        showToast('Erro ao criar conta', 'error');
+      .catch((e) => {
+        showToast(e.response?.data?.error || 'Erro ao criar conta', 'error');
       })
       .finally(() => {
         setLoading(false);

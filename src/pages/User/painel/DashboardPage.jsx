@@ -74,7 +74,7 @@ const DashboardPage = () => {
                 </button>
               )}
             </div>
-            <div className="max-w-4xl mx-auto mt-14">
+            <div className="max-w-4xl mx-auto mt-14 sm:mt-2">
               {location.pathname !== '/painel' && (
                 <Breadcrumb
                   items={ITEMS_BREADCRUMB}
