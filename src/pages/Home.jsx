@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { showToast } from '../utils/toast';
 import { findAllAnimals, findAllCaracteristicas } from '../services/ApiAdocao';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout';
 import PetCard from '../components/Cards/PetCard';
 import FilterSidebar from '../components/FilterSidebar';
@@ -9,12 +9,48 @@ import Pagination from '../components/Pagination';
 import { calculateAge } from '../utils/pet';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
+const createParamsFromFilters = (filters) => {
+  const params = {
+    name: filters.name,
+    size: filters.size,
+    ageGroup: filters.ageGroup,
+    gender: filters.gender,
+    temperament: filters.temperament.join(','),
+    page: filters.page.toString(),
+  };
+
+  Object.keys(params).forEach(
+    (key) => (params[key] === '' || params[key] == null) && delete params[key]
+  );
+
+  if (params.page === '0') {
+    delete params.page;
+  }
+
+  return params;
+};
+
+const getFiltersFromParams = (searchParams) => {
+  return {
+    name: searchParams.get('name') || '',
+    size: searchParams.get('size') || '',
+    ageGroup: searchParams.get('ageGroup') || '',
+    gender: searchParams.get('gender') || '',
+    temperament: searchParams.get('temperament')
+      ? searchParams.get('temperament').split(',').map(Number)
+      : [],
+    page: searchParams.get('page') ? Number(searchParams.get('page')) : 0,
+  };
+};
+
 const Home = () => {
   const [filteredAnimals, setFilteredAnimals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [pageData, setPageData] = useState({
     totalPages: 0,
@@ -25,16 +61,9 @@ const Home = () => {
   const [temperamentsLoading, setTemperamentsLoading] = useState(true);
   const [temperamentsError, setTemperamentsError] = useState(null);
 
-  const [filters, setFilters] = useState({
-    name: '',
-    size: '',
-    ageGroup: '',
-    gender: '',
-    temperament: [],
-    page: 0,
-  });
-
-  const [tempFilters, setTempFilters] = useState(filters);
+  const [tempFilters, setTempFilters] = useState(() =>
+    getFiltersFromParams(searchParams)
+  );
 
   useEffect(() => {
     const fetchTemperaments = async () => {
@@ -52,6 +81,10 @@ const Home = () => {
     };
     fetchTemperaments();
   }, []);
+
+  useEffect(() => {
+    setTempFilters(getFiltersFromParams(searchParams));
+  }, [searchParams]);
 
   const openPageAnimal = useCallback(
     (id) => {
@@ -83,9 +116,10 @@ const Home = () => {
   }, []);
 
   const applyFilters = useCallback(() => {
-    setFilters({ ...tempFilters, page: 0 });
+    const newFiltersWithPageReset = { ...tempFilters, page: 0 };
+    setSearchParams(createParamsFromFilters(newFiltersWithPageReset));
     setIsSidebarOpen(false);
-  }, [tempFilters]);
+  }, [tempFilters, setSearchParams]);
 
   const clearFilters = useCallback(() => {
     const defaultFilters = {
@@ -96,30 +130,39 @@ const Home = () => {
       temperament: [],
       page: 0,
     };
-    setFilters(defaultFilters);
     setTempFilters(defaultFilters);
+    setSearchParams({});
     setIsSidebarOpen(false);
-  }, []);
+  }, [setSearchParams]);
 
-  const handlePageChange = useCallback((page) => {
-    setFilters((prevFilters) => ({ ...prevFilters, page: page - 1 }));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  const handlePageChange = useCallback(
+    (page) => {
+      const currentFilters = getFiltersFromParams(searchParams);
+      const newParams = createParamsFromFilters({
+        ...currentFilters,
+        page: page - 1,
+      });
+      setSearchParams(newParams);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    [searchParams, setSearchParams]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
-        const caracteristicasIds =
-          filters.temperament.length > 0 ? filters.temperament.join(',') : null;
+
+        const caracteristicasIds = searchParams.get('temperament') || null;
+
         const apiParams = {
-          nome: filters.name,
-          porte: filters.size,
-          faixaEtaria: filters.ageGroup,
-          sexo: filters.gender,
+          nome: searchParams.get('name') || null,
+          porte: searchParams.get('size') || null,
+          faixaEtaria: searchParams.get('ageGroup') || null,
+          sexo: searchParams.get('gender') || null,
           caracteristicasIds: caracteristicasIds,
-          page: filters.page,
+          page: searchParams.get('page') || 0,
         };
 
         Object.keys(apiParams).forEach(
@@ -151,7 +194,7 @@ const Home = () => {
     };
 
     fetchData();
-  }, [filters]);
+  }, [searchParams]);
 
   return (
     <Layout>
