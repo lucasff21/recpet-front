@@ -39,7 +39,7 @@ export const findByQuestionarioEmail = async (email, token) => {
 };
 
 export const findAnimalById = async (id) => {
-  return apiClient.get(`/animais/${id}`);
+  return axios.get(`${URL.api}/animais/${id}`);
 };
 
 export const adotarPet = (data) => {
