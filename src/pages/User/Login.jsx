@@ -37,7 +37,7 @@ const Login = () => {
         }
       }
     } catch (error) {
-      console.error('Erro ao processar redirect:', error);
+      showToast('Erro ao processar redirect.', 'error');
     }
     return '/';
   };

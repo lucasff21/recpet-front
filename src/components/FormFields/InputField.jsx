@@ -16,6 +16,8 @@ const InputField = ({
 }) => {
   const { errorMessage, hasError } = useFieldValidation(id, errors);
 
+  const registerProps = register ? register(id, { required }) : {};
+
   const commonProps = {
     id: id,
     type: type,
@@ -29,7 +31,7 @@ const InputField = ({
       ${className}
     `,
     placeholder: placeholder,
-    ...register(id, { required }),
+    ...registerProps,
     ...props,
   };
 
