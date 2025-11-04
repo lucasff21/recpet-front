@@ -13,7 +13,11 @@ import Panel from '../../../components/Panel';
 const PetsTable = () => {
   document.title = 'Pets | ADMIN';
   const [pets, setPets] = useState([]);
-  const [pageData, setPageData] = useState({ totalPages: 0, number: 0 });
+  const [pageData, setPageData] = useState({
+    totalPages: 0,
+    number: 0,
+    totalElements: 0,
+  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -62,6 +66,7 @@ const PetsTable = () => {
         setPageData({
           totalPages: pageResponse.totalPages,
           number: pageResponse.number,
+          totalElements: pageResponse.totalElements,
         });
       })
       .catch(() => {
@@ -111,7 +116,9 @@ const PetsTable = () => {
   return (
     <Panel>
       <header className="text-center">
-        <h1 className="text-3xl font-bold text-gray-800">Pets</h1>
+        <h1 className="text-3xl font-bold text-gray-800">
+          Pets ({pageData.totalElements})
+        </h1>
       </header>
 
       <div className="py-4 border-b">

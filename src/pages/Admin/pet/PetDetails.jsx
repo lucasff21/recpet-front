@@ -24,7 +24,11 @@ const PetDetails = () => {
   const [adoptions, setAdoptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [pageData, setPageData] = useState({ totalPages: 0, number: 0 });
+  const [pageData, setPageData] = useState({
+    totalPages: 0,
+    number: 0,
+    totalElements: 0,
+  });
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filters, setFilters] = useState({
@@ -40,6 +44,7 @@ const PetDetails = () => {
         setPageData({
           totalPages: pageResponse?.totalPages,
           number: pageResponse?.pageable?.pageNumber,
+          totalElements: pageResponse?.totalElements,
         });
       } catch (err) {
         showToast('Erro ao buscar as adoções do pet.', 'error');
@@ -216,8 +221,8 @@ const PetDetails = () => {
           </Panel>
 
           <Panel>
-            <h2 className="font-semibold m-0 text-center text-gray-800">
-              Solicitações de Adoção
+            <h2 className="font-semibold m-0 text-center text-gray-800 mb-2">
+              Solicitações de Adoção ({pageData.totalElements})
             </h2>
             {adoptions?.length === 0 && !loading ? (
               <p className="text-center text-gray-600 py-10">

@@ -11,7 +11,11 @@ import AdoptionTable from '../../../components/AdoptionTable';
 
 const AdoptionsPage = () => {
   const [adocoes, setAdocoes] = useState([]);
-  const [pageData, setPageData] = useState({ totalPages: 0, number: 0 });
+  const [pageData, setPageData] = useState({
+    totalPages: 0,
+    number: 0,
+    totalElements: 0,
+  });
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -36,6 +40,7 @@ const AdoptionsPage = () => {
       setPageData({
         totalPages: pageResponse.totalPages,
         number: pageResponse.number,
+        totalElements: pageResponse.totalElements,
       });
     } catch (error) {
       showToast('Erro ao buscar adoções', 'error');
@@ -107,7 +112,9 @@ const AdoptionsPage = () => {
   return (
     <Panel>
       <header className="text-center">
-        <h1 className="text-3xl font-bold text-gray-800">Adoções</h1>
+        <h1 className="text-3xl font-bold text-gray-800">
+          Adoções ({pageData.totalElements})
+        </h1>
       </header>
 
       <div className="py-4 border-b">

@@ -13,7 +13,11 @@ import Panel from '../../../components/Panel';
 const UserTable = () => {
   document.title = 'Usuários | ADMIN';
   const [accounts, setAccounts] = useState([]);
-  const [pageData, setPageData] = useState({ totalPages: 0, number: 0 });
+  const [pageData, setPageData] = useState({
+    totalPages: 0,
+    number: 0,
+    totalElements: 0,
+  });
   const [loading, setLoading] = useState(false);
 
   const [filters, setFilters] = useState({
@@ -58,6 +62,7 @@ const UserTable = () => {
         setPageData({
           totalPages: pageResponse.totalPages,
           number: pageResponse.number,
+          totalElements: pageResponse.totalElements,
         });
       })
       .catch(() => toast.error('Erro ao buscar os usuários'))
@@ -132,7 +137,9 @@ const UserTable = () => {
   return (
     <Panel>
       <header className="text-center">
-        <h1 className="text-3xl font-bold text-gray-800">Usuários</h1>
+        <h1 className="text-3xl font-bold text-gray-800">
+          Usuários ({pageData.totalElements})
+        </h1>
       </header>
 
       <div className="py-4 border-b">
@@ -270,8 +277,10 @@ const UserTable = () => {
                           </span>
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">
-                            {account.nome}
+                          <div className="text-sm font-medium text-blue-600-900">
+                            <Link to={`/admin/usuarios/${account.id}`}>
+                              {account.nome}
+                            </Link>
                           </div>
                         </div>
                       </div>
