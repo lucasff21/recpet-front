@@ -4,7 +4,6 @@ import Layout from '../../components/Layout';
 import '../../styles/UserPages.css';
 import { loginUser } from '../../services/ApiUser';
 import { AuthContext } from '../../contexts/AuthContext';
-import { findByQuestionarioEmail } from '../../services/ApiAdocao';
 import { showToast } from '../../utils/toast';
 import InputField from '../../components/FormFields/InputField';
 import { Button } from '../../components/Button';
@@ -19,7 +18,7 @@ const Login = () => {
   const location = useLocation();
   const userCreated = location.state?.userCreated;
 
-  const { login, role, authToken } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const getRedirectPath = () => {
     try {
@@ -39,27 +38,23 @@ const Login = () => {
     } catch (error) {
       showToast('Erro ao processar redirect.', 'error');
     }
-    return '/';
+    return null;
   };
 
-  const handlePostLogin = async () => {
-    if (role?.includes('ADMIN')) {
+  const handlePostLogin = (role) => {
+    const redirect = getRedirectPath();
+
+    if (redirect) {
+      return navigate(redirect);
+    }
+
+    if (role === 'ADMIN') {
       return navigate('/admin');
     }
 
-    if (role?.includes('ADOTANTE')) {
-      try {
-        const response = await findByQuestionarioEmail(email, authToken);
-        if (!response?.user) {
-          return navigate('/questionario');
-        }
-      } catch (error) {
-        showToast('Erro ao verificar questionário.', 'error');
-        return navigate('/');
-      }
+    if (role === 'ADOTANTE') {
+      return navigate('/');
     }
-
-    navigate(getRedirectPath());
   };
 
   const handleLogin = async (e) => {
@@ -73,16 +68,19 @@ const Login = () => {
     }
 
     setLoading(true);
-    try {
-      const response = await loginUser(email, password);
-      login(response.data);
-
-      await handlePostLogin();
-    } catch (error) {
-      showToast('E-mail ou senha inválidos', 'error');
-    } finally {
-      setLoading(false);
-    }
+    loginUser(email, password)
+      .then(({ data }) => {
+        handlePostLogin(data.user.tipoUsuario);
+        setTimeout(() => {
+          login(data);
+        }, 500);
+      })
+      .catch((r) => {
+        showToast('E-mail ou senha inválidos', 'error');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {

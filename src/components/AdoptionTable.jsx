@@ -66,8 +66,8 @@ const AdoptionTable = ({ adocoes = [], loading, openDetailsModal }) => {
                         />
                       </div>
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          <Link to={`/pets/${adocao.animal.id}`}>
+                        <div className="text-sm font-medium text-blue-600">
+                          <Link to={`/admin/pets/${adocao.animal.id}`}>
                             {adocao.animal?.nome ?? '-'}
                           </Link>
                         </div>
@@ -78,12 +78,14 @@ const AdoptionTable = ({ adocoes = [], loading, openDetailsModal }) => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {adocao.usuario?.nome ?? '-'}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {adocao.usuario?.email ?? ''}
-                    </div>
+                    <Link to={`/admin/usuarios/${adocao.usuario.id}`}>
+                      <div className="text-sm font-medium text-blue-600">
+                        {adocao.usuario?.nome ?? '-'}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {adocao.usuario?.email ?? ''}
+                      </div>
+                    </Link>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {adocao.concluidoEm

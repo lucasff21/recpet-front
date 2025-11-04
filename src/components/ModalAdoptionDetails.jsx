@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import AdocaoStatusBadge from './AdocaoStatusBadge';
+import { Link } from 'react-router-dom';
 
 const ModalAdoptionDetails = ({ onClose, request, onUpdateStatus }) => {
   const [newStatus, setNewStatus] = useState(request.status);
@@ -10,8 +11,25 @@ const ModalAdoptionDetails = ({ onClose, request, onUpdateStatus }) => {
   };
 
   const details = [
-    { label: 'Animal', value: request.animal.nome },
-    { label: 'Usuário', value: request.usuario.nome },
+    {
+      label: 'Animal',
+      value: (
+        <Link className="text-blue-600" to={`/admin/pets/${request.animal.id}`}>
+          {request.animal.nome}
+        </Link>
+      ),
+    },
+    {
+      label: 'Usuário',
+      value: (
+        <Link
+          className="text-blue-600"
+          to={`/admin/usuarios/${request.usuario.id}`}
+        >
+          {request.usuario.nome}
+        </Link>
+      ),
+    },
     {
       label: 'Data da solicitação',
       value: new Date(request.createdAt).toLocaleDateString('pt-BR'),
@@ -51,7 +69,7 @@ const ModalAdoptionDetails = ({ onClose, request, onUpdateStatus }) => {
           <h3 className="text-xl font-semibold text-gray-700 mb-3 border-b pb-1">
             Questionário do Adotante
           </h3>
-          <div className="space-y-2 text-gray-700 text-sm"></div>
+          <div className="space-y-2 text-gray-700 text-sm"> Sem registros </div>
         </div>
 
         <div className="mb-6">

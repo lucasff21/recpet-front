@@ -89,9 +89,11 @@ const PetProfilePage = () => {
     return (
       <div className="flex flex-col justify-center items-center h-screen p-4">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">{error}</h2>
-        <Button variant="primary" onClick={() => navigate('/')}>
-          Voltar para a página inicial
-        </Button>
+        <div className="w-75">
+          <Button variant="primary" onClick={() => navigate('/')}>
+            Voltar para a página inicial
+          </Button>
+        </div>
       </div>
     );
   }
