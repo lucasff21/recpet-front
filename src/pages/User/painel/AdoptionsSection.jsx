@@ -55,16 +55,17 @@ const Adoptions = () => {
   };
 
   const handleDelete = (id) => {
+    setLoading(true);
     deletarAdocao(id)
       .then(() => {
         showToast('Solicitação excluída com sucesso');
+        window.location.reload();
       })
       .catch(() => {
         showToast('Erro ao carregar solicitações de adoção', 'error');
       })
       .finally(() => {
         setLoading(false);
-        window.location.reload();
       });
   };
 
