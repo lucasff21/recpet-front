@@ -59,5 +59,5 @@ export const updateAnimal = (id, data) => {
 };
 
 export const deletarAdocao = (id) => {
-  return apiClient.put(`/adocao/${id}`);
+  return apiClient.delete(`/adocao/${id}`);
 };
