@@ -8,6 +8,7 @@ import FilterSidebar from '../components/FilterSidebar';
 import Pagination from '../components/Pagination';
 import { calculateAge } from '../utils/pet';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { useAdoptions } from '../contexts/AdoptionContext';
 
 const createParamsFromFilters = (filters) => {
   const params = {
@@ -49,6 +50,7 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const { pendingAnimalIds } = useAdoptions();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -278,6 +280,7 @@ const Home = () => {
                       key={animal.id}
                       pet={animal}
                       openPagePet={openPageAnimal}
+                      isPending={pendingAnimalIds.has(animal.id)}
                     />
                   ))}
                 </div>
