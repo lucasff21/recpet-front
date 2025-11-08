@@ -3,6 +3,7 @@ import ContentTable from './ContentTable';
 import ContentForm from './ContentForm';
 
 const ContentManagement = () => {
+  document.title = 'Conteúdos | ADMIN';
   return (
     <Routes>
       <Route path="/" element={<ContentTable />} />

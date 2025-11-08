@@ -115,7 +115,7 @@ const FilterSidebar = ({
           </FilterAccordion>
 
           <FilterAccordion
-            title="GÊNERO"
+            title="SEXO"
             isOpen={accordionOpen.genero}
             toggleOpen={() => toggleAccordion('genero')}
           >
@@ -173,6 +173,7 @@ const FilterSidebar = ({
 
         <div className="mt-8 flex flex-col space-y-3">
           <button
+            type="submit"
             onClick={applyFilters}
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200 font-semibold"
           >

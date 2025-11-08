@@ -11,7 +11,7 @@ import AboutUs from './pages/AboutUs';
 import PetProfilePage from './pages/PetProfilePage';
 import DashboardPage from './pages/User/painel/DashboardPage';
 import Contact from './pages/Contact';
-import RequestRecoveryPassword from './pages/User/RecoveryPassword.tsx';
+import RecoveryPassword from './pages/User/RecoveryPassword';
 import ResetPassword from './pages/User/ResetPassword';
 
 const PrivateRoute = ({ element: Element }) => {
@@ -55,7 +55,7 @@ const AppRoutes = () => (
 
       <Route
         path="/solicitar-senha"
-        element={<PublicRoute element={RequestRecoveryPassword} />}
+        element={<PublicRoute element={RecoveryPassword} />}
       />
 
       <Route

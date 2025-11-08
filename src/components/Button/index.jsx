@@ -1,5 +1,4 @@
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import React from 'react';
 
 export const Button = ({
   text,
@@ -10,7 +9,10 @@ export const Button = ({
   loading = false,
   icon = null,
   size = 'full',
+  type,
 }) => {
+  const isDisabled = disabled || loading;
+
   const typeClass = confirm
     ? 'text-white bg-cyan-950 hover:bg-cyan-900'
     : 'text-black hover:bg-gray-50 border border-gray-300';
@@ -25,14 +27,15 @@ export const Button = ({
   return (
     <button
       onClick={onClick}
-      disabled={disabled}
+      disabled={isDisabled}
       className={`
         ${typeClass} 
         ${sizeClasses[size]} 
         text-center px-6 py-2 rounded-md text-gray-700
         h-10 flex items-center justify-center gap-2 
-        ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
+        ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}
         `}
+      type={type}
     >
       {loading ? (
         <AiOutlineLoading3Quarters className="animate-spin" />

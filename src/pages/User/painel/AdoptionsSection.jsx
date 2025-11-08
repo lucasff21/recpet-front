@@ -3,11 +3,13 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { deletarAdocao, findAllAdocoes } from '../../../services/ApiAdocao';
 import { showToast } from '../../../utils/toast';
 import AdocaoStatusBadge from '../../../components/AdocaoStatusBadge';
+import ConfirmModal from '../../../components/ConfirmModal';
 
 const Adoptions = () => {
   const [solicitacoes, setSolicitacoes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
+  const [modal, setModal] = useState({ isOpen: false, adoptionId: null });
 
   useEffect(() => {
     setLoading(true);
@@ -54,22 +56,31 @@ const Adoptions = () => {
     },
   };
 
-  const handleDelete = (id) => {
-    deletarAdocao(id)
+  const handleDelete = () => {
+    setLoading(true);
+    deletarAdocao(modal.adoptionId)
       .then(() => {
         showToast('Solicitação excluída com sucesso');
+        window.location.reload();
       })
       .catch(() => {
         showToast('Erro ao carregar solicitações de adoção', 'error');
       })
       .finally(() => {
         setLoading(false);
-        window.location.reload();
       });
   };
 
+  const openDeleteModal = (id) => {
+    setModal({ isOpen: true, adoptionId: id });
+  };
+
+  const closeDeleteModal = () => {
+    setModal({ isOpen: false, adoptionId: null });
+  };
+
   return (
-    <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <div className="max-w-4xl mx-auto bg-white p-6 rounded-ld shadow-sm">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
         Minhas Solicitações de Adoção
       </h2>
@@ -96,7 +107,7 @@ const Adoptions = () => {
           <p>
             Que tal explorar nossos{' '}
             <a href="/" className="text-blue-600 hover:underline">
-              cãezinhos disponíveis
+              pets disponíveis
             </a>
             ?
           </p>
@@ -165,7 +176,7 @@ const Adoptions = () => {
                   <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
                     <button
                       className="text-red-600 hover:text-red-900"
-                      onClick={() => handleDelete(solicitacao.id)}
+                      onClick={() => openDeleteModal(solicitacao.id)}
                     >
                       Excluir
                     </button>
@@ -175,6 +186,14 @@ const Adoptions = () => {
             </tbody>
           </table>
         </div>
+      )}
+
+      {modal.isOpen && (
+        <ConfirmModal
+          message="Tem certeza que deseja excluir esta solicitação? Esta ação não pode ser desfeita."
+          onConfirm={handleDelete}
+          onCancel={closeDeleteModal}
+        />
       )}
     </div>
   );

@@ -17,7 +17,7 @@ export const loginUser = async (email, password) => {
 
 export const createUser = async (payload) => {
   return axios({
-    url: `${apiUrl}/users/create`,
+    url: `${apiUrl}/users`,
     method: 'POST',
     data: payload,
     headers: {
@@ -26,36 +26,14 @@ export const createUser = async (payload) => {
   });
 };
 
-export const findByUserEmail = async (email, token) => {
-  try {
-    const url = `${apiUrl}/users/findbyemail/${email}`;
-    const response = await axios({
-      url,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error: ', error?.response?.data || error.message);
-    return null;
-  }
-};
-
 export const updateUserProfile = async (data) => {
   return apiClient.put(`${apiUrl}/users/me`, data);
 };
 
-export const sendEMailResetPassword = async (formData) => {
-  const url = `${apiUrl}/users/password-reset/request`;
-  const response = await axios.post(url, formData);
-  return response;
+export const sendEMailResetPassword = async (params) => {
+  return axios.post(`${apiUrl}/users/password-reset`, params);
 };
 
-export const sendNewPassword = async (formData) => {
-  const url = `${apiUrl}/users/new-password`;
-  const response = await axios.put(url, formData);
-  return response;
+export const sendNewPassword = async (params) => {
+  return axios.put(`${apiUrl}/users/new-password`, params);
 };

@@ -11,18 +11,49 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import Panel from '../../../components/Panel';
 
 const PetsTable = () => {
+  document.title = 'Pets | ADMIN';
   const [pets, setPets] = useState([]);
-  const [pageData, setPageData] = useState({ totalPages: 0, number: 0 });
-  const [currentPage, setCurrentPage] = useState(0);
+  const [pageData, setPageData] = useState({
+    totalPages: 0,
+    number: 0,
+    totalElements: 0,
+  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const [filters, setFilters] = useState({
     nome: '',
+    sexo: '',
+    porte: '',
+    disponivelParaAdocao: '',
+    page: 0,
   });
 
-  const getPets = useCallback((page, nome) => {
+  const [localFilters, setLocalFilters] = useState({
+    nome: filters.nome,
+    sexo: filters.sexo,
+    porte: filters.porte,
+    disponivelParaAdocao: filters.disponivelParaAdocao,
+  });
+
+  const fetchPets = useCallback((currentFilters) => {
     setLoading(true);
-    findAllAnimals({ page, nome })
+
+    const apiParams = {
+      page: currentFilters.page,
+      nome: currentFilters.nome,
+      sexo: currentFilters.sexo,
+      porte: currentFilters.porte,
+      disponivelParaAdocao: currentFilters.disponivelParaAdocao,
+    };
+
+    Object.keys(apiParams).forEach((key) => {
+      if (apiParams[key] === '' || apiParams[key] === null) {
+        delete apiParams[key];
+      }
+    });
+
+    findAllAnimals(apiParams)
       .then((response) => {
         const pageResponse = response.data;
         const petsData = pageResponse.content.map((pet) => ({
@@ -35,6 +66,7 @@ const PetsTable = () => {
         setPageData({
           totalPages: pageResponse.totalPages,
           number: pageResponse.number,
+          totalElements: pageResponse.totalElements,
         });
       })
       .catch(() => {
@@ -44,17 +76,11 @@ const PetsTable = () => {
   }, []);
 
   useEffect(() => {
-    const handler = setTimeout(() => {
-      getPets(currentPage, filters.nome);
-    }, 500);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [currentPage, filters.nome, getPets]);
+    fetchPets(filters);
+  }, [filters, fetchPets]);
 
   const handlePageChange = useCallback((page) => {
-    setCurrentPage(page - 1);
+    setFilters((prev) => ({ ...prev, page: page - 1 }));
   }, []);
 
   const handleEdit = (id) => {
@@ -63,57 +89,146 @@ const PetsTable = () => {
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
-    setFilters((prevFilters) => ({
+    setLocalFilters((prevFilters) => ({
       ...prevFilters,
       [name]: value,
     }));
-    setCurrentPage(0);
   };
+
+  const handleSearch = () => {
+    setFilters((prev) => ({
+      ...prev,
+      ...localFilters,
+      page: 0,
+    }));
+  };
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const inputStyle =
+    'h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500';
+  const labelStyle = 'block text-sm font-medium text-gray-700 mb-1';
 
   return (
     <Panel>
       <header className="text-center">
-        <h1 className="text-3xl font-bold text-gray-800">Pets</h1>
+        <h1 className="text-3xl font-bold text-gray-800">
+          Pets ({pageData.totalElements})
+        </h1>
       </header>
+
       <div className="py-4 border-b">
-        <div className="mt-2 flex justify-between items-center">
-          <div className="relative w-64">
-            <input
-              type="text"
-              placeholder="Buscar animais..."
-              name="nome"
-              value={filters.nome}
-              onChange={handleFilterChange}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <div className="absolute left-3 top-2.5 text-gray-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-700">Filtros</h2>
+          <Link
+            to="../criar"
+            className="list-group-item list-group-item-action"
+          >
+            <button className="h-10 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+              <GoPlus className="h-5 w-5" />
+              Adicionar PET
+            </button>
+          </Link>
+        </div>
+
+        <div className="flex flex-wrap items-end gap-4">
+          <div>
+            <label htmlFor="nome" className={labelStyle}>
+              Nome
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Buscar animal pelo nome..."
+                id="nome"
+                name="nome"
+                value={localFilters.nome}
+                onChange={handleFilterChange}
+                onKeyDown={handleSearchKeyDown}
+                className={`${inputStyle} w-64 pl-10 pr-4`}
+              />
+              <div className="absolute left-3 top-2.5 text-gray-400">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
-          <div className="flex space-x-2">
-            <Link
-              to="../criar"
-              className="list-group-item list-group-item-action"
+
+          <div>
+            <label htmlFor="sexo" className={labelStyle}>
+              Sexo
+            </label>
+            <select
+              id="sexo"
+              name="sexo"
+              value={localFilters.sexo}
+              onChange={handleFilterChange}
+              className={`${inputStyle} w-full sm:w-40`}
             >
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
-                <GoPlus className="h-5 w-5" />
-                Novo Pet
-              </button>
-            </Link>
+              <option value="">Todos</option>
+              <option value="MACHO">Macho</option>
+              <option value="FEMEA">Fêmea</option>
+            </select>
           </div>
+
+          <div>
+            <label htmlFor="porte" className={labelStyle}>
+              Porte
+            </label>
+            <select
+              id="porte"
+              name="porte"
+              value={localFilters.porte}
+              onChange={handleFilterChange}
+              className={`${inputStyle} w-full sm:w-40`}
+            >
+              <option value="">Todos</option>
+              <option value="PEQUENO">Pequeno</option>
+              <option value="MEDIO">Médio</option>
+              <option value="GRANDE">Grande</option>
+              <option value="GIGANTE">Gigante</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="disponivelParaAdocao" className={labelStyle}>
+              Disponibilidade
+            </label>
+            <select
+              id="disponivelParaAdocao"
+              name="disponivelParaAdocao"
+              value={localFilters.disponivelParaAdocao}
+              onChange={handleFilterChange}
+              className={`${inputStyle} w-full sm:w-40`}
+            >
+              <option value="">Todos</option>
+              <option value="true">Disponível</option>
+              <option value="false">Não Disponível</option>
+            </select>
+          </div>
+
+          <button
+            onClick={handleSearch}
+            className="h-10 px-4 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors shadow-sm"
+          >
+            Buscar
+          </button>
         </div>
       </div>
 
@@ -211,7 +326,7 @@ const PetsTable = () => {
               ) : (
                 <tr>
                   <td colSpan="6" className="py-8 text-center text-gray-500">
-                    Nenhuma animal encontrado.
+                    Nenhum animal encontrado.
                   </td>
                 </tr>
               )}

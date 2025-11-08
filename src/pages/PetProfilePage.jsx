@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import logo from '../assets/logo-pet.png';
 import { adotarPet, findAnimalById } from '../services/ApiAdocao';
 import { showToast } from '../utils/toast';
@@ -9,6 +9,7 @@ import { Button } from '../components/Button';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { calculateAge } from '../utils/pet';
 import Breadcrumb from '../components/Breadcrumb';
+import { useAdoptions } from '../contexts/AdoptionContext';
 
 const predefinedColors = [
   'bg-blue-100 text-blue-800',
@@ -36,6 +37,9 @@ const PetProfilePage = () => {
   const [pageLoading, setPageLoading] = useState(true);
   const [adoptionLoading, setAdoptionLoading] = useState(false);
 
+  const { pendingAnimalIds, loadingAdoptions, addAdoption } = useAdoptions();
+  const [isPending, setIsPending] = useState(false);
+
   useEffect(() => {
     const fetchPet = async () => {
       try {
@@ -51,6 +55,12 @@ const PetProfilePage = () => {
     fetchPet();
   }, [id]);
 
+  useEffect(() => {
+    if (!pageLoading && !loadingAdoptions && selectedPet) {
+      setIsPending(pendingAnimalIds.has(selectedPet.id));
+    }
+  }, [selectedPet, pendingAnimalIds, pageLoading, loadingAdoptions]);
+
   const interesseAdocao = async (e) => {
     e?.preventDefault();
 
@@ -63,12 +73,15 @@ const PetProfilePage = () => {
 
     setAdoptionLoading(true);
     try {
-      await adotarPet({ animalId: selectedPet.id });
+      const response = await adotarPet({ animalId: selectedPet.id });
       showToast('Interesse registrado! Entraremos em contato.');
+      addAdoption(response.data);
+      setIsPending(true);
     } catch (error) {
       const statusCode = error.status || error.response?.status;
       if (statusCode === 401) {
         showToast('Você já solicitou adoção desse pet', 'error');
+        setIsPending(true);
       } else {
         showToast('Erro ao processar interesse', 'error');
       }
@@ -89,12 +102,73 @@ const PetProfilePage = () => {
     return (
       <div className="flex flex-col justify-center items-center h-screen p-4">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">{error}</h2>
-        <Button variant="primary" onClick={() => navigate('/')}>
-          Voltar para a página inicial
-        </Button>
+        <div className="w-75">
+          <Button variant="primary" onClick={() => navigate('/')}>
+            Voltar para a página inicial
+          </Button>
+        </div>
       </div>
     );
   }
+
+  const renderAdoptionButton = () => {
+    if (pageLoading || loadingAdoptions) {
+      return (
+        <Button
+          disabled
+          size={'medium'}
+          className="flex items-center justify-center"
+        >
+          <AiOutlineLoading3Quarters className="animate-spin w-5 h-5 mr-2" />
+          Verificando status...
+        </Button>
+      );
+    }
+
+    if (!isAuthenticated) {
+      return (
+        <Button onClick={interesseAdocao} size={'medium'}>
+          Faça login para adotar
+        </Button>
+      );
+    }
+
+    if (isPending) {
+      return (
+        <div className="w-full text-right">
+          <div className="inline-block p-4 rounded-md bg-yellow-100 text-yellow-800 text-center font-semibold">
+            <p>
+              Você já possui uma solicitação pendente para {selectedPet?.nome} .
+            </p>
+            <Link
+              to="/painel/adocoes"
+              className="text-sm text-blue-600 hover:underline mt-1 block"
+            >
+              Ver minhas solicitações
+            </Link>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <Button
+        confirm={true}
+        onClick={interesseAdocao}
+        disabled={adoptionLoading || !selectedPet}
+        size={'medium'}
+      >
+        {adoptionLoading ? (
+          <>
+            <AiOutlineLoading3Quarters className="animate-spin w-5 h-5 mr-2" />
+            Enviando...
+          </>
+        ) : (
+          'Tenho Interesse'
+        )}
+      </Button>
+    );
+  };
 
   return (
     <Layout>
@@ -202,14 +276,7 @@ const PetProfilePage = () => {
               </div>
             </div>
             <div className="pt-6 flex justify-end">
-              <Button
-                confirm={true}
-                onClick={interesseAdocao}
-                disabled={adoptionLoading || !selectedPet}
-                size={'medium'}
-              >
-                {isAuthenticated ? 'Tenho Interesse' : 'Faça login para adotar'}
-              </Button>
+              {renderAdoptionButton()}
             </div>
           </div>
         )}

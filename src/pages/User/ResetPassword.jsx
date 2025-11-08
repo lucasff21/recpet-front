@@ -38,13 +38,9 @@ const ResetPassword = () => {
       return toast.error('Token inválido ou ausente.');
     }
 
-    const formData = new FormData();
-    formData.append('password', senha);
-    formData.append('tokenReset', tokenReset);
-
     setLoading(true);
     try {
-      await sendNewPassword(formData);
+      await sendNewPassword({ password: senha, token: tokenReset });
       toast.success('Senha alterada com sucesso!');
       setTimeout(() => navigate('/'), 500);
     } catch (err) {

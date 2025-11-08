@@ -1,4 +1,8 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
 import { showToast } from '../../../utils/toast';
 import { updateUserProfile } from '../../../services/ApiUser';
 import { getAddressByZipCode } from '../../../services/addressService';
@@ -9,29 +13,52 @@ import SelectField from '../../../components/FormFields/SelectField';
 import DateField from '../../../components/FormFields/DateField';
 import { Button } from '../../../components/Button';
 
+const accountSettingsSchema = z.object({
+  nome: z.string().nonempty('Nome é obrigatório'),
+  telefone: z
+    .string()
+    .nonempty('Telefone é obrigatório')
+    .transform((phone) => phone.replace(/\D/g, ''))
+    .pipe(z.string().min(10, 'Telefone deve ter no mínimo 10 dígitos')),
+  genero: z.string().nonempty('Gênero é obrigatório'),
+  dataNascimento: z.string().nonempty('Data de nascimento é obrigatória'),
+
+  endereco: z.object({
+    cep: z
+      .string()
+      .nonempty('CEP é obrigatório')
+      .transform((cep) => cep.replace(/\D/g, ''))
+      .pipe(z.string().length(8, 'CEP deve ter 8 dígitos')),
+    logradouro: z.string().nonempty('Logradouro é obrigatório'),
+    bairro: z.string().nonempty('Bairro é obrigatório'),
+    cidade: z.string().nonempty('Cidade é obrigatória'),
+    estado: z.string().nonempty('Estado é obrigatório'),
+    complemento: z.string().optional(),
+  }),
+
+  email: z.string().optional(),
+  cpf: z.string().optional(),
+});
+
 const AccountSettings = () => {
   const { user, updateUserContext } = useContext(AuthContext);
-
-  const [userData, setUserData] = useState({
-    nome: '',
-    telefone: '',
-    genero: '',
-    dataNascimento: '',
-    cpf: '',
-    email: '',
-    endereco: {
-      cep: '',
-      logradouro: '',
-      complemento: '',
-      bairro: '',
-      cidade: '',
-      estado: '',
-    },
-  });
 
   const [initialUserData, setInitialUserData] = useState(null);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loadingAddress, setLoadingAddress] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors, isValid },
+  } = useForm({
+    resolver: zodResolver(accountSettingsSchema),
+    mode: 'onChange',
+  });
 
   useEffect(() => {
     if (user) {
@@ -40,6 +67,7 @@ const AccountSettings = () => {
         dataNascimento: user.dataNascimento
           ? user.dataNascimento.split('T')[0]
           : '',
+        genero: user.genero?.toUpperCase() || '',
         endereco: {
           cep: user.endereco?.cep || '',
           logradouro: user.endereco?.logradouro || '',
@@ -50,66 +78,62 @@ const AccountSettings = () => {
         },
       };
 
-      setUserData(formattedUser);
+      reset(formattedUser);
       setInitialUserData(formattedUser);
     }
-  }, [user]);
+  }, [user, reset]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (Object.keys(userData.endereco).includes(name)) {
-      setUserData((prev) => ({
-        ...prev,
-        endereco: { ...prev.endereco, [name]: value },
-      }));
-    } else {
-      setUserData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
+  const cepValue = watch('endereco.cep');
 
-  const handleCepBlur = useCallback((e) => {
-    const cep = e.target.value.replace(/\D/g, '');
-    if (cep.length !== 8) return;
+  useEffect(() => {
+    const fetchAddress = async () => {
+      if (!cepValue) return;
+      const cep = cepValue.replace(/\D/g, '');
+      if (cep.length !== 8) return;
 
-    getAddressByZipCode(cep)
-      .then((response) => {
+      setLoadingAddress(true);
+      try {
+        const response = await getAddressByZipCode(cep);
         const { data } = response;
         if (data.erro) {
           showToast('CEP não encontrado.', 'error');
           return;
         }
-        setUserData((prev) => ({
-          ...prev,
-          endereco: {
-            ...prev.endereco,
-            cep: data.cep,
-            logradouro: data.logradouro,
-            bairro: data.bairro,
-            cidade: data.localidade,
-            estado: data.uf,
-          },
-        }));
-      })
-      .catch(() => {
+        setValue('endereco.logradouro', data.logradouro, {
+          shouldValidate: true,
+        });
+        setValue('endereco.bairro', data.bairro, { shouldValidate: true });
+        setValue('endereco.cidade', data.localidade, { shouldValidate: true });
+        setValue('endereco.estado', data.uf, { shouldValidate: true });
+      } catch (error) {
         showToast('Erro ao buscar o CEP.', 'error');
-      });
-  }, []);
+      } finally {
+        setLoadingAddress(false);
+      }
+    };
 
-  const handleSave = () => {
+    const debounceHandler = setTimeout(() => {
+      fetchAddress();
+    }, 500);
+
+    return () => clearTimeout(debounceHandler);
+  }, [cepValue, setValue]);
+
+  const onSubmit = (data) => {
     setSaving(true);
 
     const payload = {
-      nome: userData.nome,
-      telefone: userData.telefone,
-      genero: userData.genero,
-      dataNascimento: userData.dataNascimento,
+      nome: data.nome,
+      telefone: data.telefone,
+      genero: data.genero,
+      dataNascimento: data.dataNascimento,
       endereco: {
-        cep: userData.endereco.cep,
-        logradouro: userData.endereco.logradouro,
-        complemento: userData.endereco.complemento,
-        bairro: userData.endereco.bairro,
-        cidade: userData.endereco.cidade,
-        estado: userData.endereco.estado,
+        cep: data.endereco.cep,
+        logradouro: data.endereco.logradouro,
+        complemento: data.endereco.complemento,
+        bairro: data.endereco.bairro,
+        cidade: data.endereco.cidade,
+        estado: data.endereco.estado,
       },
     };
 
@@ -117,7 +141,11 @@ const AccountSettings = () => {
       .then((response) => {
         const { data: updatedUser } = response;
         showToast('Suas configurações foram salvas com sucesso!', 'success');
+
         updateUserContext(updatedUser);
+        reset(updatedUser);
+        setInitialUserData(updatedUser);
+
         setEditing(false);
       })
       .catch(() => {
@@ -129,7 +157,7 @@ const AccountSettings = () => {
   };
 
   const handleCancel = () => {
-    setUserData(initialUserData);
+    reset(initialUserData);
     setEditing(false);
   };
 
@@ -138,12 +166,12 @@ const AccountSettings = () => {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto">
+    <div className="bg-white p-6 rounded-lg shadow-sm max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">
         Configurações da Conta
       </h2>
 
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-700">
@@ -151,48 +179,45 @@ const AccountSettings = () => {
             </h3>
             <InputField
               id="nome"
-              name="nome"
               label="Nome Completo"
-              value={userData.nome}
-              onChange={handleChange}
+              register={register}
+              errors={errors}
               disabled={!editing}
             />
             <InputField
               id="email"
-              name="email"
               label="Email"
-              value={userData.email}
+              register={register}
+              errors={errors}
               disabled
             />
             <InputField
               id="cpf"
-              name="cpf"
               label="CPF"
-              value={userData.cpf}
+              register={register}
+              errors={errors}
               disabled
             />
             <InputField
               id="telefone"
-              name="telefone"
               label="Telefone"
-              value={userData.telefone}
-              onChange={handleChange}
+              register={register}
+              errors={errors}
+              mask={editing ? '(99) 99999-9999' : ''}
               disabled={!editing}
             />
             <DateField
               id="dataNascimento"
-              name="dataNascimento"
               label="Data de Nascimento"
-              value={userData.dataNascimento}
-              onChange={handleChange}
+              register={register}
+              errors={errors}
               disabled={!editing}
             />
             <SelectField
               id="genero"
-              name="genero"
               label="Gênero"
-              value={userData.genero.toUpperCase()}
-              onChange={handleChange}
+              register={register}
+              errors={errors}
               disabled={!editing}
               options={[
                 { value: 'MASCULINO', label: 'Masculino' },
@@ -205,81 +230,81 @@ const AccountSettings = () => {
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-700">Endereço</h3>
             <InputField
-              id="cep"
-              name="cep"
+              id="endereco.cep"
               label="CEP"
-              value={userData.endereco.cep}
-              onChange={handleChange}
-              onBlur={handleCepBlur}
+              register={register}
+              errors={errors}
+              mask={editing ? '99999-999' : ''}
               disabled={!editing}
             />
             <InputField
-              id="logradouro"
-              name="logradouro"
+              id="endereco.logradouro"
               label="Logradouro"
-              value={userData.endereco.logradouro}
-              onChange={handleChange}
+              register={register}
+              errors={errors}
               disabled={!editing}
             />
             <InputField
-              id="bairro"
-              name="bairro"
+              id="endereco.bairro"
               label="Bairro"
-              value={userData.endereco.bairro}
-              onChange={handleChange}
+              register={register}
+              errors={errors}
               disabled={!editing}
             />
             <InputField
-              id="complemento"
-              name="complemento"
               label="Complemento"
-              value={userData.endereco.complemento}
-              onChange={handleChange}
+              register={register}
+              errors={errors}
               disabled={!editing}
               required={false}
+              id="endereco.complemento"
             />
             <InputField
-              id="cidade"
-              name="cidade"
+              id="endereco.cidade"
               label="Cidade"
-              value={userData.endereco.cidade}
-              onChange={handleChange}
+              register={register}
+              errors={errors}
               disabled
             />
             <InputField
-              id="estado"
-              name="estado"
+              id="endereco.estado"
               label="Estado"
-              value={userData.endereco.estado}
-              onChange={handleChange}
+              register={register}
+              errors={errors}
               disabled
             />
           </div>
         </div>
-      </form>
 
-      <div className="mt-8 pt-6 border-t flex justify-end space-x-3">
-        {!editing ? (
-          <Button
-            text="Editar Perfil"
-            onClick={() => setEditing(true)}
-            confirm={true}
-            size="small"
-          />
-        ) : (
-          <>
-            <Button text="Cancelar" onClick={handleCancel} size="small" />
+        <div className="mt-8 pt-6 border-t flex justify-end space-x-3">
+          {!editing ? (
             <Button
-              text="Salvar Alterações"
-              onClick={handleSave}
-              disabled={saving}
-              loading={saving}
+              text="Editar Perfil"
+              onClick={() => setEditing(true)}
               confirm={true}
               size="small"
+              type="button"
             />
-          </>
-        )}
-      </div>
+          ) : (
+            <>
+              <Button
+                text="Cancelar"
+                onClick={handleCancel}
+                size="small"
+                type="button"
+              />
+              <Button
+                text="Salvar Alterações"
+                disabled={!isValid || saving || loadingAddress}
+                loading={saving || loadingAddress}
+                confirm={true}
+                size="small"
+                type="submit"
+              />
+            </>
+          )}
+        </div>
+      </form>
     </div>
   );
 };

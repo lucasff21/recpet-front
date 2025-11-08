@@ -2,8 +2,9 @@ import { useContext, useState } from 'react';
 import Layout from '../../components/Layout';
 import { createQuestionario } from '../../services/ApiAdocao';
 import { AuthContext } from '../../contexts/AuthContext';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import { showToast } from '../../utils/toast';
 
 const QuestionarioAdotante = () => {
   const [sexo, setSexo] = useState('');
@@ -51,34 +52,17 @@ const QuestionarioAdotante = () => {
       tendeLatir: Boolean(tendeLatir),
     };
 
-    try {
-      if (role.includes('ADOTANTE')) {
-        const result = await createQuestionario(formData, authToken);
-
-        if (result) {
-          toast.success('Questionário enviado com sucesso!', {
-            position: 'bottom-right',
-            autoClose: 5000,
-          });
+    if (role.includes('ADOTANTE')) {
+      const result = await createQuestionario(formData, authToken)
+        .then(() => {
+          showToast('Questionário enviado com sucesso!', 'success');
           navigate('/');
-        } else {
-          toast.error('Erro ao enviar o questionário. Tente novamente.', {
-            position: 'bottom-right',
-            autoClose: 5000,
-          });
-        }
-      } else {
-        toast.error('Apenas adotantes podem enviar este questionário.', {
-          position: 'bottom-right',
-          autoClose: 5000,
+        })
+        .catch(() => {
+          showToast('Erro ao enviar o questionário. Tente novamente.', 'error');
         });
-      }
-    } catch (error) {
-      console.error('Erro ao enviar o questionário:', error);
-      toast.error('Ocorreu um erro ao enviar o questionário.', {
-        position: 'bottom-right',
-        autoClose: 5000,
-      });
+    } else {
+      showToast('Apenas adotantes podem enviar este questionário.', 'error');
     }
   };
 

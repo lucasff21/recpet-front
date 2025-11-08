@@ -1,26 +1,10 @@
 import '../styles/ComponentLayout.css';
 import logo from '../assets/logo-pet.png';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
-import { findByUserEmail } from '../services/ApiUser';
 
 const NavBar = () => {
-  const [user, setUser] = useState(null);
-  const { userEmail, authToken } = useContext(AuthContext);
-
-  useEffect(() => {
-    getUser();
-  }, [userEmail]);
-
-  const getUser = async () => {
-    if (userEmail && authToken) {
-      const userGet = await findByUserEmail(userEmail, authToken);
-
-      if (userGet) {
-        setUser(userGet);
-      }
-    }
-  };
+  const { user } = useContext(AuthContext);
 
   return (
     <>

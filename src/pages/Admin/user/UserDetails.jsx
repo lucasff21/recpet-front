@@ -6,21 +6,20 @@ import ModalAdoptionDetails from '../../../components/ModalAdoptionDetails';
 import Pagination from '../../../components/Pagination';
 import AdoptionTable from '../../../components/AdoptionTable';
 import {
-  getAdocoesByAnimalId,
+  findUserById,
+  getAdocoesByUserId,
   updateAdoptionStatus,
 } from '../../../services/ApiAdmin';
 import logo from '../../../assets/logo-pet.png';
-import { findAnimalById } from '../../../services/ApiAdocao';
-import { calculateAge } from '../../../utils/pet';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { FaEdit } from 'react-icons/fa';
-import { LuExternalLink } from 'react-icons/lu';
+import { FaEnvelope, FaPhone, FaCalendarAlt } from 'react-icons/fa';
 import Breadcrumb from '../../../components/Breadcrumb';
 
-const PetDetails = () => {
-  const { id: petId } = useParams();
+const UserDetails = () => {
+  const { id: userId } = useParams();
+  document.title = 'Usuário | ADMIN';
 
-  const [pet, setPet] = useState(null);
+  const [user, setUser] = useState(null);
   const [adoptions, setAdoptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -38,7 +37,9 @@ const PetDetails = () => {
   const findAdoptions = useCallback(
     async (page = 0) => {
       try {
-        const response = await getAdocoesByAnimalId(petId, filters);
+        const response = await getAdocoesByUserId(userId, {
+          page: filters.page,
+        });
         const pageResponse = response.data;
         setAdoptions(pageResponse?.content);
         setPageData({
@@ -47,11 +48,11 @@ const PetDetails = () => {
           totalElements: pageResponse?.totalElements,
         });
       } catch (err) {
-        showToast('Erro ao buscar as adoções do pet.', 'error');
+        showToast('Erro ao buscar as adoções do usuário.', 'error');
         setError('Erro ao buscar as adoções.');
       }
     },
-    [petId, filters]
+    [userId, filters]
   );
 
   const handlePageChange = useCallback((page) => {
@@ -71,7 +72,6 @@ const PetDetails = () => {
 
   const handleUpdateStatus = (requestId, newStatus, adminNotes) => {
     if (!newStatus) return;
-
     updateAdoptionStatus(requestId, {
       status: newStatus,
       observacoes: adminNotes,
@@ -90,20 +90,20 @@ const PetDetails = () => {
       setLoading(true);
       setError(null);
       try {
-        const petResponse = await findAnimalById(petId);
-        setPet(petResponse.data);
-        document.title = `${petResponse?.data?.nome || 'Pet'} | ADMIN `;
+        const userResponse = await findUserById(userId);
+        setUser(userResponse.data);
+        document.title = `${userResponse?.data?.nome || 'Usuário'} | ADMIN `;
         await findAdoptions();
       } catch (err) {
-        showToast('Pet não encontrado.', 'error');
-        setError('Pet não encontrado.');
+        showToast('Usuário não encontrado.', 'error');
+        setError('Usuário não encontrado.');
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [petId, findAdoptions]);
+  }, [userId, findAdoptions]);
 
   const renderContent = () => {
     if (loading) {
@@ -132,101 +132,58 @@ const PetDetails = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <img
-                  className="h-20 w-20 rounded-full object-cover"
-                  src={pet?.imagemPath || logo}
-                  alt={pet?.nome || 'Animal'}
+                  className="h-20 w-20 rounded-full object-cover bg-gray-200"
+                  src={logo}
+                  alt={user?.nome || 'Usuário'}
                 />
                 <div className="flex flex-col justify-around gap-2">
                   <h1 className="text-2xl font-bold text-gray-800">
-                    {pet?.nome}
+                    {user?.nome}
                   </h1>
-                  {pet?.disponivelParaAdocao ? (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800">
-                      Disponível para adoção
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800">
-                      Indisponível para adoção
-                    </span>
-                  )}
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
+                    {user?.tipoUsuario || 'USUARIO'}
+                  </span>
                 </div>
               </div>
-              <div className="flex space-x-2">
-                <a
-                  href={`/admin/pets/${pet.id}/editar`}
-                  rel="noopener noreferrer"
-                  className="font-semibold flex gap-2 items-center text-blue-600 hover:underline"
-                  title="Ver Perfil Público"
-                >
-                  Editar <FaEdit className="inline w-5 h-5" />
-                </a>
-                <span className="text-gray-300">|</span>
-                <a
-                  href={`/pets/${pet.id}`}
-                  rel="noopener noreferrer"
-                  className="font-semibold flex gap-2 items-center text-blue-600 hover:underline"
-                  title="Ver Perfil Público"
-                >
-                  Ver perfil público{' '}
-                  <LuExternalLink className="inline w-5 h-5" />
-                </a>
-              </div>
             </div>
           </Panel>
 
-          <Panel title="Informações Detalhadas">
+          <Panel title="Informações de Contato">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6">
               <div>
-                <p className="text-sm font-semibold text-gray-500">Sexo</p>
-                <p className="text-gray-800">{pet.sexo}</p>
+                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+                  <FaEnvelope /> E-mail
+                </p>
+                <p className="text-gray-800">{user.email}</p>
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-500">Porte</p>
-                <p className="text-gray-800">{pet.porte}</p>
+                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+                  <FaPhone /> Telefone
+                </p>
+                <p className="text-gray-800">
+                  {user.telefone || 'Não informado'}
+                </p>
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-500">Pelagem</p>
-                <p className="text-gray-800">{pet.pelagem}</p>
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-500">Tipo</p>
-                <p className="text-gray-800">{pet.tipo}</p>
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-500">
-                  Idade Aproximada
+                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+                  <FaCalendarAlt /> Data de Nascimento
                 </p>
                 <p className="text-gray-600">
-                  {calculateAge(pet.dataNascimentoAproximada)}
+                  {user.dataNascimento
+                    ? new Date(user.dataNascimento).toLocaleDateString('pt-BR')
+                    : 'Não informada'}
                 </p>
               </div>
-            </div>
-          </Panel>
-
-          <Panel>
-            <h2 className="font-semibold m-0 text-center text-gray-800">
-              Descrição e características
-            </h2>
-            <p className="mb-4 pt-0">{pet.descricao}</p>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {pet.caracteristicas?.map((char) => (
-                <span
-                  key={char.id}
-                  className="px-3 py-1 text-xs font-semibold text-indigo-800 bg-indigo-100 rounded-full"
-                >
-                  {char.nome}
-                </span>
-              ))}
             </div>
           </Panel>
 
           <Panel>
             <h2 className="font-semibold m-0 text-center text-gray-800 mb-2">
-              Solicitações de Adoção ({pageData.totalElements})
+              Solicitações de Adoção Feitas ({pageData.totalElements})
             </h2>
             {adoptions?.length === 0 && !loading ? (
               <p className="text-center text-gray-600 py-10">
-                Nenhuma solicitação de adoção para este pet.
+                Nenhuma solicitação de adoção feita por este usuário.
               </p>
             ) : (
               <div>
@@ -248,6 +205,7 @@ const PetDetails = () => {
             )}
           </Panel>
         </div>
+
         {isModalOpen && selectedRequest && (
           <ModalAdoptionDetails
             isOpen={isModalOpen}
@@ -264,8 +222,8 @@ const PetDetails = () => {
     <>
       <Breadcrumb
         items={[
-          { label: 'Pets', href: '/admin/pets' },
-          { label: pet?.nome || 'Detalhes' },
+          { label: 'Usuários', href: '/admin/usuarios' },
+          { label: user?.nome || 'Detalhes' },
         ]}
       />
       {renderContent()}
@@ -273,4 +231,4 @@ const PetDetails = () => {
   );
 };
 
-export default PetDetails;
+export default UserDetails;

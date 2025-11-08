@@ -6,7 +6,7 @@ const apiUrl = URL.base;
 
 export const createUser = async (data) => {
   return axios({
-    url: `${apiUrl}/admin/create`,
+    url: `${apiUrl}/admin`,
     method: 'POST',
     data: data,
     headers: {
@@ -18,7 +18,7 @@ export const createUser = async (data) => {
 
 export const deleteUser = async (id) => {
   return axios({
-    url: `${apiUrl}/admin/user/${id}`,
+    url: `${apiUrl}/admin/users/${id}`,
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${localStorage.getItem('Token_RecSys')}`,
@@ -98,4 +98,12 @@ export const createPagina = (data) => {
 
 export const updatePagina = (id, data) => {
   return apiClient.put(`${apiUrl}/admin/paginas/${id}`, data);
+};
+
+export const findUserById = (userId) => {
+  return apiClient.get(`${apiUrl}/admin/users/${userId}`);
+};
+
+export const getAdocoesByUserId = (userId, params) => {
+  return apiClient.get(`${apiUrl}/admin/users/${userId}/adocoes`, { params });
 };
