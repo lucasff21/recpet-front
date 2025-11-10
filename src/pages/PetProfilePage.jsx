@@ -204,9 +204,9 @@ const PetProfilePage = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <div>
-                        <p className="text-sm text-gray-500 m-0">Raça</p>
+                        <p className="text-sm text-gray-500 m-0">Pelagem</p>
                         <p className="font-medium text-base md:text-lg">
-                          {selectedPet.raca || 'SRD (Sem Raça Definida)'}
+                          {selectedPet.pelagem|| 'SRD (Sem Raça Definida)'}
                         </p>
                       </div>
                       <div>
