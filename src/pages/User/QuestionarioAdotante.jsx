@@ -53,7 +53,7 @@ const QuestionarioAdotante = () => {
     };
 
     if (role.includes('ADOTANTE')) {
-      const result = await createQuestionario(formData, authToken)
+      createQuestionario(formData, authToken)
         .then(() => {
           showToast('Questionário enviado com sucesso!', 'success');
           navigate('/');

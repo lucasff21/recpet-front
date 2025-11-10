@@ -18,6 +18,7 @@ const createParamsFromFilters = (filters) => {
     gender: filters.gender,
     temperament: filters.temperament.join(','),
     page: filters.page.toString(),
+    species: filters.species,
   };
 
   Object.keys(params).forEach(
@@ -41,6 +42,7 @@ const getFiltersFromParams = (searchParams) => {
       ? searchParams.get('temperament').split(',').map(Number)
       : [],
     page: searchParams.get('page') ? Number(searchParams.get('page')) : 0,
+    species: searchParams.get('species') || '',
   };
 };
 
@@ -131,6 +133,7 @@ const Home = () => {
       gender: '',
       temperament: [],
       page: 0,
+      species: '',
     };
     setTempFilters(defaultFilters);
     setSearchParams({});
@@ -165,6 +168,7 @@ const Home = () => {
           sexo: searchParams.get('gender') || null,
           caracteristicasIds: caracteristicasIds,
           page: searchParams.get('page') || 0,
+          especie: searchParams.get('species') || null,
         };
 
         Object.keys(apiParams).forEach(
