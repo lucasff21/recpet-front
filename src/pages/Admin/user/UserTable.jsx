@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { getUsers, updateRole, deleteUser } from '../../../services/ApiAdmin';
 import { toast } from 'react-toastify';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ConfirmModal from '../../../components/ConfirmModal';
 import Pagination from '../../../components/Pagination';
 import { showToast } from '../../../utils/toast';
@@ -37,7 +37,6 @@ const UserTable = () => {
 
   const [modal, setModal] = useState({ isOpen: false, userId: null });
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   const fetchUsers = useCallback((currentFilters) => {
     setLoading(true);
@@ -121,8 +120,6 @@ const UserTable = () => {
       })
       .catch(() => showToast('Erro ao editar o usuário', 'error'));
   };
-
-  const handleEdit = (id) => navigate(`/admin/usuarios/${id}/editar`);
 
   const tipos = {
     ADMIN: 'ADMINISTRADOR',
