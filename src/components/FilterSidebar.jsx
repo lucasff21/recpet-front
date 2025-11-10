@@ -20,6 +20,7 @@ const FilterSidebar = ({
     idade: true,
     genero: true,
     temperamento: true,
+    species: true,
   });
 
   const toggleAccordion = (key) => {
@@ -72,6 +73,24 @@ const FilterSidebar = ({
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 mt-2"
               placeholder="Buscar por nome..."
             />
+          </FilterAccordion>
+
+          <FilterAccordion
+            title="ESPÉCIE"
+            isOpen={accordionOpen.species}
+            toggleOpen={() => toggleAccordion('species')}
+          >
+            <select
+              id="species"
+              name="species"
+              value={tempFilters.species}
+              onChange={handleTempFilterChange}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 mt-2"
+            >
+              <option value="">Todos</option>
+              <option value="GATO">Gato</option>
+              <option value="CACHORRO">Cachorro</option>
+            </select>
           </FilterAccordion>
 
           <FilterAccordion
