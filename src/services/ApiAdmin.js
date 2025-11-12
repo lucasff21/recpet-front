@@ -4,6 +4,17 @@ import apiClient from './api/axios';
 
 const apiUrl = URL.base;
 
+export const getAdminMetrics = (params) => {
+  return axios({
+    url: `${apiUrl}/admin/metricas`,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('Token_RecSys')}`,
+    },
+  });
+};
+
 export const createUser = async (data) => {
   return axios({
     url: `${apiUrl}/admin`,

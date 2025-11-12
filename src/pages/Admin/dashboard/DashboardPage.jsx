@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { getUsers, getAllAdoptions, findAllAnimals } from '../../../services/ApiAdmin';
+import React, { useEffect, useState, useCallback } from 'react';
+import { getAdminMetrics, getAllAdoptions } from '../../../services/ApiAdmin';
 import StatsCard from '../dashboard/StatsCard';
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaDog, FaCat, FaUsers } from 'react-icons/fa';
 import { MdOutlinePets } from 'react-icons/md';
 import { PiFilesFill } from 'react-icons/pi';
-import { IoTimeOutline, IoCheckmarkCircle } from 'react-icons/io5';
+import { IoTimeOutline, IoCheckmarkCircle, IoSearchOutline } from 'react-icons/io5';
 import { showToast } from '../../../utils/toast';
 
 const AdminDashboard = () => {
@@ -14,7 +14,19 @@ const AdminDashboard = () => {
     pendingAdoptions: 0,
     approvedAdoptions: 0,
     finalizedAdoptions: 0,
+    totalAnimals: 0,
+    available: 0,
+    totalDogs: 0,
+    totalCats: 0,
+    totalRequests: 0,
+    pending: 0,
+    underReview: 0,
+    approved: 0,
+    completed: 0,
+    totalAdopters: 0,
   });
+  
+  
 
   const [recentAdoptions, setRecentAdoptions] = useState([]);
 
@@ -34,50 +46,57 @@ const AdminDashboard = () => {
     return allData;
   };
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
-      const [allUsers, allPets, allAdoptions] = await Promise.all([
-        fetchAllPages(getUsers),
-        fetchAllPages(findAllAnimals),
+      const [getAdminMetricsResponse, allAdoptions] = await Promise.all([
+        getAdminMetrics(),
         fetchAllPages(getAllAdoptions, 50, { sortByDate: 'desc' }),
       ]);
-       
-      const pending = allAdoptions.filter(a => a.status === 'PENDENTE').length;
-      const approved = allAdoptions.filter(a => a.status === 'APROVADO').length;
-      const finalized = allAdoptions.filter(a => a.status === 'FINALIZADO').length;
-
+      const adminMetrics = getAdminMetricsResponse.data
       setStats({
-        totalUsers: allUsers.length,
-        totalPets: allPets.length,
-        pendingAdoptions: pending,
-        approvedAdoptions: approved,
-        finalizedAdoptions: finalized,
+        totalUsers: adminMetrics.usuarios?.totalUsuarios || 0,
+        totalPets: adminMetrics.animais?.totalAnimais || 0,
+        pendingAdoptions: adminMetrics.adocoes?.pendentes || 0,
+        approvedAdoptions: adminMetrics.adocoes?.aprovadas || 0,
+        finalizedAdoptions: adminMetrics.adocoes?.finalizadas || 0,
+      
+        totalAnimals: adminMetrics.animais?.totalAnimais || 0,
+        available: adminMetrics.animais?.disponiveis || 0,
+        totalDogs: adminMetrics.animais?.totalCachorros || 0,
+        totalCats: adminMetrics.animais?.totalGatos || 0,
+
+        totalRequests: adminMetrics.adocoes?.totalSolicitacoes || 0,
+        pending: adminMetrics.adocoes?.pendentes || 0,
+        underReview: adminMetrics.adocoes?.emAnalise || 0,
+        approved: adminMetrics.adocoes?.aprovadas || 0,
+        completed: adminMetrics.adocoes?.finalizadas || 0,
+      
+        totalAdopters: adminMetrics.usuarios?.totalAdotantes || 0,
       });
+      
 
       setRecentAdoptions(allAdoptions.slice(0, 15));
     } catch (error) {
         showToast('Erro ao carregar dados do dashboard. Tente novamente.', 'error');
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [fetchDashboardData]);
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 lg:gap-6 auto-rows-fr">
-        <div className="hidden sm:block">
-          <StatsCard
-            title="Total de Usuários"
-            value={stats.totalUsers}
-            icon={<FaUser className="text-2xl" />}
-            color="blue"
-            link="/admin/usuarios"
-          />
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-5 lg:gap-6 auto-rows-fr">
         <StatsCard
-          title="Total de Pets"
+          title="Total de Usuários"
+          value={stats.totalUsers}
+          icon={<FaUser className="text-2xl" />}
+          color="blue"
+          link="/admin/usuarios"
+        />
+        <StatsCard
+          title="Total de Animais"
           value={stats.totalPets}
           icon={<MdOutlinePets className="text-2xl" />}
           color="green"
@@ -106,6 +125,51 @@ const AdminDashboard = () => {
             icon={<PiFilesFill className="text-2xl" />}
             color="indigo"
             link="/admin/adocoes?status=FINALIZADO"
+          />
+        </div>
+        <div className="hidden sm:block">
+          <StatsCard
+            title="Animais Disponíveis"
+            value={stats.available}
+            icon={<IoCheckmarkCircle className="text-2xl" />}
+            color="green"
+            link="/admin/pets?status=disponivel"
+          />
+        </div>
+        <div className="hidden sm:block">
+          <StatsCard
+            title="Total de Cachorros"
+            value={stats.totalDogs}
+            icon={<FaDog className="text-2xl" />}
+            color="blue"
+            link="/admin/pets?tipo=CACHORRO"
+          />
+        </div>
+        <div className="hidden sm:block">
+          <StatsCard
+            title="Total de Gatos"
+            value={stats.totalCats}
+            icon={<FaCat className="text-2xl" />}
+            color="purple"
+            link="/admin/pets?tipo=GATO"
+          />
+        </div>
+        <div className="hidden sm:block">
+          <StatsCard
+            title="Adoções em Análise"
+            value={stats.underReview}
+            icon={<IoSearchOutline className="text-2xl" />}
+            color="yellow"
+            link="/admin/adocoes?status=EM_ANALISE"
+          />
+        </div>
+        <div className="hidden sm:block">
+          <StatsCard
+            title="Total de Adotantes"
+            value={stats.totalAdopters}
+            icon={<FaUsers className="text-2xl" />}
+            color="indigo"
+            link="/admin/usuarios?tipo=adotante"
           />
         </div>
       </div>
