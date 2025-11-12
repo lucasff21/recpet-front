@@ -206,7 +206,7 @@ const PetProfilePage = () => {
                       <div>
                         <p className="text-sm text-gray-500 m-0">Pelagem</p>
                         <p className="font-medium text-base md:text-lg">
-                          {selectedPet.pelagem|| 'SRD (Sem Raça Definida)'}
+                        {selectedPet.pelagem || 'Não informada'}
                         </p>
                       </div>
                       <div>
