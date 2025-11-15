@@ -23,12 +23,7 @@ export const updateQuestionario = (data) => {
 };
 
 export const createQuestionario = async (questionarioData) => {
-  try {
-    const response = await apiClient.post('/questionario', questionarioData);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  return await apiClient.post('/questionario', questionarioData);
 };
 
 export const findByQuestionarioEmail = async (email, token) => {
