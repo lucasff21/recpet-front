@@ -49,12 +49,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUserQuestionario = (questionarioData) => {
-    const updatedUser = {
-      ...user,
-      questionario: questionarioData,
-    };
-    setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
+    setUser((prevUser) => {
+      const updatedUser = {
+        ...prevUser,
+        questionario: questionarioData,
+      };
+      localStorage.setItem('User_RecSys', JSON.stringify(updatedUser));
+      return updatedUser;
+    });
   };
 
   const tokenDecode = (token) => {
