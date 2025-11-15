@@ -7,54 +7,55 @@ import { ToastContainer } from 'react-toastify';
 import { showToast } from '../../utils/toast';
 
 const QuestionarioAdotante = () => {
-  const [sexo, setSexo] = useState('');
-  const [porte, setPorte] = useState('');
-  const [pelagem, setPelagem] = useState('');
-  const [idealCasa, setIdealCasa] = useState('');
-  const [gostaCrianca, setGostaCrianca] = useState('');
-  const [caoGuarda, setCaoGuarda] = useState('');
-  const [brincalhao, setBrincalhao] = useState('');
-  const [necessidadeCorrer, setNecessidadeCorrer] = useState('');
-  const [quedaPelo, setQuedaPelo] = useState('');
-  const [tendeLatir, setTendeLatir] = useState('');
-  const { authToken, role } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const [moradia, setMoradia] = useState('');
+  const [telasProtecao, setTelasProtecao] = useState('');
+  const [todosDeAcordo, setTodosDeAcordo] = useState('');
+  const [qtdCaes, setQtdCaes] = useState(0);
+  const [qtdGatos, setQtdGatos] = useState(0);
+  const [qtdOutros, setQtdOutros] = useState(0);
+  const [cienteCustos, setCienteCustos] = useState('');
+  const [termoCompromissoLongoPrazo, setTermoCompromissoLongoPrazo] = useState(false);
+  const [termoSaudeBemEstar, setTermoSaudeBemEstar] = useState(false);
+  const [termoPacienciaAdaptacao, setTermoPacienciaAdaptacao] = useState(false);
 
+  const {role, setHasQuestionario } = useContext(AuthContext);
+  const navigate = useNavigate();
   const handleCreateQuestionario = async (e) => {
     e.preventDefault();
 
     if (
-      !sexo ||
-      !porte ||
-      !pelagem ||
-      !idealCasa ||
-      !gostaCrianca ||
-      !caoGuarda ||
-      !brincalhao ||
-      !necessidadeCorrer ||
-      !quedaPelo ||
-      !tendeLatir
+      !moradia ||
+      !telasProtecao ||
+      !todosDeAcordo ||
+      !cienteCustos ||
+      !termoCompromissoLongoPrazo ||
+      !termoSaudeBemEstar ||
+      !termoPacienciaAdaptacao
     ) {
-      alert('Por favor, preencha todos os campos antes de enviar.');
+      showToast('Por favor, preencha todos os campos e aceite todos os termos.', 'warning');
       return;
     }
 
     const formData = {
-      sexo,
-      porte,
-      pelagem,
-      idealCasa: Boolean(idealCasa),
-      gostaCrianca: Boolean(gostaCrianca),
-      caoGuarda: Boolean(caoGuarda),
-      brincalhao: Boolean(brincalhao),
-      necessidadeCorrer: Boolean(necessidadeCorrer),
-      quedaPelo: Boolean(quedaPelo),
-      tendeLatir: Boolean(tendeLatir),
+      moradia,
+      telasProtecao: telasProtecao === 'true',
+      todosDeAcordo: todosDeAcordo === 'true',
+      qtdCaes: parseInt(qtdCaes, 10),
+      qtdGatos: parseInt(qtdGatos, 10),
+      qtdOutros: parseInt(qtdOutros, 10),
+      cienteCustos: cienteCustos === 'true',
+      termoCompromissoLongoPrazo,
+      termoSaudeBemEstar,
+      termoPacienciaAdaptacao,
     };
 
-    if (role.includes('ADOTANTE')) {
-      createQuestionario(formData, authToken)
+    if (role.includes('ADOTANTE') || role.includes('ADMIN')) {
+      createQuestionario(formData)
         .then(() => {
+          if (setHasQuestionario) {
+            setHasQuestionario(true);
+          }
+          localStorage.setItem('hasQuestionario', 'true');
           showToast('Questionário enviado com sucesso!', 'success');
           navigate('/');
         })
@@ -69,178 +70,210 @@ const QuestionarioAdotante = () => {
   return (
     <Layout showFooter={false}>
       <ToastContainer />
-      <div className="space-y-8 bg-white p-8 rounded-lg shadow-md border border-gray-200">
-        <div style={{ textAlign: 'center' }}>
-          <h3>Encontre o Pet ideal para você!</h3>
-          <p className="font-medium">
-            Responda às perguntas abaixo para que possamos encontrar o cachorro
-            ideal para o seu estilo de vida.
+      <div className="max-w-2xl mx-auto py-8 px-4">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Questionário de Adoção</h2>
+          <p className="text-gray-600 mb-6">
+            Preencha as informações abaixo para iniciar o processo de adoção.
           </p>
+
+          <form onSubmit={handleCreateQuestionario} className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Sua moradia é:
+              </label>
+              <select 
+                value={moradia} 
+                onChange={(e) => setMoradia(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Selecione</option>
+                <option value="CASA_QUINTAL_TOTALMENTE_FECHADO">Casa com quintal totalmente fechado</option>
+                <option value="CASA_QUINTAL_ABERTO">Casa com quintal aberto</option>
+                <option value="CASA_SEM_QUINTAL">Casa sem quintal</option>
+                <option value="APARTAMENTO">Apartamento</option>
+              </select>
+            </div>
+
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Janelas e sacadas possuem telas ou grades de proteção?
+              </label>
+              <div className="flex gap-4">
+                <label className="flex items-center">
+                  <input 
+                    type="radio" 
+                    name="telasProtecao" 
+                    value="true" 
+                    checked={telasProtecao === 'true'}
+                    onChange={(e) => setTelasProtecao(e.target.value)}
+                    className="mr-2"
+                  />
+                  Sim
+                </label>
+                <label className="flex items-center">
+                  <input 
+                    type="radio" 
+                    name="telasProtecao" 
+                    value="false" 
+                    checked={telasProtecao === 'false'}
+                    onChange={(e) => setTelasProtecao(e.target.value)}
+                    className="mr-2"
+                  />
+                  Não
+                </label>
+              </div>
+            </div>
+
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Todos na sua casa estão de acordo com a adoção?
+              </label>
+              <div className="flex gap-4">
+                <label className="flex items-center">
+                  <input 
+                    type="radio" 
+                    name="todosDeAcordo" 
+                    value="true" 
+                    checked={todosDeAcordo === 'true'}
+                    onChange={(e) => setTodosDeAcordo(e.target.value)}
+                    className="mr-2"
+                  />
+                  Sim
+                </label>
+                <label className="flex items-center">
+                  <input 
+                    type="radio" 
+                    name="todosDeAcordo" 
+                    value="false" 
+                    checked={todosDeAcordo === 'false'}
+                    onChange={(e) => setTodosDeAcordo(e.target.value)}
+                    className="mr-2"
+                  />
+                  Não
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Quais animais você já tem em casa?
+              </label>
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs text-gray-600 mb-1">Cães</label>
+                  <input 
+                    type="number" 
+                    value={qtdCaes} 
+                    onChange={(e) => setQtdCaes(e.target.value)} 
+                    min="0"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-600 mb-1">Gatos</label>
+                  <input 
+                    type="number" 
+                    value={qtdGatos} 
+                    onChange={(e) => setQtdGatos(e.target.value)} 
+                    min="0"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-600 mb-1">Outros</label>
+                  <input 
+                    type="number" 
+                    value={qtdOutros} 
+                    onChange={(e) => setQtdOutros(e.target.value)} 
+                    min="0"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Você pode incluir os custos de um animal (ração, vacinas, veterinário) no seu orçamento?
+              </label>
+              <div className="flex gap-4">
+                <label className="flex items-center">
+                  <input 
+                    type="radio" 
+                    name="cienteCustos" 
+                    value="true" 
+                    checked={cienteCustos === 'true'}
+                    onChange={(e) => setCienteCustos(e.target.value)}
+                    className="mr-2"
+                  />
+                  Sim
+                </label>
+                <label className="flex items-center">
+                  <input 
+                    type="radio" 
+                    name="cienteCustos" 
+                    value="false" 
+                    checked={cienteCustos === 'false'}
+                    onChange={(e) => setCienteCustos(e.target.value)}
+                    className="mr-2"
+                  />
+                  Não
+                </label>
+              </div>
+            </div>
+
+            <div className="border-t pt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Pilares da Adoção Responsável
+              </label>
+              <div className="space-y-3">
+                <label className="flex items-start">
+                  <input 
+                    type="checkbox" 
+                    checked={termoCompromissoLongoPrazo} 
+                    onChange={(e) => setTermoCompromissoLongoPrazo(e.target.checked)}
+                    className="mt-1 mr-3"
+                  />
+                  <span className="text-sm text-gray-700">
+                    Entendo que um animal pode viver mais de 15 anos e é um compromisso para a vida toda.
+                  </span>
+                </label>
+                <label className="flex items-start">
+                  <input 
+                    type="checkbox" 
+                    checked={termoSaudeBemEstar} 
+                    onChange={(e) => setTermoSaudeBemEstar(e.target.checked)}
+                    className="mt-1 mr-3"
+                  />
+                  <span className="text-sm text-gray-700">
+                    Comprometo-me a zelar pela saúde e bem-estar do animal.
+                  </span>
+                </label>
+                <label className="flex items-start">
+                  <input 
+                    type="checkbox" 
+                    checked={termoPacienciaAdaptacao} 
+                    onChange={(e) => setTermoPacienciaAdaptacao(e.target.checked)}
+                    className="mt-1 mr-3"
+                  />
+                  <span className="text-sm text-gray-700">
+                    Entendo que o animal precisará de paciência e carinho para se adaptar.
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <button 
+              type="submit" 
+              className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors font-medium"
+            >
+              Enviar Questionário
+            </button>
+          </form>
         </div>
-        <hr />
-        <form id="questionario-adotante" onSubmit={handleCreateQuestionario}>
-          <label htmlFor="sexo">Qual o sexo do pet que você prefere?</label>
-          <select
-            id="sexo"
-            className="form-control"
-            value={sexo}
-            onChange={(e) => setSexo(e.target.value)}
-          >
-            <option value="" disabled>
-              Selecione:
-            </option>
-            <option value="macho">Macho</option>
-            <option value="femea">Fêmea</option>
-          </select>
-
-          <label htmlFor="porte">Qual o porte do pet que você prefere?</label>
-          <select
-            id="porte"
-            className="form-control"
-            value={porte}
-            onChange={(e) => setPorte(e.target.value)}
-          >
-            <option value="" disabled>
-              Selecione:
-            </option>
-            <option value="pequeno">Pequeno</option>
-            <option value="medio">Médio</option>
-            <option value="grande">Grande</option>
-            <option value="gigantes">Gigante</option>
-          </select>
-
-          <label htmlFor="pelagem">
-            Qual o tipo de pelagem que você prefere?
-          </label>
-          <select
-            id="pelagem"
-            className="form-control"
-            value={pelagem}
-            onChange={(e) => setPelagem(e.target.value)}
-          >
-            <option value="" disabled>
-              Selecione:
-            </option>
-            <option value="pelo curto liso">Pelo curto liso</option>
-            <option value="pelo curto duro">Pelo curto e duro</option>
-            <option value="pelo longo liso">Pelo longo liso</option>
-            <option value="pelo longo ondulado">Pelo longo ondulado</option>
-          </select>
-
-          <label htmlFor="idealCasa">
-            O pet será ideal para viver em casa?
-          </label>
-          <select
-            id="idealCasa"
-            className="form-control"
-            value={idealCasa}
-            onChange={(e) => setIdealCasa(e.target.value)}
-          >
-            <option value="" disabled>
-              Selecione:
-            </option>
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-          </select>
-
-          <label htmlFor="gostaCrianca">
-            O pet precisa ser amigável com crianças?
-          </label>
-          <select
-            id="gostaCrianca"
-            className="form-control"
-            value={gostaCrianca}
-            onChange={(e) => setGostaCrianca(e.target.value)}
-          >
-            <option value="" disabled>
-              Selecione:
-            </option>
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-          </select>
-
-          <label htmlFor="caoGuarda">
-            Você está procurando um cão de guarda?
-          </label>
-          <select
-            id="caoGuarda"
-            className="form-control"
-            value={caoGuarda}
-            onChange={(e) => setCaoGuarda(e.target.value)}
-          >
-            <option value="" disabled>
-              Selecione:
-            </option>
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-          </select>
-
-          <label htmlFor="brincalhao">O pet deve ser brincalhão?</label>
-          <select
-            id="brincalhao"
-            className="form-control"
-            value={brincalhao}
-            onChange={(e) => setBrincalhao(e.target.value)}
-          >
-            <option value="" disabled>
-              Selecione:
-            </option>
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-          </select>
-
-          <label htmlFor="necessidadeCorrer">
-            O pet terá necessidade de correr frequentemente?
-          </label>
-          <select
-            id="necessidadeCorrer"
-            className="form-control"
-            value={necessidadeCorrer}
-            onChange={(e) => setNecessidadeCorrer(e.target.value)}
-          >
-            <option value="" disabled>
-              Selecione:
-            </option>
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-          </select>
-
-          <label htmlFor="quedaPelo">
-            Você se incomoda com queda de pelos?
-          </label>
-          <select
-            id="quedaPelo"
-            className="form-control"
-            value={quedaPelo}
-            onChange={(e) => setQuedaPelo(e.target.value)}
-          >
-            <option value="" disabled>
-              Selecione:
-            </option>
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-          </select>
-
-          <label htmlFor="tendeLatir">
-            O pet pode ser de uma raça que tende a latir com frequência?
-          </label>
-          <select
-            id="tendeLatir"
-            className="form-control"
-            value={tendeLatir}
-            onChange={(e) => setTendeLatir(e.target.value)}
-          >
-            <option value="" disabled>
-              Selecione:
-            </option>
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-          </select>
-
-          <button type="submit" className="btn btn-primary mt-3">
-            Enviar
-          </button>
-        </form>
       </div>
     </Layout>
   );
