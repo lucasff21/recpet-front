@@ -18,6 +18,10 @@ export const createAnimal = (animal) => {
   });
 };
 
+export const updateQuestionario = (data) => {
+  return apiClient.put(`/questionario`, data);
+};
+
 export const createQuestionario = async (questionarioData) => {
   try {
     const response = await apiClient.post('/questionario', questionarioData);
