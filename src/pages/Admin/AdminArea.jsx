@@ -5,12 +5,14 @@ import { ToastContainer } from 'react-toastify';
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import AdoptionsPage from './adoptions/AdoptionsPage';
+import AdminDashboard from './dashboard/DashboardPage';
 import Sidebar from '../../components/Sidebar';
 import PetManagement from './pet/PetManagement';
 import { GoSidebarExpand } from 'react-icons/go';
 import ContentManagement from './content/ContentManagement';
 import { FiFileText } from 'react-icons/fi';
 import { MdOutlinePets } from 'react-icons/md';
+import { TbLayoutDashboard } from 'react-icons/tb';
 import { PiFilesFill } from 'react-icons/pi';
 import { FaUser } from 'react-icons/fa';
 import { IoMdHome } from 'react-icons/io';
@@ -26,6 +28,11 @@ const AdminArea = () => {
       path: '/',
       label: 'Página Inicial',
       icon: <IoMdHome className="h-5 w-5 mr-3" />,
+    },
+    {
+      path: '/admin/dashboard',
+      label: 'Dashboard',
+      icon: <TbLayoutDashboard className="h-5 w-5 mr-3" />,
     },
     {
       path: '/admin/usuarios',
@@ -77,6 +84,7 @@ const AdminArea = () => {
           )}
         </div>
         <Routes>
+          <Route path = "dashboard/*" element = {<AdminDashboard/>}/>
           <Route path="pets/*" element={<PetManagement />} />
           <Route path="usuarios/*" element={<UserManagement />} />
           <Route path="adocoes/*" element={<AdoptionsPage />} />
