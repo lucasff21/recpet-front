@@ -7,18 +7,22 @@ const stringToBoolean = z.preprocess((val) => {
 }, z.boolean());
 
 export const questionarioSchema = z.object({
-  moradia: z.enum(
-    [
-      'CASA_QUINTAL_TOTALMENTE_FECHADO',
-      'CASA_QUINTAL_ABERTO',
-      'CASA_SEM_QUINTAL',
-      'APARTAMENTO',
-    ],
-    {
-      required_error: 'Selecione o tipo de moradia',
-      invalid_type_error: 'Selecione um tipo de moradia válido',
-    }
-  ),
+  moradia: z
+    .string()
+    .nonempty({ message: 'Selecione o tipo de moradia' })
+    .pipe(
+      z.enum(
+        [
+          'CASA_QUINTAL_TOTALMENTE_FECHADO',
+          'CASA_QUINTAL_ABERTO',
+          'CASA_SEM_QUINTAL',
+          'APARTAMENTO',
+        ],
+        {
+          invalid_type_error: 'Selecione um tipo de moradia válido',
+        }
+      )
+    ),
   telasProtecao: stringToBoolean,
   todosDeAcordo: stringToBoolean,
   qtdCaes: z
