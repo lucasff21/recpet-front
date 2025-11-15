@@ -33,7 +33,7 @@ const PetProfilePage = () => {
   const navigate = useNavigate();
   const [selectedPet, setSelectedPet] = useState(null);
   const [error, setError] = useState(null);
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, user } = useContext(AuthContext);
   const [pageLoading, setPageLoading] = useState(true);
   const [adoptionLoading, setAdoptionLoading] = useState(false);
 
@@ -68,6 +68,12 @@ const PetProfilePage = () => {
       navigate(
         `/login?redirect=${encodeURIComponent(window.location.pathname)}`
       );
+      return;
+    }
+
+    if (!user.questionario) {
+      showToast('Você precisa responder o questionário antes de adotar.', 'warning');
+      navigate('/questionario');
       return;
     }
 

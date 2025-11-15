@@ -10,7 +10,7 @@ import Layout from '../../../components/Layout';
 import Sidebar from '../../../components/Sidebar';
 import { GoSidebarExpand } from 'react-icons/go';
 import { IoMdHome, IoMdSettings } from 'react-icons/io';
-import { PiFilesFill } from 'react-icons/pi';
+import { PiClipboardTextFill,PiHeartStraightFill  } from 'react-icons/pi';
 
 const DashboardPage = () => {
   document.title = 'Minha conta';
@@ -24,11 +24,16 @@ const DashboardPage = () => {
       label: 'Início',
       icon: <IoMdHome className="h-5 w-5 mr-3" />,
     },
-    {
-      path: '/painel/adocoes',
-      label: 'Minhas adoções',
-      icon: <PiFilesFill className="h-5 w-5 mr-3" />,
-    },
+{
+  path: '/painel/adocoes',
+  label: 'Minhas adoções',
+  icon: <PiHeartStraightFill className="h-5 w-5 mr-3" />,
+},
+{
+  path: '/questionario',
+  label: 'Questionário de Adoção',
+  icon: <PiClipboardTextFill className="h-5 w-5 mr-3" />
+},
     {
       path: '/painel/configuracoes',
       label: 'Editar conta',

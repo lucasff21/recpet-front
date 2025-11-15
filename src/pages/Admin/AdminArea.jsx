@@ -11,7 +11,7 @@ import { GoSidebarExpand } from 'react-icons/go';
 import ContentManagement from './content/ContentManagement';
 import { FiFileText } from 'react-icons/fi';
 import { MdOutlinePets } from 'react-icons/md';
-import { PiFilesFill } from 'react-icons/pi';
+import { PiFilesFill, PiClipboardTextFill} from 'react-icons/pi';
 import { FaUser } from 'react-icons/fa';
 import { IoMdHome } from 'react-icons/io';
 import { IoExitOutline } from 'react-icons/io5';
@@ -41,6 +41,11 @@ const AdminArea = () => {
       path: '/admin/adocoes',
       label: 'Solicitações',
       icon: <PiFilesFill className="h-5 w-5 mr-3" />,
+    },
+    {
+      path: '/questionario',
+      label: 'Questionário de Adoção',
+      icon: <PiClipboardTextFill className="h-5 w-5 mr-3" />
     },
     {
       path: '/admin/conteudos',
