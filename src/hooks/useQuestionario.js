@@ -7,7 +7,7 @@ import { createQuestionario, updateQuestionario } from '../services/ApiAdocao';
 import { showToast } from '../utils/toast';
 import { questionarioSchema, defaultValues } from '../zod/questionarioSchema';
 
-export const useQuestionario = () => {
+export const useQuestionario = ({ onSuccess } = {}) => {
   const navigate = useNavigate();
   const { user, updateUserQuestionario } = useContext(AuthContext);
 
@@ -28,15 +28,14 @@ export const useQuestionario = () => {
   useEffect(() => {
     if (user?.questionario) {
       const q = user.questionario;
-
       reset({
         moradia: q.moradia || '',
-        telasProtecao: q.telasProtecao || false,
-        todosDeAcordo: q.todosDeAcordo || false,
+        telasProtecao: q.telasProtecao ? 'true' : 'false',
+        todosDeAcordo: q.todosDeAcordo ? 'true' : 'false',
         qtdCaes: q.qtdCaes || 0,
         qtdGatos: q.qtdGatos || 0,
         qtdOutros: q.qtdOutros || 0,
-        cienteCustos: q.cienteCustos || false,
+        cienteCustos: q.cienteCustos ? 'true' : 'false',
         termoCompromissoLongoPrazo: q.termoCompromissoLongoPrazo || false,
         termoSaudeBemEstar: q.termoSaudeBemEstar || false,
         termoPacienciaAdaptacao: q.termoPacienciaAdaptacao || false,
@@ -65,11 +64,12 @@ export const useQuestionario = () => {
         response = await createQuestionario(data);
         showToast('Questionário enviado com sucesso!', 'success');
       }
-      if (updateUserQuestionario) {
-        updateUserQuestionario(response.data || response);
-      }
 
-      navigate('/');
+      updateUserQuestionario(response.data);
+
+      if (onSuccess) {
+        onSuccess(response.data || response);
+      }
     } catch (error) {
       if (error.response?.status === 401) {
         showToast('Sessão expirada. Faça login novamente.', 'error');
