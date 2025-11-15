@@ -5,7 +5,6 @@ import Home from './pages/Home';
 import AdminArea from './pages/Admin/AdminArea';
 import { AuthContext } from './contexts/AuthContext';
 import Login from './pages/User/Login';
-import QuestionarioAdotante from './pages/User/QuestionarioAdotante';
 import CreateAccountForm from './pages/User/CreateAccount';
 import AboutUs from './pages/AboutUs';
 import PetProfilePage from './pages/PetProfilePage';
@@ -64,10 +63,6 @@ const AppRoutes = () => (
       />
 
       {/* ROTAS PROTEGIDA */}
-      <Route
-        path="/questionario"
-        element={<PrivateRoute element={QuestionarioAdotante} />}
-      />
       <Route
         path="/painel/*"
         element={<PrivateRoute element={DashboardPage} />}

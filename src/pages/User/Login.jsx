@@ -7,6 +7,8 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { showToast } from '../../utils/toast';
 import InputField from '../../components/FormFields/InputField';
 import { Button } from '../../components/Button';
+import Modal from '../../components/Modal';
+import QuestionarioForm from '../../components/QuestionarioForm';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -19,6 +21,8 @@ const Login = () => {
   const userCreated = location.state?.userCreated;
 
   const { login } = useContext(AuthContext);
+
+  const [isQuestionarioModalOpen, setIsQuestionarioModalOpen] = useState(false);
 
   const getRedirectPath = () => {
     try {
@@ -41,6 +45,16 @@ const Login = () => {
     return null;
   };
 
+  const handleModalClose = () => {
+    setIsQuestionarioModalOpen(false);
+    navigate('/');
+  };
+
+  const handleQuestionarioSuccess = () => {
+    setIsQuestionarioModalOpen(false);
+    navigate('/');
+  };
+
   const handlePostLogin = (userData) => {
     const redirect = getRedirectPath();
 
@@ -48,13 +62,12 @@ const Login = () => {
       return navigate(redirect);
     }
 
-    if (userData.tipoUsuario === 'ADMIN' && userData.questionario) {
-      return navigate('/admin');
+    if (userData.tipoUsuario === 'ADMIN') {
+      return navigate('/admin/dashboard');
     }
 
-
     if (!userData.questionario) {
-      return navigate('/questionario');
+      return setIsQuestionarioModalOpen(true);
     }
 
     navigate('/');
@@ -159,6 +172,16 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      {isQuestionarioModalOpen && (
+        <Modal onClose={handleModalClose} title="Questionário de Adoção">
+          <QuestionarioForm
+            onSuccess={handleQuestionarioSuccess}
+            onClose={handleModalClose}
+            showTitle={false}
+          />
+        </Modal>
+      )}
     </Layout>
   );
 };

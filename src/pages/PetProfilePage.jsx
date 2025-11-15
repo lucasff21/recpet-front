@@ -10,6 +10,8 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { calculateAge } from '../utils/pet';
 import Breadcrumb from '../components/Breadcrumb';
 import { useAdoptions } from '../contexts/AdoptionContext';
+import Modal from '../components/Modal';
+import QuestionarioForm from '../components/QuestionarioForm';
 
 const predefinedColors = [
   'bg-blue-100 text-blue-800',
@@ -36,6 +38,7 @@ const PetProfilePage = () => {
   const { isAuthenticated, user } = useContext(AuthContext);
   const [pageLoading, setPageLoading] = useState(true);
   const [adoptionLoading, setAdoptionLoading] = useState(false);
+  const [isQuestionarioModalOpen, setIsQuestionarioModalOpen] = useState(false);
 
   const { pendingAnimalIds, loadingAdoptions, addAdoption } = useAdoptions();
   const [isPending, setIsPending] = useState(false);
@@ -61,7 +64,7 @@ const PetProfilePage = () => {
     }
   }, [selectedPet, pendingAnimalIds, pageLoading, loadingAdoptions]);
 
-  const interesseAdocao = async (e) => {
+  const handleAdoptionClick = (e) => {
     e?.preventDefault();
 
     if (!isAuthenticated) {
@@ -72,8 +75,22 @@ const PetProfilePage = () => {
     }
 
     if (!user.questionario) {
-      showToast('Você precisa responder o questionário antes de adotar.', 'warning');
-      navigate('/questionario');
+      setIsQuestionarioModalOpen(true);
+      return;
+    }
+    interesseAdocao();
+  };
+
+  const handleQuestionarioSuccess = () => {
+    setIsQuestionarioModalOpen(false);
+    interesseAdocao();
+  };
+
+  const interesseAdocao = async () => {
+    if (!isAuthenticated) {
+      navigate(
+        `/login?redirect=${encodeURIComponent(window.location.pathname)}`
+      );
       return;
     }
 
@@ -133,7 +150,7 @@ const PetProfilePage = () => {
 
     if (!isAuthenticated) {
       return (
-        <Button onClick={interesseAdocao} size={'medium'}>
+        <Button onClick={handleAdoptionClick} size={'medium'}>
           Faça login para adotar
         </Button>
       );
@@ -142,15 +159,13 @@ const PetProfilePage = () => {
     if (isPending) {
       return (
         <div className="w-full text-right">
-          <div className="inline-block p-4 rounded-md bg-yellow-100 text-yellow-800 text-center font-semibold">
-            <p>
-              Você já possui uma solicitação pendente para {selectedPet?.nome} .
-            </p>
+          <div className="inline-block p-4 rounded-md bg-green-100 text-green-800 text-center font-semibold">
+            <p>Sua solicitação para {selectedPet?.nome} já foi registrada!</p>
             <Link
               to="/painel/adocoes"
               className="text-sm text-blue-600 hover:underline mt-1 block"
             >
-              Ver minhas solicitações
+              Acompanhar minha solicitação
             </Link>
           </div>
         </div>
@@ -160,7 +175,7 @@ const PetProfilePage = () => {
     return (
       <Button
         confirm={true}
-        onClick={interesseAdocao}
+        onClick={handleAdoptionClick}
         disabled={adoptionLoading || !selectedPet}
         size={'medium'}
       >
@@ -178,6 +193,18 @@ const PetProfilePage = () => {
 
   return (
     <Layout>
+      {isQuestionarioModalOpen && (
+        <Modal
+          onClose={() => setIsQuestionarioModalOpen(false)}
+          title="Questionário de Adoção"
+        >
+          <QuestionarioForm
+            onSuccess={handleQuestionarioSuccess}
+            onClose={() => setIsQuestionarioModalOpen(false)}
+            showTitle={false}
+          />
+        </Modal>
+      )}
       <div className="max-w-6xl mx-auto p-4 md:p-6">
         <Breadcrumb
           items={[
@@ -212,7 +239,7 @@ const PetProfilePage = () => {
                       <div>
                         <p className="text-sm text-gray-500 m-0">Pelagem</p>
                         <p className="font-medium text-base md:text-lg">
-                        {selectedPet.pelagem || 'Não informada'}
+                          {selectedPet.pelagem || 'Não informada'}
                         </p>
                       </div>
                       <div>
