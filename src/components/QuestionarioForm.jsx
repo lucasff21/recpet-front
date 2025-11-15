@@ -1,23 +1,20 @@
-import Layout from '../../components/Layout';
 import { ToastContainer } from 'react-toastify';
-import { useQuestionario } from '../../hooks/useQuestionario';
-import SelectField from '../../components/FormFields/SelectField';
-import RadioGroupField from '../../components/FormFields/RadioGroupField';
-import InputField from '../../components/FormFields/InputField';
-import CheckboxField from '../../components/FormFields/CheckboxField';
-import { Button } from '../../components/Button';
+import { useQuestionario } from '../hooks/useQuestionario';
+import SelectField from './FormFields/SelectField';
+import RadioGroupField from './FormFields/RadioGroupField';
+import InputField from './FormFields/InputField';
+import CheckboxField from './FormFields/CheckboxField';
+import { Button } from './Button';
 
-const QuestionarioAdotante = () => {
-  const {
-    register,
-    handleSubmit,
-    errors,
-    isSubmitting,
-    isEditing,
-  } = useQuestionario();
+const QuestionarioForm = ({ onSuccess, onClose, showTitle = true }) => {
+  const { register, handleSubmit, errors, isSubmitting, isEditing } =
+    useQuestionario({ onSuccess });
 
   const moradiaOptions = [
-    { value: 'CASA_QUINTAL_TOTALMENTE_FECHADO', label: 'Casa com quintal totalmente fechado' },
+    {
+      value: 'CASA_QUINTAL_TOTALMENTE_FECHADO',
+      label: 'Casa com quintal totalmente fechado',
+    },
     { value: 'CASA_QUINTAL_ABERTO', label: 'Casa com quintal aberto' },
     { value: 'CASA_SEM_QUINTAL', label: 'Casa sem quintal' },
     { value: 'APARTAMENTO', label: 'Apartamento' },
@@ -29,16 +26,20 @@ const QuestionarioAdotante = () => {
   ];
 
   return (
-    <Layout showFooter={false}>
+    <>
       <ToastContainer />
-      <div className="max-w-2xl mx-auto py-8 px-4">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            {isEditing ? 'Editar Questionário de Adoção' : 'Questionário de Adoção'}
-          </h2>
+      <div className="max-w-2xl mx-auto px-4">
+        <div className="bg-white p-6">
+          {showTitle && (
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              {isEditing
+                ? 'Editar Questionário de Adoção'
+                : 'Questionário de Adoção'}
+            </h2>
+          )}
           <p className="text-gray-600 mb-6">
-            {isEditing 
-              ? 'Atualize suas informações de adoção abaixo.' 
+            {isEditing
+              ? 'Atualize suas informações de adoção abaixo.'
               : 'Preencha as informações abaixo para iniciar o processo de adoção.'}
           </p>
 
@@ -50,13 +51,13 @@ const QuestionarioAdotante = () => {
               errors={errors}
               options={moradiaOptions}
             />
-
             <RadioGroupField
               id="telasProtecao"
               label="Janelas e sacadas possuem telas ou grades de proteção?"
               options={simNaoOptions}
               register={register}
               errors={errors}
+              required={true}
             />
 
             <RadioGroupField
@@ -65,8 +66,8 @@ const QuestionarioAdotante = () => {
               options={simNaoOptions}
               register={register}
               errors={errors}
+              required={true}
             />
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Quais animais você já tem em casa?
@@ -79,6 +80,7 @@ const QuestionarioAdotante = () => {
                   register={register}
                   errors={errors}
                   required={false}
+                  min={0}
                 />
                 <InputField
                   id="qtdGatos"
@@ -87,6 +89,7 @@ const QuestionarioAdotante = () => {
                   register={register}
                   errors={errors}
                   required={false}
+                  min={0}
                 />
                 <InputField
                   id="qtdOutros"
@@ -95,10 +98,10 @@ const QuestionarioAdotante = () => {
                   register={register}
                   errors={errors}
                   required={false}
+                  min={0}
                 />
               </div>
             </div>
-
             <RadioGroupField
               id="cienteCustos"
               label="Você pode incluir os custos de um animal (ração, vacinas, veterinário) no seu orçamento?"
@@ -106,7 +109,6 @@ const QuestionarioAdotante = () => {
               register={register}
               errors={errors}
             />
-
             <div className="border-t pt-4">
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 Pilares da Adoção Responsável
@@ -119,7 +121,7 @@ const QuestionarioAdotante = () => {
                   register={register}
                   errors={errors}
                 />
-                
+
                 <CheckboxField
                   id="termoSaudeBemEstar"
                   name="termoSaudeBemEstar"
@@ -127,7 +129,7 @@ const QuestionarioAdotante = () => {
                   register={register}
                   errors={errors}
                 />
-                
+
                 <CheckboxField
                   id="termoPacienciaAdaptacao"
                   name="termoPacienciaAdaptacao"
@@ -137,20 +139,31 @@ const QuestionarioAdotante = () => {
                 />
               </div>
             </div>
-
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              loading={isSubmitting}
-              confirm={true}
-            >
-              {isEditing ? 'Atualizar Questionário' : 'Enviar Questionário'}
-            </Button>
+            <div className="flex justify-end gap-3 pt-4">
+              {onClose && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={onClose}
+                  disabled={isSubmitting}
+                >
+                  Cancelar
+                </Button>
+              )}
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                loading={isSubmitting}
+                confirm={true}
+              >
+                {isEditing ? 'Atualizar Questionário' : 'Enviar Questionário'}
+              </Button>
+            </div>
           </form>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 
-export default QuestionarioAdotante;
+export default QuestionarioForm;
