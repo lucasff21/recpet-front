@@ -48,6 +48,17 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('User_RecSys', JSON.stringify(updatedUserData));
   };
 
+  const updateUserQuestionario = (questionarioData) => {
+    setUser((prevUser) => {
+      const updatedUser = {
+        ...prevUser,
+        questionario: questionarioData,
+      };
+      localStorage.setItem('User_RecSys', JSON.stringify(updatedUser));
+      return updatedUser;
+    });
+  };
+
   const tokenDecode = (token) => {
     try {
       const decodedToken = jwtDecode(token);
@@ -84,6 +95,7 @@ export const AuthProvider = ({ children }) => {
         user,
         isAdmin,
         updateUserContext,
+        updateUserQuestionario,
       }}
     >
       {children}

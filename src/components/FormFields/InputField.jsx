@@ -12,11 +12,19 @@ const InputField = ({
   colSpan = 1,
   mask,
   required = true,
+  valueAsNumber = false,
+  min = 0,
   ...props
 }) => {
   const { errorMessage, hasError } = useFieldValidation(id, errors);
 
-  const registerProps = register ? register(id, { required }) : {};
+  const registerOptions = { required };
+  
+  if (type === 'number' || valueAsNumber) {
+    registerOptions.valueAsNumber = true;
+  }
+
+  const registerProps = register ? register(id, registerOptions) : {};
 
   const commonProps = {
     id: id,

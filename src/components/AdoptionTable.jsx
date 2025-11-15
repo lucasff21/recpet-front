@@ -78,7 +78,7 @@ const AdoptionTable = ({ adocoes = [], loading, openDetailsModal }) => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <Link to={`/admin/usuarios/${adocao.usuario.id}`}>
+                    <Link to={`/admin/usuarios/${adocao.usuario?.id}`}>
                       <div className="text-sm font-medium text-blue-600">
                         {adocao.usuario?.nome ?? '-'}
                       </div>

@@ -4,12 +4,14 @@ import { deletarAdocao, findAllAdocoes } from '../../../services/ApiAdocao';
 import { showToast } from '../../../utils/toast';
 import AdocaoStatusBadge from '../../../components/AdocaoStatusBadge';
 import ConfirmModal from '../../../components/ConfirmModal';
+import { useAdoptions } from '../../../contexts/AdoptionContext';
 
 const Adoptions = () => {
   const [solicitacoes, setSolicitacoes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error] = useState(null);
   const [modal, setModal] = useState({ isOpen: false, adoptionId: null });
+  const { removeAdoption } = useAdoptions();
 
   useEffect(() => {
     setLoading(true);
@@ -61,6 +63,7 @@ const Adoptions = () => {
     deletarAdocao(modal.adoptionId)
       .then(() => {
         showToast('Solicitação excluída com sucesso');
+        removeAdoption(modal.adoptionId);
         window.location.reload();
       })
       .catch(() => {

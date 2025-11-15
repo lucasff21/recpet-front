@@ -7,6 +7,8 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { showToast } from '../../utils/toast';
 import InputField from '../../components/FormFields/InputField';
 import { Button } from '../../components/Button';
+import Modal from '../../components/Modal';
+import QuestionarioForm from '../../components/QuestionarioForm';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -19,6 +21,8 @@ const Login = () => {
   const userCreated = location.state?.userCreated;
 
   const { login } = useContext(AuthContext);
+
+  const [isQuestionarioModalOpen, setIsQuestionarioModalOpen] = useState(false);
 
   const getRedirectPath = () => {
     try {
@@ -41,20 +45,32 @@ const Login = () => {
     return null;
   };
 
-  const handlePostLogin = (role) => {
+  const handleModalClose = () => {
+    setIsQuestionarioModalOpen(false);
+    navigate('/');
+  };
+
+  const handleQuestionarioSuccess = () => {
+    setIsQuestionarioModalOpen(false);
+    navigate('/');
+  };
+
+  const handlePostLogin = (userData) => {
     const redirect = getRedirectPath();
 
     if (redirect) {
       return navigate(redirect);
     }
 
-    if (role === 'ADMIN') {
-      return navigate('/admin');
+    if (userData.tipoUsuario === 'ADMIN') {
+      return navigate('/admin/dashboard');
     }
 
-    if (role === 'ADOTANTE') {
-      return navigate('/');
+    if (!userData.questionario) {
+      return setIsQuestionarioModalOpen(true);
     }
+
+    navigate('/');
   };
 
   const handleLogin = async (e) => {
@@ -70,10 +86,10 @@ const Login = () => {
     setLoading(true);
     loginUser(email, password)
       .then(({ data }) => {
-        handlePostLogin(data.user.tipoUsuario);
+        login(data);
         setTimeout(() => {
-          login(data);
-        }, 500);
+          handlePostLogin(data.user);
+        }, 100);
       })
       .catch((r) => {
         showToast('E-mail ou senha inválidos', 'error');
@@ -156,6 +172,16 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      {isQuestionarioModalOpen && (
+        <Modal onClose={handleModalClose} title="Questionário de Adoção">
+          <QuestionarioForm
+            onSuccess={handleQuestionarioSuccess}
+            onClose={handleModalClose}
+            showTitle={false}
+          />
+        </Modal>
+      )}
     </Layout>
   );
 };

@@ -1,0 +1,169 @@
+import { ToastContainer } from 'react-toastify';
+import { useQuestionario } from '../hooks/useQuestionario';
+import SelectField from './FormFields/SelectField';
+import RadioGroupField from './FormFields/RadioGroupField';
+import InputField from './FormFields/InputField';
+import CheckboxField from './FormFields/CheckboxField';
+import { Button } from './Button';
+
+const QuestionarioForm = ({ onSuccess, onClose, showTitle = true }) => {
+  const { register, handleSubmit, errors, isSubmitting, isEditing } =
+    useQuestionario({ onSuccess });
+
+  const moradiaOptions = [
+    {
+      value: 'CASA_QUINTAL_TOTALMENTE_FECHADO',
+      label: 'Casa com quintal totalmente fechado',
+    },
+    { value: 'CASA_QUINTAL_ABERTO', label: 'Casa com quintal aberto' },
+    { value: 'CASA_SEM_QUINTAL', label: 'Casa sem quintal' },
+    { value: 'APARTAMENTO', label: 'Apartamento' },
+  ];
+
+  const simNaoOptions = [
+    { value: 'true', label: 'Sim' },
+    { value: 'false', label: 'Não' },
+  ];
+
+  return (
+    <>
+      <ToastContainer />
+      <div className="max-w-2xl mx-auto px-4">
+        <div className="bg-white p-6">
+          {showTitle && (
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              {isEditing
+                ? 'Editar Questionário de Adoção'
+                : 'Questionário de Adoção'}
+            </h2>
+          )}
+          <p className="text-gray-600 mb-6">
+            {isEditing
+              ? 'Atualize suas informações de adoção abaixo.'
+              : 'Preencha as informações abaixo para iniciar o processo de adoção.'}
+          </p>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <SelectField
+              id="moradia"
+              label="Sua moradia é"
+              register={register}
+              errors={errors}
+              options={moradiaOptions}
+            />
+            <RadioGroupField
+              id="telasProtecao"
+              label="Janelas e sacadas possuem telas ou grades de proteção?"
+              options={simNaoOptions}
+              register={register}
+              errors={errors}
+              required={true}
+            />
+
+            <RadioGroupField
+              id="todosDeAcordo"
+              label="Todos na sua casa estão de acordo com a adoção?"
+              options={simNaoOptions}
+              register={register}
+              errors={errors}
+              required={true}
+            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Quais animais você já tem em casa?
+              </label>
+              <div className="grid grid-cols-3 gap-3">
+                <InputField
+                  id="qtdCaes"
+                  label="Cães"
+                  type="number"
+                  register={register}
+                  errors={errors}
+                  required={false}
+                  min={0}
+                />
+                <InputField
+                  id="qtdGatos"
+                  label="Gatos"
+                  type="number"
+                  register={register}
+                  errors={errors}
+                  required={false}
+                  min={0}
+                />
+                <InputField
+                  id="qtdOutros"
+                  label="Outros"
+                  type="number"
+                  register={register}
+                  errors={errors}
+                  required={false}
+                  min={0}
+                />
+              </div>
+            </div>
+            <RadioGroupField
+              id="cienteCustos"
+              label="Você pode incluir os custos de um animal (ração, vacinas, veterinário) no seu orçamento?"
+              options={simNaoOptions}
+              register={register}
+              errors={errors}
+            />
+            <div className="border-t pt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Pilares da Adoção Responsável
+              </label>
+              <div className="space-y-3">
+                <CheckboxField
+                  id="termoCompromissoLongoPrazo"
+                  name="termoCompromissoLongoPrazo"
+                  label="Entendo que um animal pode viver mais de 15 anos e é um compromisso para a vida toda."
+                  register={register}
+                  errors={errors}
+                />
+
+                <CheckboxField
+                  id="termoSaudeBemEstar"
+                  name="termoSaudeBemEstar"
+                  label="Comprometo-me a zelar pela saúde e bem-estar do animal."
+                  register={register}
+                  errors={errors}
+                />
+
+                <CheckboxField
+                  id="termoPacienciaAdaptacao"
+                  name="termoPacienciaAdaptacao"
+                  label="Entendo que o animal precisará de paciência e carinho para se adaptar."
+                  register={register}
+                  errors={errors}
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 pt-4">
+              {onClose && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={onClose}
+                  disabled={isSubmitting}
+                >
+                  Cancelar
+                </Button>
+              )}
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                loading={isSubmitting}
+                confirm={true}
+              >
+                {isEditing ? 'Atualizar Questionário' : 'Enviar Questionário'}
+              </Button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default QuestionarioForm;

@@ -5,6 +5,18 @@ import { Link } from 'react-router-dom';
 const ModalAdoptionDetails = ({ onClose, request, onUpdateStatus }) => {
   const [newStatus, setNewStatus] = useState(request.status);
   const [adminNotes, setAdminNotes] = useState(request.observacoes || '');
+  const { questionario } = request.usuario;
+
+  const moradiaLabels = {
+    CASA_QUINTAL_TOTALMENTE_FECHADO: 'Casa com quintal totalmente fechado',
+    CASA_QUINTAL_ABERTO: 'Casa com quintal aberto',
+    CASA_SEM_QUINTAL: 'Casa sem quintal',
+    APARTAMENTO: 'Apartamento',
+  };
+
+  const renderBool = (value) => {
+    return value ? 'Sim' : 'Não';
+  };
 
   const handleStatusChange = () => {
     onUpdateStatus(request.id, newStatus, adminNotes);
@@ -69,7 +81,36 @@ const ModalAdoptionDetails = ({ onClose, request, onUpdateStatus }) => {
           <h3 className="text-xl font-semibold text-gray-700 mb-3 border-b pb-1">
             Questionário do Adotante
           </h3>
-          <div className="space-y-2 text-gray-700 text-sm"> Sem registros </div>
+          <div className="space-y-2 text-gray-700 text-sm">
+            {questionario ? (
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                <div className="font-semibold">Moradia:</div>
+                <div>
+                  {moradiaLabels[questionario.moradia] || questionario.moradia}
+                </div>
+
+                <div className="font-semibold">Telas de Proteção:</div>
+                <div>{renderBool(questionario.telasProtecao)}</div>
+
+                <div className="font-semibold">Todos de Acordo:</div>
+                <div>{renderBool(questionario.todosDeAcordo)}</div>
+
+                <div className="font-semibold">Ciente dos Custos:</div>
+                <div>{renderBool(questionario.cienteCustos)}</div>
+
+                <div className="font-semibold">Animais em casa:</div>
+                <div>
+                  {questionario.qtdCaes} Cães, {questionario.qtdGatos} Gatos,{' '}
+                  {questionario.qtdOutros} Outros
+                </div>
+
+                <div className="font-semibold">Termos de Adoção:</div>
+                <div className="text-green-600 font-medium">Aceitos</div>
+              </div>
+            ) : (
+              <p className="text-gray-500 italic">Sem resposta.</p>
+            )}
+          </div>
         </div>
 
         <div className="mb-6">

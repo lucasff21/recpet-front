@@ -18,14 +18,12 @@ export const createAnimal = (animal) => {
   });
 };
 
-export const createQuestionario = async (questinarioData, token) => {
-  try {
-    const response = await apiClient.post('/questionario', questinarioData);
-    return response.data;
-  } catch (error) {
-    console.error('Error post:', error?.response?.data || error.message);
-    return null;
-  }
+export const updateQuestionario = (data) => {
+  return apiClient.put(`/questionario`, data);
+};
+
+export const createQuestionario = async (questionarioData) => {
+  return await apiClient.post('/questionario', questionarioData);
 };
 
 export const findByQuestionarioEmail = async (email, token) => {

@@ -10,7 +10,8 @@ import Layout from '../../../components/Layout';
 import Sidebar from '../../../components/Sidebar';
 import { GoSidebarExpand } from 'react-icons/go';
 import { IoMdHome, IoMdSettings } from 'react-icons/io';
-import { PiFilesFill } from 'react-icons/pi';
+import { PiClipboardTextFill, PiHeartStraightFill } from 'react-icons/pi';
+import QuestionarioSection from './QuestionarioSection';
 
 const DashboardPage = () => {
   document.title = 'Minha conta';
@@ -27,7 +28,12 @@ const DashboardPage = () => {
     {
       path: '/painel/adocoes',
       label: 'Minhas adoções',
-      icon: <PiFilesFill className="h-5 w-5 mr-3" />,
+      icon: <PiHeartStraightFill className="h-5 w-5 mr-3" />,
+    },
+    {
+      path: '/painel/questionario',
+      label: 'Questionário de Adoção',
+      icon: <PiClipboardTextFill className="h-5 w-5 mr-3" />,
     },
     {
       path: '/painel/configuracoes',
@@ -86,6 +92,7 @@ const DashboardPage = () => {
                 <Route index element={<DashboardHome />} />
                 <Route path="adocoes" element={<AdoptionsSection />} />
                 <Route path="configuracoes" element={<AccountSettings />} />
+                <Route path="questionario" element={<QuestionarioSection />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </div>
