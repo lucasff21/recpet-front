@@ -41,20 +41,23 @@ const Login = () => {
     return null;
   };
 
-  const handlePostLogin = (role) => {
+  const handlePostLogin = (userData) => {
     const redirect = getRedirectPath();
 
     if (redirect) {
       return navigate(redirect);
     }
 
-    if (role === 'ADMIN') {
+    if (userData.tipoUsuario === 'ADMIN' && userData.questionario) {
       return navigate('/admin');
     }
 
-    if (role === 'ADOTANTE') {
-      return navigate('/');
+
+    if (!userData.questionario) {
+      return navigate('/questionario');
     }
+
+    navigate('/');
   };
 
   const handleLogin = async (e) => {
@@ -70,10 +73,10 @@ const Login = () => {
     setLoading(true);
     loginUser(email, password)
       .then(({ data }) => {
-        handlePostLogin(data.user.tipoUsuario);
+        login(data);
         setTimeout(() => {
-          login(data);
-        }, 500);
+          handlePostLogin(data.user);
+        }, 100);
       })
       .catch((r) => {
         showToast('E-mail ou senha inválidos', 'error');
