@@ -123,7 +123,7 @@ const UserTable = () => {
 
   const tipos = {
     ADMIN: 'ADMINISTRADOR',
-    MODERATOR: 'MODERADOR',
+    //     MODERATOR: 'MODERADOR',
     ADOTANTE: 'ADOTANTE',
   };
 
@@ -265,13 +265,7 @@ const UserTable = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {accounts.length > 0 ? (
                 accounts.map((account) => (
-                  <tr
-                    key={account.id}
-                    className="hover:bg-gray-50 cursor-pointer"
-                    onClick={() => {
-                      window.location.href = `/admin/usuarios/${account.id}`;
-                    }}
-                  >
+                  <tr key={account.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">

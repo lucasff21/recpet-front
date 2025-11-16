@@ -12,7 +12,12 @@ import {
 } from '../../../services/ApiAdmin';
 import logo from '../../../assets/logo-pet.png';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { FaEnvelope, FaPhone, FaCalendarAlt } from 'react-icons/fa';
+import {
+  FaEnvelope,
+  FaPhone,
+  FaCalendarAlt,
+  FaAddressBook,
+} from 'react-icons/fa';
 import Breadcrumb from '../../../components/Breadcrumb';
 
 const UserDetails = () => {
@@ -73,6 +78,19 @@ const UserDetails = () => {
   const handleModalUpdateSuccess = () => {
     findAdoptions(pageData.number);
     closeDetailsModal();
+  };
+
+  const questionario = user?.questionario || null;
+
+  const moradiaLabels = {
+    CASA_QUINTAL_TOTALMENTE_FECHADO: 'Casa com quintal totalmente fechado',
+    CASA_QUINTAL_ABERTO: 'Casa com quintal aberto',
+    CASA_SEM_QUINTAL: 'Casa sem quintal',
+    APARTAMENTO: 'Apartamento',
+  };
+
+  const renderBool = (value) => {
+    return value ? 'Sim' : 'Não';
   };
 
   useEffect(() => {
@@ -144,14 +162,30 @@ const UserDetails = () => {
                 <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
                   <FaEnvelope /> E-mail
                 </p>
-                <p className="text-gray-800">{user.email}</p>
+                <a
+                  href={`mailto:${user.email}`}
+                  className="text-gray-800 hover:text-blue-600 hover:underline"
+                >
+                  {user.email}
+                </a>
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
                   <FaPhone /> Telefone
                 </p>
                 <p className="text-gray-800">
-                  {user.telefone || 'Não informado'}
+                  {user.telefone ? (
+                    <a
+                      href={`https://api.whatsapp.com/send?phone=55${user.telefone.replace(/\D/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-800 hover:text-blue-600 hover:underline"
+                    >
+                      {user.telefone}
+                    </a>
+                  ) : (
+                    <p className="text-gray-800">Não informado</p>
+                  )}
                 </p>
               </div>
               <div>
@@ -164,7 +198,80 @@ const UserDetails = () => {
                     : 'Não informada'}
                 </p>
               </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+                  <FaAddressBook /> Localidade
+                </p>
+                <p className="text-gray-800">
+                  {user.endereco?.localidade && user.endereco?.uf
+                    ? `${user.endereco.localidade}/${user.endereco.uf}`
+                    : 'Não informado'}
+                </p>
+              </div>
             </div>
+          </Panel>
+
+          <Panel title="Questionário de Adoção">
+            <h2 className="font-semibold m-0 text-center text-gray-800 mb-2">
+              Questionário
+            </h2>
+            {questionario ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+                <div>
+                  <p className="text-sm font-semibold text-gray-500">Moradia</p>
+                  <p className="text-gray-800">
+                    {moradiaLabels[questionario.moradia] ||
+                      questionario.moradia}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-gray-500">
+                    Telas de Proteção
+                  </p>
+                  <p className="text-gray-800">
+                    {renderBool(questionario.telasProtecao)}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-gray-500">
+                    Todos de Acordo
+                  </p>
+                  <p className="text-gray-800">
+                    {renderBool(questionario.todosDeAcordo)}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-gray-500">
+                    Ciente dos Custos
+                  </p>
+                  <p className="text-gray-800">
+                    {renderBool(questionario.cienteCustos)}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-gray-500">
+                    Animais em casa
+                  </p>
+                  <p className="text-gray-800">
+                    {questionario.qtdCaes} Cães, {questionario.qtdGatos} Gatos,{' '}
+                    {questionario.qtdOutros} Outros
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-gray-500">
+                    Termos de Adoção
+                  </p>
+                  <p className="text-green-600 font-medium">Aceitos</p>
+                </div>
+              </div>
+            ) : (
+              <p className="text-gray-500 italic">Sem resposta.</p>
+            )}
           </Panel>
 
           <Panel>
