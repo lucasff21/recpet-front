@@ -23,12 +23,12 @@ const EditCharacteristic = () => {
           });
         } else {
           showToast('Temperamento não encontrado', 'error');
-          navigate('/admin/caracteristicas');
+          navigate('/admin/temperamentos');
         }
       })
       .catch(() => {
         showToast('Erro ao carregar temperamentos', 'error');
-        navigate('/admin/caracteristicas');
+        navigate('/admin/temperamentos');
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
