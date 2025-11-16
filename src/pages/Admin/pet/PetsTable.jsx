@@ -325,7 +325,7 @@ const PetsTable = () => {
 
             <div>
               <label htmlFor="faixaEtaria" className={labelStyle}>
-                Idade
+                Faixa Etária
               </label>
               <select
                 id="faixaEtaria"
