@@ -21,6 +21,7 @@ const FilterSidebar = ({
     genero: true,
     temperamento: true,
     species: true,
+    saude: true,
   });
 
   const toggleAccordion = (key) => {
@@ -30,7 +31,9 @@ const FilterSidebar = ({
   return (
     <>
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-72 bg-white p-6 lg:p-2 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0 lg:flex-shrink-0 transition-transform duration-300 ease-in-out overflow-y-auto`}
+        className={`fixed inset-y-0 left-0 z-40 w-72 bg-white p-6 lg:p-2 transform ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } lg:relative lg:translate-x-0 lg:flex-shrink-0 transition-transform duration-300 ease-in-out overflow-y-auto`}
       >
         <h2 className="text-xl font-bold text-gray-800 mb-6 hidden lg:block">
           FILTRE POR
@@ -149,6 +152,57 @@ const FilterSidebar = ({
               <option value="MACHO">Macho</option>
               <option value="FEMEA">Fêmea</option>
             </select>
+          </FilterAccordion>
+
+          <FilterAccordion
+            title="SAÚDE"
+            isOpen={accordionOpen.saude}
+            toggleOpen={() => toggleAccordion('saude')}
+          >
+            <div className="space-y-2 mt-2">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="filter-castrado"
+                  name="castrado"
+                  checked={tempFilters.castrado === 'true'}
+                  onChange={(e) => {
+                    const { name, checked } = e.target;
+                    handleTempFilterChange({
+                      target: { name: name, value: checked ? 'true' : '' },
+                    });
+                  }}
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                />
+                <label
+                  htmlFor="filter-castrado"
+                  className="ml-2 text-sm text-gray-900"
+                >
+                  Apenas castrados
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="filter-vacinado"
+                  name="vacinado"
+                  checked={tempFilters.vacinado === 'true'}
+                  onChange={(e) => {
+                    const { name, checked } = e.target;
+                    handleTempFilterChange({
+                      target: { name: name, value: checked ? 'true' : '' },
+                    });
+                  }}
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                />
+                <label
+                  htmlFor="filter-vacinado"
+                  className="ml-2 text-sm text-gray-900"
+                >
+                  Apenas vacinados
+                </label>
+              </div>
+            </div>
           </FilterAccordion>
 
           <FilterAccordion

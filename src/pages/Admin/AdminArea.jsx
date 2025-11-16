@@ -4,7 +4,6 @@ import '../../styles/AdminPages.css';
 import UserManagement from './user/UserManagement';
 import { ToastContainer } from 'react-toastify';
 import { AuthContext } from '../../contexts/AuthContext';
-import AdoptionsPage from './adoptions/AdoptionsPage';
 import AdminDashboard from './dashboard/DashboardPage';
 import Sidebar from '../../components/Sidebar';
 import PetManagement from './pet/PetManagement';
@@ -19,6 +18,7 @@ import { FaUser } from 'react-icons/fa';
 import { IoMdHome } from 'react-icons/io';
 import { AiOutlineTags } from 'react-icons/ai';
 import { IoExitOutline } from 'react-icons/io5';
+import AdoptionManagement from './adoptions/AdoptionManagement';
 
 const AdminArea = () => {
   document.title = 'Painel Admin';
@@ -91,10 +91,10 @@ const AdminArea = () => {
           )}
         </div>
         <Routes>
-          <Route path = "dashboard/*" element = {<AdminDashboard/>}/>
+          <Route path="dashboard/*" element={<AdminDashboard />} />
           <Route path="pets/*" element={<PetManagement />} />
           <Route path="usuarios/*" element={<UserManagement />} />
-          <Route path="adocoes/*" element={<AdoptionsPage />} />
+          <Route path="adocoes/*" element={<AdoptionManagement />} />
           <Route path="conteudos/*" element={<ContentManagement />} />
           <Route path="caracteristicas/*" element={<CharacteristicsManagement/>} />
         </Routes>
