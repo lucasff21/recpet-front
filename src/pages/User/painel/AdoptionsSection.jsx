@@ -5,6 +5,7 @@ import { showToast } from '../../../utils/toast';
 import AdocaoStatusBadge from '../../../components/AdocaoStatusBadge';
 import ConfirmModal from '../../../components/ConfirmModal';
 import { useAdoptions } from '../../../contexts/AdoptionContext';
+import { Link } from 'react-router-dom';
 
 const Adoptions = () => {
   const [solicitacoes, setSolicitacoes] = useState([]);
@@ -156,8 +157,10 @@ const Adoptions = () => {
                         />
                       </div>
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          {solicitacao.animal.nome}
+                        <div className="text-sm font-medium text-blue-600">
+                          <Link to={`/pets/${solicitacao.animal.id}`}>
+                            {solicitacao.animal.nome}
+                          </Link>
                         </div>
                       </div>
                     </div>

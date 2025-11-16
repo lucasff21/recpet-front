@@ -180,7 +180,7 @@ const PetDetails = () => {
                 <p className="text-gray-800">{pet.pelagem}</p>
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-500">Tipo</p>
+                <p className="text-sm font-semibold text-gray-500">Espécie</p>
                 <p className="text-gray-800">{pet.tipo}</p>
               </div>
               <div>
