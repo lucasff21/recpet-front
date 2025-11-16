@@ -57,8 +57,8 @@ const AdminArea = () => {
       icon: <FiFileText className="h-5 w-5 mr-3" />,
     },
     {
-      path: '/admin/caracteristicas',
-      label: 'Características',
+      path: '/admin/temperamentos',
+      label: 'Temperamentos',
       icon: <AiOutlineTags className="h-5 w-5 mr-3" />,
     },
     {
@@ -96,7 +96,10 @@ const AdminArea = () => {
           <Route path="usuarios/*" element={<UserManagement />} />
           <Route path="adocoes/*" element={<AdoptionManagement />} />
           <Route path="conteudos/*" element={<ContentManagement />} />
-          <Route path="caracteristicas/*" element={<CharacteristicsManagement/>} />
+          <Route
+            path="temperamentos/*"
+            element={<CharacteristicsManagement />}
+          />
         </Routes>
       </main>
     </div>

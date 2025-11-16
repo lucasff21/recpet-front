@@ -13,7 +13,7 @@ const CharacteristicsManagement = () => {
       {isSubPage && (
         <Breadcrumb
           items={[
-            { label: 'Características', href: '/admin/caracteristicas' },
+            { label: 'Temperamentos', href: '/admin/temperamentos' },
             { label: /criar/.test(location.pathname) ? 'Criar' : 'Editar' },
           ]}
         />

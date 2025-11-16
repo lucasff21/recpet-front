@@ -39,14 +39,14 @@ export const useCharacteristicForm = (initialData = null) => {
     try {
       await action;
       showToast(successMessage, 'success');
-      navigate('/admin/caracteristicas');
+      navigate('/admin/temperamentos');
     } catch (error) {
       showToast('Erro ao salvar característica', 'error');
     } finally {
       setLoading(false);
     }
   };
-  const cancel = () => navigate('/admin/caracteristicas');
+  const cancel = () => navigate('/admin/temperamentos');
 
   return {
     formData,

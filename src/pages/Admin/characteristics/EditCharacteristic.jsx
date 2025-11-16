@@ -9,25 +9,26 @@ import { useParams, useNavigate } from 'react-router-dom';
 const EditCharacteristic = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { formData, handleChange, handleSubmit, loading, cancel, setFormData } = useCharacteristicForm();
+  const { formData, handleChange, handleSubmit, loading, cancel, setFormData } =
+    useCharacteristicForm();
 
   useEffect(() => {
     findAllCaracteristicas({})
       .then((res) => {
         const item = (res.data || []).find((i) => String(i.id) === String(id));
         if (item) {
-          setFormData({ 
-            nome: item.nome || '', 
-            descricao: item.descricao || '' 
+          setFormData({
+            nome: item.nome || '',
+            descricao: item.descricao || '',
           });
         } else {
-          showToast('Característica não encontrada', 'error');
-          navigate('/admin/caracteristicas');
+          showToast('Temperamento não encontrado', 'error');
+          navigate('/admin/temperamentos');
         }
       })
       .catch(() => {
-        showToast('Erro ao carregar característica', 'error');
-        navigate('/admin/caracteristicas');
+        showToast('Erro ao carregar temperamentos', 'error');
+        navigate('/admin/temperamentos');
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -40,11 +41,16 @@ const EditCharacteristic = () => {
   return (
     <Panel>
       <div className="max-w-2xl">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">Editar Característica</h1>
-        
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+          Editar Característica
+        </h1>
+
         <form onSubmit={onSubmit} className="space-y-6">
           <div>
-            <label htmlFor="nome" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="nome"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Nome <span className="text-red-500">*</span>
             </label>
             <input
@@ -59,7 +65,10 @@ const EditCharacteristic = () => {
           </div>
 
           <div>
-            <label htmlFor="descricao" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="descricao"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Descrição
             </label>
             <textarea
@@ -73,18 +82,18 @@ const EditCharacteristic = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 pt-4">
-            <Button 
-              text="Cancelar" 
-              onClick={cancel} 
-              type="button" 
+            <Button
+              text="Cancelar"
+              onClick={cancel}
+              type="button"
               size="medium"
               className="w-full sm:w-auto"
             />
-            <Button 
-              text={loading ? 'Salvando...' : 'Salvar Alterações'} 
-              type="submit" 
+            <Button
+              text={loading ? 'Salvando...' : 'Salvar Alterações'}
+              type="submit"
               disabled={loading}
-              confirm 
+              confirm
               size="medium"
               className="w-full sm:w-auto"
             />
