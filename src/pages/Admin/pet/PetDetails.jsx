@@ -234,9 +234,7 @@ const PetDetails = () => {
                 <h3 className="text-base font-semibold text-gray-700">
                   Observações Médicas:
                 </h3>
-                <p className="text-gray-800 bg-yellow-50 p-3 rounded-md border border-yellow-200">
-                  {pet.observacoesMedicas}
-                </p>
+                <p className="text-gray-800 pt-3">{pet.observacoesMedicas}</p>
               </div>
             )}
           </Panel>

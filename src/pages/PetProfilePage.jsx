@@ -306,7 +306,7 @@ const PetProfilePage = () => {
                     )}
                   </div>
 
-                  <div className="pt-4">
+                  <div className="pt-6">
                     <h2 className="text-xl font-bold text-gray-800 border-b pb-2">
                       Saúde
                     </h2>
@@ -345,6 +345,16 @@ const PetProfilePage = () => {
                             : 'Não informado'}
                         </p>
                       </div>
+                      {selectedPet.observacoesMedicas && (
+                        <div className="mt-4">
+                          <h3 className="text-base font-semibold text-gray-700">
+                            Observações Médicas:
+                          </h3>
+                          <p className="text-gray-800 mt-1">
+                            {selectedPet.observacoesMedicas}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
