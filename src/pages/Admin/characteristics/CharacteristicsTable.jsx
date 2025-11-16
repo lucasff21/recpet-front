@@ -25,7 +25,7 @@ const CharacteristicsTable = () => {
     <Panel>
       <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:justify-between sm:items-center ">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-800 whitespace-nowrap">
-          Características
+          Temperamentos
         </h1>
         <Link to="criar" className="w-full sm:w-auto flex-shrink-0">
           <button
@@ -144,12 +144,10 @@ const CharacteristicsTable = () => {
                       colSpan="4"
                       className="px-6 py-12 text-center text-gray-500"
                     >
-                      <p className="text-lg">
-                        Nenhuma característica encontrada
-                      </p>
+                      <p className="text-lg">Nenhum temperamento encontrado</p>
                       <p className="text-sm mt-1">
-                        Tente ajustar os filtros ou adicione uma nova
-                        característica
+                        Tente ajustar os filtros ou adicione um novo
+                        temperamento
                       </p>
                     </td>
                   </tr>

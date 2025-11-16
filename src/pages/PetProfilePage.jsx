@@ -284,7 +284,7 @@ const PetProfilePage = () => {
 
                 <div className="pt-4">
                   <h2 className="text-xl font-bold text-gray-800 border-b pb-2">
-                    Personalidade
+                    Temperamento
                   </h2>
                   <div className="flex flex-wrap gap-3 mt-3">
                     {selectedPet.caracteristicas &&
