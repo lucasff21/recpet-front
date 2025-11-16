@@ -52,7 +52,11 @@ const AdoptionTable = ({ adocoes = [], loading, openDetailsModal }) => {
           <tbody className="bg-white divide-y divide-gray-200">
             {adocoes.length > 0 ? (
               adocoes.map((adocao) => (
-                <tr key={adocao.id} className="hover:bg-gray-50">
+                <tr
+                  key={adocao.id}
+                  className="hover:bg-gray-50 cursor-pointer"
+                  onClick={() => openDetailsModal(adocao)}
+                >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {adocao.id ?? '-'}
                   </td>

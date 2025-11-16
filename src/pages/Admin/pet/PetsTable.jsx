@@ -278,7 +278,11 @@ const PetsTable = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {pets.length > 0 ? (
                 pets.map((pet) => (
-                  <tr key={pet.id} className="hover:bg-gray-50">
+                  <tr
+                    key={pet.id}
+                    className="hover:bg-gray-50 cursor-pointer"
+                    onClick={() => navigate(`/admin/pets/${pet.id}`)}
+                  >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {pet.id ?? '-'}
                     </td>

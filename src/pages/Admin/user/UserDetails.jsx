@@ -70,19 +70,9 @@ const UserDetails = () => {
     findAdoptions(pageData.number);
   };
 
-  const handleUpdateStatus = (requestId, newStatus, adminNotes) => {
-    if (!newStatus) return;
-    updateAdoptionStatus(requestId, {
-      status: newStatus,
-      observacoes: adminNotes,
-    })
-      .then(() => {
-        showToast(`Solicitação atualizada com sucesso`);
-        closeDetailsModal();
-      })
-      .catch(() => {
-        showToast(`Erro ao atualizar as informações`, 'error');
-      });
+  const handleModalUpdateSuccess = () => {
+    findAdoptions(pageData.number);
+    closeDetailsModal();
   };
 
   useEffect(() => {
@@ -211,7 +201,7 @@ const UserDetails = () => {
             isOpen={isModalOpen}
             onClose={closeDetailsModal}
             request={selectedRequest}
-            onUpdateStatus={handleUpdateStatus}
+            onSuccess={handleModalUpdateSuccess}
           />
         )}
       </>

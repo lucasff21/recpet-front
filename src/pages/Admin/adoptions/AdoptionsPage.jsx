@@ -86,23 +86,9 @@ const AdoptionsPage = () => {
     setSelectedRequest(null);
   };
 
-  const handleUpdateStatus = (requestId, newStatus, adminNotes) => {
-    if (!newStatus) return;
-
-    updateAdoptionStatus(requestId, {
-      status: newStatus,
-      observacoes: adminNotes,
-    })
-      .then(() => {
-        showToast(`Solicitação atualizada com sucesso`);
-        findAdocoes();
-      })
-      .catch(() => {
-        showToast(`Erro ao atualizar as informações`, 'error');
-      })
-      .finally(() => {
-        closeDetailsModal();
-      });
+  const handleModalUpdateSuccess = () => {
+    findAdocoes();
+    closeDetailsModal();
   };
 
   const inputStyle =
@@ -206,7 +192,7 @@ const AdoptionsPage = () => {
           isOpen={isModalOpen}
           onClose={closeDetailsModal}
           request={selectedRequest}
-          onUpdateStatus={handleUpdateStatus}
+          onSuccess={handleModalUpdateSuccess}
         />
       )}
     </Panel>

@@ -265,7 +265,13 @@ const UserTable = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {accounts.length > 0 ? (
                 accounts.map((account) => (
-                  <tr key={account.id} className="hover:bg-gray-50">
+                  <tr
+                    key={account.id}
+                    className="hover:bg-gray-50 cursor-pointer"
+                    onClick={() => {
+                      window.location.href = `/admin/usuarios/${account.id}`;
+                    }}
+                  >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
@@ -274,7 +280,7 @@ const UserTable = () => {
                           </span>
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-blue-600-900">
+                          <div className="text-sm font-medium text-blue-600">
                             <Link to={`/admin/usuarios/${account.id}`}>
                               {account.nome}
                             </Link>
