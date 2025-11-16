@@ -13,6 +13,7 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { showToast } from '../../../utils/toast';
 import ModalAdoptionDetails from '../../../components/ModalAdoptionDetails';
 import AdocaoStatusBadge from '../../../components/AdocaoStatusBadge';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -33,6 +34,7 @@ const AdminDashboard = () => {
     totalAdopters: 0,
   });
 
+  const navigate = useNavigate();
   const [recentAdoptions, setRecentAdoptions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
@@ -211,7 +213,7 @@ const AdminDashboard = () => {
               <div
                 key={adoption.id}
                 className="flex justify-between items-center p-3 border-b cursor-pointer hover:bg-gray-50"
-                onClick={() => openDetailsModal(adoption)}
+                onClick={() => navigate(`/admin/adocoes/${adoption.id}`)}
               >
                 <div className="flex items-center gap-3">
                   <img
