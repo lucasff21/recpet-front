@@ -1,20 +1,22 @@
+import React, { useContext, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import '../../styles/AdminPages.css';
 import UserManagement from './user/UserManagement';
 import { ToastContainer } from 'react-toastify';
-import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import AdminDashboard from './dashboard/DashboardPage';
 import Sidebar from '../../components/Sidebar';
 import PetManagement from './pet/PetManagement';
 import { GoSidebarExpand } from 'react-icons/go';
 import ContentManagement from './content/ContentManagement';
+import CharacteristicsManagement from './characteristics/CharacteristicsManagement';
 import { FiFileText } from 'react-icons/fi';
 import { MdOutlinePets } from 'react-icons/md';
 import { TbLayoutDashboard } from 'react-icons/tb';
 import { PiFilesFill } from 'react-icons/pi';
 import { FaUser } from 'react-icons/fa';
 import { IoMdHome } from 'react-icons/io';
+import { AiOutlineTags } from 'react-icons/ai';
 import { IoExitOutline } from 'react-icons/io5';
 import AdoptionManagement from './adoptions/AdoptionManagement';
 
@@ -55,6 +57,11 @@ const AdminArea = () => {
       icon: <FiFileText className="h-5 w-5 mr-3" />,
     },
     {
+      path: '/admin/caracteristicas',
+      label: 'Características',
+      icon: <AiOutlineTags className="h-5 w-5 mr-3" />,
+    },
+    {
       label: 'Sair',
       icon: <IoExitOutline className="h-5 w-5 mr-3" />,
       action: logout,
@@ -89,6 +96,7 @@ const AdminArea = () => {
           <Route path="usuarios/*" element={<UserManagement />} />
           <Route path="adocoes/*" element={<AdoptionManagement />} />
           <Route path="conteudos/*" element={<ContentManagement />} />
+          <Route path="caracteristicas/*" element={<CharacteristicsManagement/>} />
         </Routes>
       </main>
     </div>
