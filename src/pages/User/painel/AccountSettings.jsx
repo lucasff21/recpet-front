@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -60,34 +60,45 @@ const AccountSettings = () => {
     mode: 'onChange',
   });
 
+  const formatDataForForm = useCallback((data) => {
+    if (!data) return {};
+
+    const endereco = data.endereco || {};
+
+    return {
+      ...data,
+      dataNascimento: data.dataNascimento
+        ? data.dataNascimento.split('T')[0]
+        : '',
+      genero: data.genero?.toUpperCase() || '',
+      telefone: data.telefone || '',
+      endereco: {
+        cep: endereco.cep || '',
+        logradouro: endereco.logradouro || '',
+        complemento: endereco.complemento || '',
+        bairro: endereco.bairro || '',
+        cidade: endereco.localidade || '',
+        estado: endereco.uf || '',
+      },
+    };
+  }, []);
+
   useEffect(() => {
     if (user) {
-      const formattedUser = {
-        ...user,
-        dataNascimento: user.dataNascimento
-          ? user.dataNascimento.split('T')[0]
-          : '',
-        genero: user.genero?.toUpperCase() || '',
-        endereco: {
-          cep: user.endereco?.cep || '',
-          logradouro: user.endereco?.logradouro || '',
-          complemento: user.endereco?.complemento || '',
-          bairro: user.endereco?.bairro || '',
-          cidade: user.endereco?.localidade || '',
-          estado: user.endereco?.uf || '',
-        },
-      };
-
+      const formattedUser = formatDataForForm(user);
       reset(formattedUser);
       setInitialUserData(formattedUser);
     }
-  }, [user, reset]);
+  }, [user, reset, formatDataForForm]);
 
   const cepValue = watch('endereco.cep');
 
   useEffect(() => {
     const fetchAddress = async () => {
-      if (!cepValue) return;
+      if (typeof cepValue !== 'string' || !cepValue) {
+        return;
+      }
+
       const cep = cepValue.replace(/\D/g, '');
       if (cep.length !== 8) return;
 
@@ -142,9 +153,11 @@ const AccountSettings = () => {
         const { data: updatedUser } = response;
         showToast('Suas configurações foram salvas com sucesso!', 'success');
 
+        const formattedUpdatedUser = formatDataForForm(updatedUser);
+
         updateUserContext(updatedUser);
-        reset(updatedUser);
-        setInitialUserData(updatedUser);
+        reset(formattedUpdatedUser);
+        setInitialUserData(formattedUpdatedUser);
 
         setEditing(false);
       })
