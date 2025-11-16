@@ -1,15 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { showToast } from '../../../utils/toast';
 import Panel from '../../../components/Panel';
 import ModalAdoptionDetails from '../../../components/ModalAdoptionDetails';
 import Pagination from '../../../components/Pagination';
-import {
-  getAllAdoptions,
-  updateAdoptionStatus,
-} from '../../../services/ApiAdmin';
+import { getAllAdoptions } from '../../../services/ApiAdmin';
 import AdoptionTable from '../../../components/AdoptionTable';
 
 const AdoptionsPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlStatus = searchParams.get('status') || '';
+  const urlTermo = searchParams.get('termo') || '';
+
   const [adocoes, setAdocoes] = useState([]);
   const [pageData, setPageData] = useState({
     totalPages: 0,
@@ -21,14 +23,14 @@ const AdoptionsPage = () => {
   const [loading, setLoading] = useState(false);
 
   const [filters, setFilters] = useState({
-    termo: '',
-    status: '',
+    termo: urlTermo,
+    status: urlStatus,
     page: 0,
   });
 
   const [localFilters, setLocalFilters] = useState({
-    termo: filters.termo,
-    status: filters.status,
+    termo: urlTermo,
+    status: urlStatus,
   });
 
   const findAdocoes = useCallback(async () => {
@@ -48,6 +50,16 @@ const AdoptionsPage = () => {
       setLoading(false);
     }
   }, [filters]);
+
+  useEffect(() => {
+    const paramsToSet = {};
+    if (filters.termo) paramsToSet.termo = filters.termo;
+    if (filters.status) paramsToSet.status = filters.status;
+    if (filters.page > 0) paramsToSet.page = filters.page + 1;
+
+    setSearchParams(paramsToSet, { replace: true });
+    findAdocoes();
+  }, [findAdocoes, filters, setSearchParams]);
 
   useEffect(() => {
     findAdocoes();
@@ -86,23 +98,9 @@ const AdoptionsPage = () => {
     setSelectedRequest(null);
   };
 
-  const handleUpdateStatus = (requestId, newStatus, adminNotes) => {
-    if (!newStatus) return;
-
-    updateAdoptionStatus(requestId, {
-      status: newStatus,
-      observacoes: adminNotes,
-    })
-      .then(() => {
-        showToast(`Solicitação atualizada com sucesso`);
-        findAdocoes();
-      })
-      .catch(() => {
-        showToast(`Erro ao atualizar as informações`, 'error');
-      })
-      .finally(() => {
-        closeDetailsModal();
-      });
+  const handleModalUpdateSuccess = () => {
+    findAdocoes();
+    closeDetailsModal();
   };
 
   const inputStyle =
@@ -206,7 +204,7 @@ const AdoptionsPage = () => {
           isOpen={isModalOpen}
           onClose={closeDetailsModal}
           request={selectedRequest}
-          onUpdateStatus={handleUpdateStatus}
+          onSuccess={handleModalUpdateSuccess}
         />
       )}
     </Panel>

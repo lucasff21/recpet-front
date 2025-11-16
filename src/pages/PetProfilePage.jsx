@@ -305,6 +305,48 @@ const PetProfilePage = () => {
                       </p>
                     )}
                   </div>
+
+                  <div className="pt-4">
+                    <h2 className="text-xl font-bold text-gray-800 border-b pb-2">
+                      Saúde
+                    </h2>
+                    <div className="grid grid-cols-2 gap-4 mt-3">
+                      <div>
+                        <p className="text-sm text-gray-500 m-0">Castrado</p>
+                        <p className="font-medium text-base md:text-lg">
+                          {selectedPet.castrado ? 'Sim' : 'Não'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 m-0">Vermifugado</p>
+                        <p className="font-medium text-base md:text-lg">
+                          {selectedPet.dataUltimaVermifugacao
+                            ? 'Sim'
+                            : 'Não informado'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 m-0">
+                          Vacina Antirrábica
+                        </p>
+                        <p className="font-medium text-base md:text-lg">
+                          {selectedPet.dataUltimaVacinaAntirrabica
+                            ? 'Sim'
+                            : 'Não informado'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 m-0">
+                          Vacina Múltipla
+                        </p>
+                        <p className="font-medium text-base md:text-lg">
+                          {selectedPet.dataUltimaVacinaMultipla
+                            ? `Sim (${selectedPet.tipoVacinaMultipla || 'N/A'})`
+                            : 'Não informado'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

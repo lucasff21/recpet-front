@@ -1,5 +1,16 @@
 import { z } from 'zod';
 
+const imageSchema = z
+  .instanceof(File)
+  .refine((file) => file.size > 0, { message: 'Imagem é obrigatória' })
+  .refine((file) => file.size <= 5 * 1024 * 1024, {
+    // Limite de 5MB
+    message: 'Imagem deve ter no máximo 5MB',
+  })
+  .refine((file) => ['image/jpeg', 'image/png'].includes(file.type), {
+    message: 'Apenas arquivos JPEG ou PNG são aceitos',
+  });
+
 export const basePetSchema = z.object({
   nome: z
     .string()
@@ -25,7 +36,7 @@ export const basePetSchema = z.object({
   ),
   descricao: z
     .string()
-    .max(1000, { message: 'Descrição deve ter no máximo 500 caracteres' })
+    .max(1000, { message: 'Descrição deve ter no máximo 1000 caracteres' })
     .optional()
     .nullable(),
   caracteristicasIds: z
@@ -35,17 +46,31 @@ export const basePetSchema = z.object({
   disponivelParaAdocao: z.string().transform((str) => {
     return str.toLowerCase() !== 'false';
   }),
+
+  castrado: z.string().transform((str) => {
+    return str.toLowerCase() !== 'false';
+  }),
+  dataUltimaVermifugacao: z.string().optional().nullable(),
+  dataUltimaVacinaAntirrabica: z.string().optional().nullable(),
+  dataUltimaVacinaMultipla: z.string().optional().nullable(),
+  tipoVacinaMultipla: z
+    .string()
+    .max(10, { message: 'Tipo da vacina deve ter no máximo 10 caracteres' })
+    .optional()
+    .nullable(),
+  observacoesMedicas: z
+    .string()
+    .max(2000, { message: 'Observações deve ter no máximo 2000 caracteres' })
+    .optional()
+    .nullable(),
 });
 
-export const petSchema = basePetSchema.extend();
+export const petSchema = basePetSchema.extend({
+  imagem: imageSchema.optional(),
+});
 
 export const petUpdateSchema = basePetSchema
   .extend({
-    novaImagem: z
-      .instanceof(File)
-      .refine((file) => ['image/jpeg', 'image/png'].includes(file.type), {
-        message: 'Apenas arquivos JPEG ou PNG são aceitos',
-      })
-      .optional(),
+    novaImagem: imageSchema.optional(),
   })
   .partial();

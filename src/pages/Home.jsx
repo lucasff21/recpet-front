@@ -19,6 +19,8 @@ const createParamsFromFilters = (filters) => {
     temperament: filters.temperament.join(','),
     page: filters.page.toString(),
     species: filters.species,
+    castrado: filters.castrado,
+    vacinado: filters.vacinado,
   };
 
   Object.keys(params).forEach(
@@ -43,6 +45,8 @@ const getFiltersFromParams = (searchParams) => {
       : [],
     page: searchParams.get('page') ? Number(searchParams.get('page')) : 0,
     species: searchParams.get('species') || '',
+    castrado: searchParams.get('castrado') || '',
+    vacinado: searchParams.get('vacinado') || '',
   };
 };
 
@@ -134,6 +138,8 @@ const Home = () => {
       temperament: [],
       page: 0,
       species: '',
+      castrado: '',
+      vacinado: '',
     };
     setTempFilters(defaultFilters);
     setSearchParams({});
@@ -169,6 +175,8 @@ const Home = () => {
           caracteristicasIds: caracteristicasIds,
           page: searchParams.get('page') || 0,
           especie: searchParams.get('species') || null,
+          castrado: searchParams.get('castrado') || null,
+          vacinado: searchParams.get('vacinado') || null,
         };
 
         Object.keys(apiParams).forEach(
@@ -278,7 +286,7 @@ const Home = () => {
               </p>
             ) : (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-0 justify-items-center">
+                <div className="mb-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
                   {filteredAnimals.map((animal) => (
                     <PetCard
                       key={animal.id}

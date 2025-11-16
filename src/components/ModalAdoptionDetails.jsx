@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import AdocaoStatusBadge from './AdocaoStatusBadge';
 import { Link } from 'react-router-dom';
+import { updateAdoptionStatus } from '../services/ApiAdmin';
+import { showToast } from '../utils/toast';
 
-const ModalAdoptionDetails = ({ onClose, request, onUpdateStatus }) => {
+const ModalAdoptionDetails = ({ onClose, request, onSuccess }) => {
   const [newStatus, setNewStatus] = useState(request.status);
   const [adminNotes, setAdminNotes] = useState(request.observacoes || '');
   const { questionario } = request.usuario;
+  const [isSaving, setIsSaving] = useState(false);
 
   const moradiaLabels = {
     CASA_QUINTAL_TOTALMENTE_FECHADO: 'Casa com quintal totalmente fechado',
@@ -19,7 +22,26 @@ const ModalAdoptionDetails = ({ onClose, request, onUpdateStatus }) => {
   };
 
   const handleStatusChange = () => {
-    onUpdateStatus(request.id, newStatus, adminNotes);
+    if (isSaving) return;
+    setIsSaving(true);
+
+    const payload = {
+      status: newStatus,
+      observacoes: adminNotes,
+    };
+
+    updateAdoptionStatus(request.id, payload)
+      .then(() => {
+        showToast('Solicitação atualizada com sucesso', 'success');
+        onSuccess();
+      })
+      .catch((err) => {
+        showToast('Erro ao atualizar as informações', 'error');
+        console.error(err);
+      })
+      .finally(() => {
+        setIsSaving(false);
+      });
   };
 
   const details = [
