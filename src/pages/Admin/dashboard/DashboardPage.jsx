@@ -9,6 +9,7 @@ import {
   IoCheckmarkCircle,
   IoSearchOutline,
 } from 'react-icons/io5';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { showToast } from '../../../utils/toast';
 import ModalAdoptionDetails from '../../../components/ModalAdoptionDetails';
 import AdocaoStatusBadge from '../../../components/AdocaoStatusBadge';
@@ -35,6 +36,7 @@ const AdminDashboard = () => {
   const [recentAdoptions, setRecentAdoptions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const openDetailsModal = (adoption) => {
     setSelectedRequest(adoption);
@@ -69,6 +71,7 @@ const AdminDashboard = () => {
 
   const fetchDashboardData = useCallback(async () => {
     try {
+      setLoading(true);
       const [getAdminMetricsResponse, allAdoptions] = await Promise.all([
         getAdminMetrics(),
         fetchAllPages(getAllAdoptions, 50, { sortByDate: 'desc' }),
@@ -101,6 +104,8 @@ const AdminDashboard = () => {
         'Erro ao carregar dados do dashboard. Tente novamente.',
         'error'
       );
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -108,13 +113,17 @@ const AdminDashboard = () => {
     fetchDashboardData();
   }, [fetchDashboardData]);
 
+  const loadingSpinner = (
+    <AiOutlineLoading3Quarters className="animate-spin w-5 h-5" />
+  );
+
   return (
     <div className="p-4 sm:p-6 space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-5 lg:gap-6 auto-rows-fr">
         <div className="hidden sm:block">
           <StatsCard
             title="Total de Adotantes"
-            value={stats.totalAdopters}
+            value={loading ? loadingSpinner : stats.totalAdopters}
             icon={<FaUsers className="text-2xl" />}
             color="indigo"
             link="/admin/usuarios?tipo=ADOTANTE"
@@ -122,7 +131,7 @@ const AdminDashboard = () => {
         </div>
         <StatsCard
           title="Adoções Pendentes"
-          value={stats.pendingAdoptions}
+          value={loading ? loadingSpinner : stats.pendingAdoptions}
           icon={<IoTimeOutline className="text-2xl" />}
           color="yellow"
           link="/admin/adocoes?status=PENDENTE"
@@ -130,7 +139,7 @@ const AdminDashboard = () => {
         <div className="hidden sm:block">
           <StatsCard
             title="Adoções Aprovadas"
-            value={stats.approvedAdoptions}
+            value={loading ? loadingSpinner : stats.approvedAdoptions}
             icon={<IoCheckmarkCircle className="text-2xl" />}
             color="purple"
             link="/admin/adocoes?status=APROVADO"
@@ -139,7 +148,7 @@ const AdminDashboard = () => {
         <div className="hidden sm:block">
           <StatsCard
             title="Adoções Finalizadas"
-            value={stats.finalizedAdoptions}
+            value={loading ? loadingSpinner : stats.finalizedAdoptions}
             icon={<PiFilesFill className="text-2xl" />}
             color="indigo"
             link="/admin/adocoes?status=FINALIZADO"
@@ -148,7 +157,7 @@ const AdminDashboard = () => {
         <div className="hidden sm:block">
           <StatsCard
             title="Adoções em Análise"
-            value={stats.underReview}
+            value={loading ? loadingSpinner : stats.underReview}
             icon={<IoSearchOutline className="text-2xl" />}
             color="yellow"
             link="/admin/adocoes?status=EM_ANALISE"
@@ -156,7 +165,7 @@ const AdminDashboard = () => {
         </div>
         <StatsCard
           title="Total de Animais"
-          value={stats.totalPets}
+          value={loading ? loadingSpinner : stats.totalPets}
           icon={<MdOutlinePets className="text-2xl" />}
           color="green"
           link="/admin/pets"
@@ -164,7 +173,7 @@ const AdminDashboard = () => {
         <div className="hidden sm:block">
           <StatsCard
             title="Animais Disponíveis"
-            value={stats.available}
+            value={loading ? loadingSpinner : stats.available}
             icon={<IoCheckmarkCircle className="text-2xl" />}
             color="green"
             link="/admin/pets?status=disponivel"
@@ -173,7 +182,7 @@ const AdminDashboard = () => {
         <div className="hidden sm:block">
           <StatsCard
             title="Total de Cachorros"
-            value={stats.totalDogs}
+            value={loading ? loadingSpinner : stats.totalDogs}
             icon={<FaDog className="text-2xl" />}
             color="blue"
             link="/admin/pets?tipo=CACHORRO"
@@ -182,7 +191,7 @@ const AdminDashboard = () => {
         <div className="hidden sm:block">
           <StatsCard
             title="Total de Gatos"
-            value={stats.totalCats}
+            value={loading ? loadingSpinner : stats.totalCats}
             icon={<FaCat className="text-2xl" />}
             color="purple"
             link="/admin/pets?tipo=GATO"
@@ -193,7 +202,11 @@ const AdminDashboard = () => {
       <div className="bg-white rounded-lg  p-6">
         <h2 className="text-xl font-semibold mb-4">Solicitações Recentes</h2>
         <div className="max-h-[37.5rem] overflow-y-auto space-y-3 pr-2">
-          {recentAdoptions.length > 0 ? (
+          {loading ? (
+            <div className="flex justify-center items-center py-10">
+              <AiOutlineLoading3Quarters className="animate-spin w-6 h-6 text-gray-500" />
+            </div>
+          ) : recentAdoptions.length > 0 ? (
             recentAdoptions.map((adoption) => (
               <div
                 key={adoption.id}
