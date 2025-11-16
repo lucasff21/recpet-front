@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { getAdminMetrics, getAllAdoptions } from '../../../services/ApiAdmin';
 import StatsCard from '../dashboard/StatsCard';
-import { FaUser, FaDog, FaCat, FaUsers } from 'react-icons/fa';
+import { FaDog, FaCat, FaUsers } from 'react-icons/fa';
 import { MdOutlinePets } from 'react-icons/md';
 import { PiFilesFill } from 'react-icons/pi';
 import {

@@ -5,11 +5,7 @@ import Panel from '../../../components/Panel';
 import ModalAdoptionDetails from '../../../components/ModalAdoptionDetails';
 import Pagination from '../../../components/Pagination';
 import AdoptionTable from '../../../components/AdoptionTable';
-import {
-  findUserById,
-  getAdocoesByUserId,
-  updateAdoptionStatus,
-} from '../../../services/ApiAdmin';
+import { findUserById, getAdocoesByUserId } from '../../../services/ApiAdmin';
 import logo from '../../../assets/logo-pet.png';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import {

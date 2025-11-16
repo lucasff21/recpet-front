@@ -5,10 +5,7 @@ import Panel from '../../../components/Panel';
 import ModalAdoptionDetails from '../../../components/ModalAdoptionDetails';
 import Pagination from '../../../components/Pagination';
 import AdoptionTable from '../../../components/AdoptionTable';
-import {
-  getAdocoesByAnimalId,
-  updateAdoptionStatus,
-} from '../../../services/ApiAdmin';
+import { getAdocoesByAnimalId } from '../../../services/ApiAdmin';
 import logo from '../../../assets/logo-pet.png';
 import { findAnimalById } from '../../../services/ApiAdocao';
 import { calculateAge } from '../../../utils/pet';
@@ -94,6 +91,11 @@ const PetDetails = () => {
     fetchData();
   }, [petId, findAdoptions]);
 
+  const displayDate = (dateString) => {
+    if (!dateString) return 'Não informado';
+    return new Date(dateString + 'T00:00:00').toLocaleDateString('pt-BR');
+  };
+
   const renderContent = () => {
     if (loading) {
       return (
@@ -163,7 +165,10 @@ const PetDetails = () => {
             </div>
           </Panel>
 
-          <Panel title="Informações Detalhadas">
+          <Panel>
+            <h2 className="font-semibold m-0 text-center text-gray-800 mb-2">
+              Informações Detalhadas
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6">
               <div>
                 <p className="text-sm font-semibold text-gray-500">Sexo</p>
@@ -193,10 +198,61 @@ const PetDetails = () => {
           </Panel>
 
           <Panel>
+            <h2 className="font-semibold m-0 text-center text-gray-800 mb-2">
+              Informações de Saúde
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6">
+              <div>
+                <p className="text-sm font-semibold text-gray-500">Castrado</p>
+                <p className="text-gray-800">{pet.castrado ? 'Sim' : 'Não'}</p>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-500">
+                  Última Vermifugação
+                </p>
+                <p className="text-gray-800">
+                  {displayDate(pet.dataUltimaVermifugacao)}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-500">
+                  Vacina Antirrábica
+                </p>
+                <p className="text-gray-800">
+                  {displayDate(pet.dataUltimaVacinaAntirrabica)}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-500">
+                  Vacina Múltipla
+                </p>
+                <p className="text-gray-800">
+                  {pet.dataUltimaVacinaMultipla
+                    ? `${displayDate(pet.dataUltimaVacinaMultipla)} (${
+                        pet.tipoVacinaMultipla || 'N/A'
+                      })`
+                    : 'Não informado'}
+                </p>
+              </div>
+            </div>
+            {pet.observacoesMedicas && (
+              <div className="mt-6 border-t pt-4">
+                <h3 className="text-base font-semibold text-gray-700">
+                  Observações Médicas:
+                </h3>
+                <p className="text-gray-800 bg-yellow-50 p-3 rounded-md border border-yellow-200">
+                  {pet.observacoesMedicas}
+                </p>
+              </div>
+            )}
+          </Panel>
+
+          <Panel>
             <h2 className="font-semibold m-0 text-center text-gray-800">
               Descrição e características
             </h2>
             <p className="mb-4 pt-0">{pet.descricao}</p>
+
             <div className="flex flex-wrap gap-2 mt-2">
               {pet.caracteristicas?.map((char) => (
                 <span

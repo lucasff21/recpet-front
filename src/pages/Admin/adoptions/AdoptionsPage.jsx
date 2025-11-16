@@ -3,10 +3,7 @@ import { showToast } from '../../../utils/toast';
 import Panel from '../../../components/Panel';
 import ModalAdoptionDetails from '../../../components/ModalAdoptionDetails';
 import Pagination from '../../../components/Pagination';
-import {
-  getAllAdoptions,
-  updateAdoptionStatus,
-} from '../../../services/ApiAdmin';
+import { getAllAdoptions } from '../../../services/ApiAdmin';
 import AdoptionTable from '../../../components/AdoptionTable';
 
 const AdoptionsPage = () => {

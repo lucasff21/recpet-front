@@ -33,7 +33,7 @@ const ModalAdoptionDetails = ({ onClose, request, onSuccess }) => {
     updateAdoptionStatus(request.id, payload)
       .then(() => {
         showToast('Solicitação atualizada com sucesso', 'success');
-        onSuccess(); // <-- Chama o callback de sucesso (que vai recarregar a lista e fechar)
+        onSuccess();
       })
       .catch((err) => {
         showToast('Erro ao atualizar as informações', 'error');

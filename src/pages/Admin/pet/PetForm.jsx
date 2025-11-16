@@ -35,6 +35,8 @@ const PetForm = ({
     handleSubmit,
     formState: { errors, isValid },
     reset,
+    watch,
+    setValue,
   } = useForm({
     mode: 'all',
     resolver: zodResolver(validationSchema),
@@ -50,11 +52,20 @@ const PetForm = ({
           descricao: '',
           caracteristicasIds: [],
           disponivelParaAdocao: 'true',
+          castrado: 'false',
+          dataUltimaVermifugacao: '',
+          dataUltimaVacinaAntirrabica: '',
+          dataUltimaVacinaMultipla: '',
+          tipoVacinaMultipla: 'V10',
+          observacoesMedicas: '',
         },
   });
 
   const [caracteristicasOptions, setCaracteristicasOptions] = useState([]);
   const [loadingCaracteristicas, setLoadingCaracteristicas] = useState(true);
+
+  const tipoAnimal = watch('tipo');
+  const dataVacinaMultipla = watch('dataUltimaVacinaMultipla');
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -84,6 +95,17 @@ const PetForm = ({
         tipo: defaultValues.tipo || 'CACHORRO',
         disponivelParaAdocao:
           String(defaultValues.disponivelParaAdocao) || 'true',
+
+        castrado: String(defaultValues.castrado) || 'false',
+        dataUltimaVermifugacao: defaultValues.dataUltimaVermifugacao || '',
+        dataUltimaVacinaAntirrabica:
+          defaultValues.dataUltimaVacinaAntirrabica || '',
+        dataUltimaVacinaMultipla: defaultValues.dataUltimaVacinaMultipla || '',
+        tipoVacinaMultipla:
+          defaultValues.tipoVacinaMultipla || defaultValues.tipo === 'CACHORRO'
+            ? 'V10'
+            : 'V5',
+        observacoesMedicas: defaultValues.observacoesMedicas || '',
       });
       setLocalCurrentImage(defaultValues.imagemPath || null);
       hasDefaultValuesBeenSet.current = true;
@@ -98,6 +120,13 @@ const PetForm = ({
         descricao: '',
         disponivelParaAdocao: 'true',
         caracteristicasIds: [],
+
+        castrado: 'false',
+        dataUltimaVermifugacao: '',
+        dataUltimaVacinaAntirrabica: '',
+        dataUltimaVacinaMultipla: '',
+        tipoVacinaMultipla: '',
+        observacoesMedicas: '',
       });
       setImagePreSave(null);
       setLocalCurrentImage(null);
@@ -119,6 +148,14 @@ const PetForm = ({
     };
     fetchCaracteristicas();
   }, []);
+
+  useEffect(() => {
+    const tipoVacinaAtual = watch('tipoVacinaMultipla');
+    if (dataVacinaMultipla && !tipoVacinaAtual) {
+      const defaultTipo = tipoAnimal === 'CACHORRO' ? 'V10' : 'V5';
+      setValue('tipoVacinaMultipla', defaultTipo, { shouldValidate: true });
+    }
+  }, [dataVacinaMultipla, tipoAnimal, setValue, watch]);
 
   const handleFormSubmit = (data) => {
     const dataToSend = { ...data };
@@ -297,11 +334,73 @@ const PetForm = ({
           errors={errors}
         />
 
+        <h2 className="text-2xl font-semibold text-gray-700 mt-6 border-t pt-4">
+          Informações de Saúde
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <RadioGroupField
+            id="castrado"
+            name="castrado"
+            label="Castrado"
+            options={[
+              { value: 'true', label: 'Sim' },
+              { value: 'false', label: 'Não' },
+            ]}
+            register={register}
+            errors={errors}
+          />
+          <DateField
+            id="dataUltimaVermifugacao"
+            label="Última Vermifugação"
+            register={register}
+            errors={errors}
+            max={new Date().toISOString().split('T')[0]}
+          />
+          <DateField
+            id="dataUltimaVacinaAntirrabica"
+            label="Última Vacina Antirrábica"
+            register={register}
+            errors={errors}
+            max={new Date().toISOString().split('T')[0]}
+          />
+          <DateField
+            id="dataUltimaVacinaMultipla"
+            label={
+              tipoAnimal === 'CACHORRO'
+                ? 'Vacina Múltipla (V10/V8)'
+                : 'Vacina Múltipla (V5/V4)'
+            }
+            register={register}
+            errors={errors}
+            max={new Date().toISOString().split('T')[0]}
+          />
+          <InputField
+            id="tipoVacinaMultipla"
+            type="text"
+            name="tipoVacinaMultipla"
+            register={register}
+            errors={errors}
+            placeholder={tipoAnimal === 'CACHORRO' ? 'Ex: V10' : 'Ex: V5'}
+            label="Tipo da Vacina Múltipla"
+          />
+        </div>
         <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <TextareaField
+            id="observacoesMedicas"
+            name="observacoesMedicas"
+            register={register}
+            errors={errors}
+            placeholder="Alergias, doenças crônicas, etc. (Deixe em branco se for saudável)"
+            label="Observações Médicas (Problemas)"
+            rows={3}
+          />
+        </div>
+
+        <div className="mt-4 border-t pt-4">
+          <label className="text-2xl font-semibold text-gray-700">
             Selecione as características do animal
           </label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
             {loadingCaracteristicas ? (
               <div className="flex items-center justify-center h-20 col-span-2">
                 <AiOutlineLoading3Quarters className="animate-spin text-xl text-gray-600" />
