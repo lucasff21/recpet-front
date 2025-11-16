@@ -19,7 +19,7 @@ const Header = () => {
 
   const USER_MENU = [
     ...(isAdmin
-      ? [{ path: '/admin/pets', label: 'Painel', icon: 'grid' }]
+      ? [{ path: '/admin/dashboard', label: 'Painel', icon: 'grid' }]
       : []),
     { path: '/painel', label: 'Minha conta', icon: 'user' },
     {
