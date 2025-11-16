@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { getUsers, updateRole, deleteUser } from '../../../services/ApiAdmin';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import ConfirmModal from '../../../components/ConfirmModal';
 import Pagination from '../../../components/Pagination';
 import { showToast } from '../../../utils/toast';
@@ -19,20 +19,30 @@ const UserTable = () => {
     totalElements: 0,
   });
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlValor = searchParams.get('valor') || '';
+  const urlTipoBusca = searchParams.get('tipoBusca') || 'NOME';
+  const urlRole = searchParams.get('tipo') || '';
+  const urlSortByDate = searchParams.get('sortByDate') || 'desc';
+  const urlPage = searchParams.get('page')
+    ? Number(searchParams.get('page')) - 1
+    : 0;
 
   const [filters, setFilters] = useState({
-    valor: '',
-    tipoBusca: 'NOME',
-    role: '',
-    sortByDate: 'desc',
-    page: 0,
+    valor: urlValor,
+    tipoBusca: urlTipoBusca,
+    role: urlRole,
+    sortByDate: urlSortByDate,
+    page: urlPage,
   });
 
   const [localFilters, setLocalFilters] = useState({
-    valor: filters.valor,
-    tipoBusca: filters.tipoBusca,
-    role: filters.role,
-    sortByDate: filters.sortByDate,
+    valor: urlValor,
+    tipoBusca: urlTipoBusca,
+    role: urlRole,
+    sortByDate: urlSortByDate,
   });
 
   const [modal, setModal] = useState({ isOpen: false, userId: null });
@@ -69,8 +79,18 @@ const UserTable = () => {
   }, []);
 
   useEffect(() => {
+    const paramsToSet = {};
+    if (filters.valor) paramsToSet.valor = filters.valor;
+    if (filters.tipoBusca !== 'NOME') paramsToSet.tipoBusca = filters.tipoBusca;
+    if (filters.role) paramsToSet.tipo = filters.role;
+    if (filters.sortByDate !== 'desc')
+      paramsToSet.sortByDate = filters.sortByDate;
+    if (filters.page > 0) paramsToSet.page = filters.page + 1;
+
+    setSearchParams(paramsToSet, { replace: true });
+
     fetchUsers(filters);
-  }, [filters, fetchUsers]);
+  }, [filters, fetchUsers, setSearchParams]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -123,7 +143,6 @@ const UserTable = () => {
 
   const tipos = {
     ADMIN: 'ADMINISTRADOR',
-    //     MODERATOR: 'MODERADOR',
     ADOTANTE: 'ADOTANTE',
   };
 
@@ -303,7 +322,15 @@ const UserTable = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                       <button
-                        className="text-red-600 hover:text-red-900"
+                        className="text-blue-600 hover:text-blue-900 mr-3"
+                        onClick={() =>
+                          navigate(`/admin/usuarios/${account.id}`)
+                        }
+                      >
+                        Ver mais
+                      </button>
+                      <button
+                        className="text-red-600 hover:text-red-900 mr-3"
                         onClick={() => handleDelete(account.id)}
                         disabled={account.id === user.id}
                       >
@@ -321,11 +348,15 @@ const UserTable = () => {
               )}
             </tbody>
           ) : (
-            <td colSpan="6" className="py-10">
-              <div className="flex justify-center items-center">
-                <AiOutlineLoading3Quarters className="animate-spin w-8 h-8 text-gray-500" />
-              </div>
-            </td>
+            <tbody>
+              <tr>
+                <td colSpan="6" className="py-10">
+                  <div className="flex justify-center items-center">
+                    <AiOutlineLoading3Quarters className="animate-spin w-8 h-8 text-gray-500" />
+                  </div>
+                </td>
+              </tr>
+            </tbody>
           )}
         </table>
       </div>

@@ -117,7 +117,7 @@ const AdminDashboard = () => {
             value={stats.totalAdopters}
             icon={<FaUsers className="text-2xl" />}
             color="indigo"
-            link="/admin/usuarios?tipo=adotante"
+            link="/admin/usuarios?tipo=ADOTANTE"
           />
         </div>
         <StatsCard
