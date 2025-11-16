@@ -117,7 +117,7 @@ const FilterSidebar = ({
           </FilterAccordion>
 
           <FilterAccordion
-            title="IDADE"
+            title="FAIXA ETÁRIA"
             isOpen={accordionOpen.idade}
             toggleOpen={() => toggleAccordion('idade')}
           >

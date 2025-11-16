@@ -98,11 +98,11 @@ const CharacteristicsTable = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-center">
                         {item.ativo ? (
                           <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            <FaCircleCheck /> Ativo
+                            <FaCircleCheck /> Visível
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                            <FaCircleXmark /> Inativo
+                            <FaCircleXmark /> Oculto
                           </span>
                         )}
                       </td>
@@ -126,11 +126,11 @@ const CharacteristicsTable = () => {
                           >
                             {item.ativo ? (
                               <>
-                                <MdToggleOff /> Desativar
+                                <MdToggleOff /> Ocultar
                               </>
                             ) : (
                               <>
-                                <MdToggleOn /> Reativar
+                                <MdToggleOn /> Mostrar
                               </>
                             )}
                           </button>
