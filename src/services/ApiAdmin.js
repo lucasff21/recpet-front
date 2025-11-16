@@ -118,3 +118,7 @@ export const findUserById = (userId) => {
 export const getAdocoesByUserId = (userId, params) => {
   return apiClient.get(`${apiUrl}/admin/users/${userId}/adocoes`, { params });
 };
+
+export const getAdoptionById = (id) => {
+  return apiClient.get(`${apiUrl}/admin/adocoes/${id}`);
+};

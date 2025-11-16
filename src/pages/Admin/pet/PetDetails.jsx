@@ -165,10 +165,7 @@ const PetDetails = () => {
             </div>
           </Panel>
 
-          <Panel>
-            <h2 className="font-semibold m-0 text-center text-gray-800 mb-2">
-              Informações Detalhadas
-            </h2>
+          <Panel title="Informações Detalhadas">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6">
               <div>
                 <p className="text-sm font-semibold text-gray-500">Sexo</p>
@@ -197,10 +194,7 @@ const PetDetails = () => {
             </div>
           </Panel>
 
-          <Panel>
-            <h2 className="font-semibold m-0 text-center text-gray-800 mb-2">
-              Informações de Saúde
-            </h2>
+          <Panel title="Informações de Saúde">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6">
               <div>
                 <p className="text-sm font-semibold text-gray-500">Castrado</p>
@@ -247,10 +241,7 @@ const PetDetails = () => {
             )}
           </Panel>
 
-          <Panel>
-            <h2 className="font-semibold m-0 text-center text-gray-800">
-              Descrição e características
-            </h2>
+          <Panel title="Descrição e características">
             <p className="mb-4 pt-0">{pet.descricao}</p>
 
             <div className="flex flex-wrap gap-2 mt-2">
@@ -265,10 +256,7 @@ const PetDetails = () => {
             </div>
           </Panel>
 
-          <Panel>
-            <h2 className="font-semibold m-0 text-center text-gray-800 mb-2">
-              Solicitações de Adoção ({pageData.totalElements})
-            </h2>
+          <Panel title={`Solicitações de Adoção (${pageData.totalElements})`}>
             {adoptions?.length === 0 && !loading ? (
               <p className="text-center text-gray-600 py-10">
                 Nenhuma solicitação de adoção para este pet.

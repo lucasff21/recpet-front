@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo-pet.png';
 import AdocaoStatusBadge from './AdocaoStatusBadge';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const AdoptionTable = ({ adocoes = [], loading, openDetailsModal }) => {
+  const navigate = useNavigate();
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -109,7 +110,7 @@ const AdoptionTable = ({ adocoes = [], loading, openDetailsModal }) => {
                   <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                     <button
                       className="text-blue-600 hover:text-blue-900 mr-3"
-                      onClick={() => openDetailsModal(adocao)}
+                      onClick={() => navigate(`/admin/adocoes/${adocao.id}`)}
                     >
                       Ver mais
                     </button>

@@ -15,6 +15,7 @@ import {
   FaAddressBook,
 } from 'react-icons/fa';
 import Breadcrumb from '../../../components/Breadcrumb';
+import { calculateHumanAge } from '../../../utils/usuario';
 
 const UserDetails = () => {
   const { id: userId } = useParams();
@@ -186,12 +187,19 @@ const UserDetails = () => {
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
-                  <FaCalendarAlt /> Data de Nascimento
+                  <FaCalendarAlt /> Idade
                 </p>
-                <p className="text-gray-600">
+                <p className="text-gray-800">
                   {user.dataNascimento
-                    ? new Date(user.dataNascimento).toLocaleDateString('pt-BR')
+                    ? calculateHumanAge(user.dataNascimento)
+                    : 'Não informada'}{' '}
+                  (
+                  {user.dataNascimento
+                    ? new Date(
+                        user.dataNascimento + 'T00:00:00'
+                      ).toLocaleDateString('pt-BR')
                     : 'Não informada'}
+                  )
                 </p>
               </div>
               <div>
@@ -208,9 +216,6 @@ const UserDetails = () => {
           </Panel>
 
           <Panel title="Questionário de Adoção">
-            <h2 className="font-semibold m-0 text-center text-gray-800 mb-2">
-              Questionário
-            </h2>
             {questionario ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
                 <div>
@@ -266,14 +271,15 @@ const UserDetails = () => {
                 </div>
               </div>
             ) : (
-              <p className="text-gray-500 italic">Sem resposta.</p>
+              <p className="text-gray-500 italic">
+                Usuário não preencheu o questionário.
+              </p>
             )}
           </Panel>
 
-          <Panel>
-            <h2 className="font-semibold m-0 text-center text-gray-800 mb-2">
-              Solicitações de Adoção Feitas ({pageData.totalElements})
-            </h2>
+          <Panel
+            title={`Solicitações de Adoção Feitas (${pageData.totalElements})`}
+          >
             {adoptions?.length === 0 && !loading ? (
               <p className="text-center text-gray-600 py-10">
                 Nenhuma solicitação de adoção feita por este usuário.
