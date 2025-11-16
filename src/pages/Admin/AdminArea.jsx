@@ -52,14 +52,14 @@ const AdminArea = () => {
       icon: <PiFilesFill className="h-5 w-5 mr-3" />,
     },
     {
-      path: '/admin/conteudos',
-      label: 'Conteúdos',
-      icon: <FiFileText className="h-5 w-5 mr-3" />,
-    },
-    {
       path: '/admin/temperamentos',
       label: 'Temperamentos',
       icon: <AiOutlineTags className="h-5 w-5 mr-3" />,
+    },
+    {
+      path: '/admin/conteudos',
+      label: 'Conteúdos',
+      icon: <FiFileText className="h-5 w-5 mr-3" />,
     },
     {
       label: 'Sair',
