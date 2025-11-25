@@ -23,6 +23,8 @@ export const updateQuestionario = (data) => {
 };
 
 export const createQuestionario = async (questionarioData) => {
+  console.log(questionarioData)
+
   return await apiClient.post('/questionario', questionarioData);
 };
 
