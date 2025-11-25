@@ -25,31 +25,55 @@ export const useQuestionario = ({ onSuccess } = {}) => {
     defaultValues,
   });
 
+  // Carregar dados existentes se for edição
   useEffect(() => {
     if (user?.questionario) {
       const q = user.questionario;
+      
+      // Helper para converter valor numérico/boolean da API para String do Input
+      const toStr = (val) => (val !== undefined && val !== null ? String(val) : '');
+      const boolToStr = (val) => (val === true ? 'true' : 'false');
+
       reset({
-        moradia: q.moradia || '',
-        telasProtecao: q.telasProtecao ? 'true' : 'false',
-        todosDeAcordo: q.todosDeAcordo ? 'true' : 'false',
-        qtdCaes: q.qtdCaes || 0,
-        qtdGatos: q.qtdGatos || 0,
-        qtdOutros: q.qtdOutros || 0,
-        cienteCustos: q.cienteCustos ? 'true' : 'false',
+        // Enums (Strings diretas)
+        preferenciaSexo: q.preferenciaSexo || 'INDIFERENTE',
+        temCriancas: q.temCriancas || 'NAO', // Atenção ao nome do campo vindo do DTO Response
+
+        // Escalas (Converter Number -> String para o Select)
+        preferenciaPorte: toStr(q.preferenciaPorte),
+        nivelEnergia: toStr(q.nivelEnergia),
+        nivelQuedaPelo: toStr(q.nivelQuedaPelo),
+        nivelLatido: toStr(q.nivelLatido),
+        instintoGuarda: toStr(q.instintoGuarda),
+        moradia: toStr(q.moradia),
+        tempoDisponivel: toStr(q.tempoDisponivel),
+        experienciaPets: toStr(q.experienciaPets),
+
+        // Booleans de Contexto (Converter Boolean -> String "true"/"false" para Radio)
+        possuiCaes: boolToStr(q.possuiCaes),
+        possuiGatos: boolToStr(q.possuiGatos),
+        disposicaoNecessidadesEspeciais: boolToStr(q.disposicaoNecessidadesEspeciais),
+        cienteCustos: boolToStr(q.cienteCustos),
+
+        // Termos (Manter Boolean para Checkbox)
         termoCompromissoLongoPrazo: q.termoCompromissoLongoPrazo || false,
         termoSaudeBemEstar: q.termoSaudeBemEstar || false,
         termoPacienciaAdaptacao: q.termoPacienciaAdaptacao || false,
+        termoVistoria: q.termoVistoria || false,
+        termoDevolucaoNaoAbandono: q.termoDevolucaoNaoAbandono || false,
+        termoLegislacaoPosseResponsavel: q.termoLegislacaoPosseResponsavel || false,
       });
     }
   }, [user, reset]);
 
+  // Toast de erro
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
       const firstError = Object.values(errors)[0];
-      showToast(
-        firstError?.message || 'Por favor, corrija os erros no formulário.',
-        'warning'
-      );
+      // Se for um erro de enum/objeto, a mensagem pode estar aninhada
+      const msg = firstError?.message || 'Verifique os campos obrigatórios.';
+      showToast(msg, 'warning');
+      console.log('Erros de validação:', errors); // Útil para debug
     }
   }, [errors]);
 
@@ -57,29 +81,32 @@ export const useQuestionario = ({ onSuccess } = {}) => {
     try {
       let response;
 
+      // O Zod já converteu as strings numéricas para Int e "true" para boolean aqui
       if (isEditing) {
         response = await updateQuestionario(data);
-        showToast('Questionário atualizado com sucesso!', 'success');
+        showToast('Perfil atualizado com sucesso!', 'success');
       } else {
         response = await createQuestionario(data);
-        showToast('Questionário enviado com sucesso!', 'success');
+        showToast('Perfil criado com sucesso!', 'success');
       }
 
+      // Atualiza o contexto do usuário com o novo questionário retornado
       updateUserQuestionario(response.data);
 
       if (onSuccess) {
         onSuccess(response.data || response);
       }
     } catch (error) {
+      console.error(error);
       if (error.response?.status === 401) {
         showToast('Sessão expirada. Faça login novamente.', 'error');
         navigate('/login');
       } else if (error.response?.status === 400) {
-        showToast('Dados inválidos. Verifique o formulário.', 'error');
-      } else if (error.response?.data?.message) {
-        showToast(error.response.data.message, 'error');
+        // Tenta pegar a mensagem específica do backend se houver validação lá
+        const serverMsg = error.response.data?.message || 'Dados inválidos.';
+        showToast(serverMsg, 'error');
       } else {
-        showToast('Erro ao enviar o questionário. Tente novamente.', 'error');
+        showToast('Erro ao salvar. Tente novamente.', 'error');
       }
     }
   };
