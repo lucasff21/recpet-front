@@ -270,6 +270,7 @@ const PetsTable = () => {
               />
             </div>
 
+
             <div>
               <label htmlFor="tipo" className={labelStyle}>
                 Espécie
@@ -494,6 +495,12 @@ const PetsTable = () => {
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
+                Raça
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Sexo
               </th>
               <th
@@ -537,6 +544,9 @@ const PetsTable = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">{pet.idade}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {pet.raca || '—'}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`${pet.sexo.toLowerCase() === 'macho' ? 'bg-sky-100 text-sky-800' : 'bg-pink-50 text-pink-800'} rounded-full px-3 py-1 text-xs font-bold`}
@@ -577,7 +587,7 @@ const PetsTable = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="py-8 text-center text-gray-500">
+                  <td colSpan="9" className="py-8 text-center text-gray-500">
                     Nenhum animal encontrado.
                   </td>
                 </tr>
@@ -586,7 +596,7 @@ const PetsTable = () => {
           ) : (
             <tbody>
               <tr>
-                <td colSpan="6" className="py-10">
+                <td colSpan="9" className="py-10">
                   <div className="flex justify-center items-center">
                     <AiOutlineLoading3Quarters className="animate-spin w-8 h-8 text-gray-500" />
                   </div>

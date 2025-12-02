@@ -274,6 +274,24 @@ const PetProfilePage = () => {
                           {selectedPet.porte}
                         </p>
                       </div>
+                      <div>
+                        <p className="text-sm text-gray-500 m-0">Raça</p>
+                        <p className="font-medium text-base md:text-lg">
+                          {selectedPet.raca || '—'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 m-0">RG do Animal</p>
+                        <p className="font-medium text-base md:text-lg">
+                          {selectedPet.rgAnimal || '—'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 m-0">Microchip</p>
+                        <p className="font-medium text-base md:text-lg">
+                          {selectedPet.microchipId || '—'}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

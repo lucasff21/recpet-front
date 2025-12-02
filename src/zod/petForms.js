@@ -63,6 +63,28 @@ export const basePetSchema = z.object({
     .max(2000, { message: 'Observações deve ter no máximo 2000 caracteres' })
     .optional()
     .nullable(),
+  raca: z
+    .string()
+    .max(20, { message: 'Raça deve ter no máximo 20 caracteres' })
+    .optional()
+    .nullable(),
+  rgAnimal: z
+    .string()
+    .max(20, { message: 'RG do animal deve ter no máximo 20 caracteres' })
+    .optional()
+    .nullable(),
+  microchipId: z
+    .string()
+    .max(20, { message: 'Microchip deve ter no máximo 20 caracteres' })
+    .optional()
+    .nullable(),
+  privateInfo: z
+    .string()
+    .max(2000, {
+      message: 'Informações privadas deve ter no máximo 2000 caracteres',
+    })
+    .optional()
+    .nullable(),
 });
 
 export const petSchema = basePetSchema.extend({
