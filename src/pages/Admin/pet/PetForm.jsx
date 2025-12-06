@@ -42,7 +42,7 @@ const PetForm = ({
     resolver: zodResolver(validationSchema),
     defaultValues: isEdit
       ? {}
-      : {
+    : {
           nome: '',
           dataNascimentoAproximada: '',
           sexo: 'MACHO',
@@ -51,6 +51,7 @@ const PetForm = ({
           tipo: 'CACHORRO',
           descricao: '',
           caracteristicasIds: [],
+    microchipId: '',
           disponivelParaAdocao: 'true',
           castrado: 'false',
           dataUltimaVermifugacao: '',
@@ -106,6 +107,10 @@ const PetForm = ({
             ? 'V10'
             : 'V5',
         observacoesMedicas: defaultValues.observacoesMedicas || '',
+  raca: defaultValues.raca || '',
+  rgAnimal: defaultValues.rgAnimal || '',
+  privateInfo: defaultValues.privateInfo || '',
+  microchipId: defaultValues.microchipId || '',
       });
       setLocalCurrentImage(defaultValues.imagemPath || null);
       hasDefaultValuesBeenSet.current = true;
@@ -118,6 +123,9 @@ const PetForm = ({
         pelagem: 'CURTA',
         tipo: 'CACHORRO',
         descricao: '',
+  raca: '',
+  rgAnimal: '',
+        privateInfo: '',
         disponivelParaAdocao: 'true',
         caracteristicasIds: [],
 
@@ -309,6 +317,54 @@ const PetForm = ({
             ]}
           />
         </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <InputField
+              id="raca"
+              type="text"
+              name="raca"
+              register={register}
+              errors={errors}
+              placeholder="Raça"
+              label="Raça"
+              maxLength={20}
+            />
+            <InputField
+              id="rgAnimal"
+              type="text"
+              name="rgAnimal"
+              register={register}
+              errors={errors}
+              placeholder="RG do animal"
+              label="RG do animal"
+              maxLength={20}
+            />
+          </div>
+
+          <div className="mt-4">
+            <TextareaField
+              id="privateInfo"
+              name="privateInfo"
+              register={register}
+              errors={errors}
+              placeholder="Informações privadas (visíveis apenas para administradores)"
+              label="Informações Privadas"
+              rows={3}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <InputField
+              id="microchipId"
+              type="text"
+              name="microchipId"
+              register={register}
+              errors={errors}
+              placeholder="Microchip"
+              label="Microchip"
+              maxLength={20}
+            />
+          </div>
 
         <div className="mt-4">
           <TextareaField

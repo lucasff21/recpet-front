@@ -77,7 +77,7 @@ const AdoptionTable = ({ adocoes = [], loading, openDetailsModal }) => {
                           </Link>
                         </div>
                         <div className="text-sm text-gray-500">
-                          {adocao.animal?.idade ?? ''}
+                            {adocao.animal?.idade ?? ''} {adocao.animal?.raca ? `• ${adocao.animal.raca}` : ''} {adocao.animal?.rgAnimal ? `• RG: ${adocao.animal.rgAnimal}` : ''} {adocao.animal?.microchipId ? `• ${adocao.animal.microchipId}` : ''}
                         </div>
                       </div>
                     </div>

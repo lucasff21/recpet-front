@@ -191,6 +191,18 @@ const PetDetails = () => {
                   {calculateAge(pet.dataNascimentoAproximada)}
                 </p>
               </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-500">Raça</p>
+                <p className="text-gray-800">{pet.raca || '—'}</p>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-500">RG do Animal</p>
+             <p className="text-gray-800">{pet.rgAnimal || '—'}</p>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-500">Microchip</p>
+             <p className="text-gray-800">{pet.microchipId || '—'}</p>
+              </div>
             </div>
           </Panel>
 
@@ -235,6 +247,14 @@ const PetDetails = () => {
                   Observações Médicas:
                 </h3>
                 <p className="text-gray-800 pt-3">{pet.observacoesMedicas}</p>
+              </div>
+            )}
+            {pet.privateInfo && (
+              <div className="mt-6 border-t pt-4">
+                <h3 className="text-base font-semibold text-gray-700">
+                  Informações Privadas:
+                </h3>
+                <p className="text-gray-800 pt-3">{pet.privateInfo}</p>
               </div>
             )}
           </Panel>

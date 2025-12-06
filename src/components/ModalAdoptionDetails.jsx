@@ -54,6 +54,10 @@ const ModalAdoptionDetails = ({ onClose, request, onSuccess }) => {
       ),
     },
     {
+      label: 'Raça',
+      value: request.animal.raca || 'Não informada',
+    },
+    {
       label: 'Usuário',
       value: (
         <Link
