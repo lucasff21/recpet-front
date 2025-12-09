@@ -12,6 +12,7 @@ import DashboardPage from './pages/User/painel/DashboardPage';
 import Contact from './pages/Contact';
 import RecoveryPassword from './pages/User/RecoveryPassword';
 import ResetPassword from './pages/User/ResetPassword';
+import Faq from './pages/Faq';
 
 const PrivateRoute = ({ element: Element }) => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -44,7 +45,7 @@ const AppRoutes = () => (
       <Route path="/quem-somos" element={<AboutUs />} />
       <Route path="/contato" element={<Contact />} />
       <Route path="/pets/:id" element={<PetProfilePage />} />
-
+      <Route path="/faq" element={<Faq />} />
       {/* ROTAS PROTEGIDAS PARA USUÁRIO LOGADO */}
       <Route path="/login" element={<PublicRoute element={Login} />} />
       <Route
