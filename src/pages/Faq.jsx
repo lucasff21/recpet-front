@@ -32,39 +32,14 @@ const Faq = () => {
 
   const faqData = [
     {
-      question: 'O que é este projeto?',
-      answer:
-        'Este é um projeto de adoção responsável de animais que conecta pets resgatados a famílias que desejam adotar. Nossa plataforma facilita o processo de adoção, tornando-o mais acessível e transparente para todos os envolvidos.',
-    },
-    {
       question: 'Como funciona o processo de adoção?',
       answer:
         'O processo é simples: navegue pelos animais disponíveis, utilize os filtros para encontrar o pet ideal, visualize os detalhes do animal e solicite a adoção através do botão "Adotar". Nossa equipe entrará em contato para dar continuidade ao processo, que inclui entrevista, visita e documentação necessária.',
     },
     {
-      question: 'Quais informações posso encontrar sobre os animais?',
-      answer:
-        'Para cada animal, fornecemos informações detalhadas como: nome, idade aproximada, porte, sexo, espécie, temperamento, se é castrado, vacinado, histórico de saúde e uma descrição completa da personalidade do pet. Também incluímos fotos para você conhecer melhor seu futuro companheiro.',
-    },
-    {
-      question: 'Posso filtrar os animais por características específicas?',
-      answer:
-        'Sim! Nossa plataforma oferece diversos filtros: nome, espécie (cão ou gato), porte (pequeno, médio, grande), faixa etária (filhote, adulto, idoso), sexo, temperamento, se é castrado e vacinado. Isso facilita encontrar o pet que melhor se adequa ao seu estilo de vida.',
-    },
-    {
-      question: 'Todos os animais são castrados e vacinados?',
-      answer:
-        'Não necessariamente. Cada animal tem seu histórico individual. Alguns já foram castrados e vacinados, outros podem estar em processo. Todas essas informações estão claramente indicadas no perfil de cada pet para sua total transparência.',
-    },
-    {
       question: 'Há algum custo para adotar?',
       answer:
-        'A adoção em si é gratuita, porém pode haver uma taxa simbólica de adoção que ajuda a cobrir custos com vacinação, castração e cuidados veterinários que o animal recebeu. Os valores e condições são informados durante o processo de adoção.',
-    },
-    {
-      question: 'Posso adotar se moro em apartamento?',
-      answer:
-        'Sim! Muitos animais se adaptam muito bem a apartamentos. O importante é escolher um pet compatível com seu espaço e estilo de vida. Use nossos filtros de porte e temperamento para encontrar o animal ideal para sua moradia.',
+        "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.",
     },
     {
       question: 'O que preciso para adotar?',
@@ -75,21 +50,6 @@ const Faq = () => {
       question: 'Posso devolver o animal se não me adaptar?',
       answer:
         'Adoção é um compromisso de longo prazo. No entanto, entendemos que situações excepcionais podem ocorrer. Se houver problemas de adaptação, entre em contato conosco imediatamente. Oferecemos suporte e orientação, e em último caso, podemos receber o animal de volta.',
-    },
-    {
-      question: 'Como posso ajudar se não posso adotar agora?',
-      answer:
-        'Há várias formas de ajudar: seja um lar temporário, faça doações, divulgue nossos animais em suas redes sociais, seja voluntário em eventos, ou contribua com ração e suprimentos. Toda ajuda faz diferença na vida desses animais!',
-    },
-    {
-      question: 'Os animais têm algum problema de saúde?',
-      answer:
-        'Cada animal passa por avaliação veterinária. Se houver alguma condição de saúde especial ou necessidade de cuidados específicos, isso estará claramente informado no perfil do pet. Acreditamos na transparência total sobre o histórico de saúde dos nossos animais.',
-    },
-    {
-      question: 'Como é feito o acompanhamento pós-adoção?',
-      answer:
-        'Após a adoção, mantemos contato para saber como está a adaptação do pet. Realizamos visitas de acompanhamento e estamos sempre disponíveis para tirar dúvidas e oferecer suporte. O bem-estar do animal e a felicidade do adotante são nossas prioridades.',
     },
   ];
 
