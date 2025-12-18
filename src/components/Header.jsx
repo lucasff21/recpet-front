@@ -15,6 +15,7 @@ const Header = () => {
     { path: '/', label: 'Home' },
     { path: '/quem-somos', label: 'Quem somos' },
     { path: '/contato', label: 'Contato' },
+    {path:'/faq', label:'Perguntas frequentes'}
   ];
 
   const USER_MENU = [
