@@ -7,7 +7,7 @@ import CheckboxField from './FormFields/CheckboxField';
 import { Button } from './Button';
 
 const QuestionarioForm = ({ onSuccess, onClose, showTitle = true }) => {
-  const { register, handleSubmit, errors,  isSubmitting, isEditing } =
+  const { register, handleSubmit, errors, isSubmitting, isEditing } =
     useQuestionario({ onSuccess });
 
   // --- Opções Mapeadas para os Enums e Escalas ---
@@ -48,15 +48,15 @@ const QuestionarioForm = ({ onSuccess, onClose, showTitle = true }) => {
   ];
 
   const tempoOptions = [
-    { value: '1', label: 'Pouco tempo livre' },
-    { value: '3', label: 'Tempo moderado' },
-    { value: '5', label: 'Muito tempo livre' },
+    { value: '1', label: 'Curto (1 a 2 horas livres/dia)' },
+    { value: '3', label: 'Moderado (3 a 5 horas livres/dia)' },
+    { value: '5', label: 'Amplo (Mais de 5h)' },
   ];
 
   const experienciaOptions = [
-    { value: '1', label: 'Primeiro Pet (Iniciante)' },
-    { value: '3', label: 'Já tive pets' },
-    { value: '5', label: 'Experiente / Adestrador' },
+    { value: '1', label: 'Nenhuma (Primeiro contato como tutor)' },
+    { value: '3', label: 'Média (Já tive pets)' },
+    { value: '5', label: 'Alta (Sei lidar com saúde/comportamento)' },
   ];
 
   const escala1a5Options = [
@@ -91,154 +91,91 @@ const QuestionarioForm = ({ onSuccess, onClose, showTitle = true }) => {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            
-            {/* --- SEÇÃO 1: PREFERÊNCIAS BÁSICAS --- */}
-            <div className="bg-gray-50 p-4 rounded-md">
-                <h3 className="text-lg font-semibold text-gray-700 mb-4">Preferências do Pet</h3>
+            <div className="">
+              <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                Seu Estilo de Vida
+              </h3>
+              <div className="space-y-4">
+                <SelectField
+                  id="moradia"
+                  label="Tipo de Moradia"
+                  register={register}
+                  errors={errors}
+                  options={moradiaOptions}
+                />
+
+                <SelectField
+                  id="temCriancas"
+                  label="Convívio com Crianças"
+                  register={register}
+                  errors={errors}
+                  options={criancasOptions}
+                />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <SelectField
-                      id="preferenciaSexo"
-                      label="Sexo do Animal"
-                      register={register}
-                      errors={errors}
-                      options={sexoOptions}
-                    />
+                  <SelectField
+                    id="tempoDisponivel"
+                    label="Tempo diário livre para o pet"
+                    register={register}
+                    errors={errors}
+                    options={tempoOptions}
+                  />
 
-                    <SelectField
-                      id="preferenciaPorte"
-                      label="Porte do Animal"
-                      register={register}
-                      errors={errors}
-                      options={porteOptions}
-                    />
-
-                    <SelectField
-                      id="nivelEnergia"
-                      label="Nível de Energia"
-                      register={register}
-                      errors={errors}
-                      options={energiaOptions}
-                    />
-
-                    <SelectField
-                      id="nivelQuedaPelo"
-                      label="Tolerância a pelos pela casa"
-                      register={register}
-                      errors={errors}
-                      options={escala1a5Options}
-                    />
-                     
-                     <SelectField
-                      id="nivelLatido"
-                      label="Tolerância a latidos/barulho"
-                      register={register}
-                      errors={errors}
-                      options={escala1a5Options}
-                    />
-
-                    <SelectField
-                      id="instintoGuarda"
-                      label="Deseja um cão de guarda?"
-                      register={register}
-                      errors={errors}
-                      options={[
-                        {value: '1', label: 'Não, prefiro dócil/companhia'},
-                        {value: '3', label: 'Indiferente'},
-                        {value: '5', label: 'Sim, preciso de guarda'}
-                      ]}
-                    />
+                  <SelectField
+                    id="experienciaPets"
+                    label="Sua experiência com animais"
+                    register={register}
+                    errors={errors}
+                    options={experienciaOptions}
+                  />
                 </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                  <RadioGroupField
+                    id="possuiCaes"
+                    label="Já possui Cães?"
+                    options={simNaoOptions}
+                    register={register}
+                    errors={errors}
+                    required={true}
+                  />
+                  <RadioGroupField
+                    id="possuiGatos"
+                    label="Já possui Gatos?"
+                    options={simNaoOptions}
+                    register={register}
+                    errors={errors}
+                    required={true}
+                  />
+                  <RadioGroupField
+                    id="disposicaoNecessidadesEspeciais"
+                    label="Aceita pets especiais?"
+                    options={simNaoOptions}
+                    register={register}
+                    errors={errors}
+                    required={true}
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* --- SEÇÃO 2: SEU CONTEXTO --- */}
-            <div className="bg-gray-50 p-4 rounded-md">
-                <h3 className="text-lg font-semibold text-gray-700 mb-4">Seu Estilo de Vida</h3>
-                <div className="space-y-4">
-                    <SelectField
-                      id="moradia"
-                      label="Tipo de Moradia"
-                      register={register}
-                      errors={errors}
-                      options={moradiaOptions}
-                    />
-
-                    <SelectField
-                      id="temCriancas"
-                      label="Convívio com Crianças"
-                      register={register}
-                      errors={errors}
-                      options={criancasOptions}
-                    />
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <SelectField
-                          id="tempoDisponivel"
-                          label="Tempo diário livre para o pet"
-                          register={register}
-                          errors={errors}
-                          options={tempoOptions}
-                        />
-
-                        <SelectField
-                          id="experienciaPets"
-                          label="Sua experiência com animais"
-                          register={register}
-                          errors={errors}
-                          options={experienciaOptions}
-                        />
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                        <RadioGroupField
-                          id="possuiCaes"
-                          label="Já possui Cães?"
-                          options={simNaoOptions}
-                          register={register}
-                          errors={errors}
-                          required={true}
-                        />
-                        <RadioGroupField
-                          id="possuiGatos"
-                          label="Já possui Gatos?"
-                          options={simNaoOptions}
-                          register={register}
-                          errors={errors}
-                          required={true}
-                        />
-                         <RadioGroupField
-                          id="disposicaoNecessidadesEspeciais"
-                          label="Aceita pets especiais?"
-                          options={simNaoOptions}
-                          register={register}
-                          errors={errors}
-                          required={true}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* --- SEÇÃO 3: TERMOS E COMPROMISSOS --- */}
             <div className="border-t pt-4">
               <label className="block text-lg font-semibold text-gray-700 mb-3">
                 Termos de Adoção Responsável
               </label>
-              <div className="space-y-3 bg-red-50 p-4 rounded border border-red-100">
-                
-                <RadioGroupField
+              <div className="space-y-3">
+                <CheckboxField
                   id="cienteCustos"
-                  label="Estou ciente dos custos financeiros (ração, vacina, vet)?"
-                  options={simNaoOptions}
+                  name="cienteCustos"
+                  label="Estou ciente dos custos financeiros (ração, vacina, vet)."
                   register={register}
                   errors={errors}
-                  required={true}
                 />
-
-                <div className="h-px bg-red-200 my-2"></div>
 
                 <CheckboxField
                   id="termoCompromissoLongoPrazo"
                   name="termoCompromissoLongoPrazo"
-                  label="Entendo que a adoção é um compromisso para a vida toda (15+ anos)."
+                  label="Entendo que a adoção é um compromisso para a vida toda."
                   register={register}
                   errors={errors}
                 />

@@ -254,6 +254,14 @@ const PetProfilePage = () => {
                           {selectedPet.pelagem || 'Não informada'}
                         </p>
                       </div>
+                      <div>
+                        <p className="text-sm text-gray-500 m-0">
+                          RG do Animal
+                        </p>
+                        <p className="font-medium text-base md:text-lg">
+                          {selectedPet.rgAnimal || '—'}
+                        </p>
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <div>
@@ -278,12 +286,6 @@ const PetProfilePage = () => {
                         <p className="text-sm text-gray-500 m-0">Raça</p>
                         <p className="font-medium text-base md:text-lg">
                           {selectedPet.raca || '—'}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500 m-0">RG do Animal</p>
-                        <p className="font-medium text-base md:text-lg">
-                          {selectedPet.rgAnimal || '—'}
                         </p>
                       </div>
                       <div>

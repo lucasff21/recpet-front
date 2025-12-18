@@ -29,9 +29,10 @@ export const useQuestionario = ({ onSuccess } = {}) => {
   useEffect(() => {
     if (user?.questionario) {
       const q = user.questionario;
-      
+
       // Helper para converter valor numérico/boolean da API para String do Input
-      const toStr = (val) => (val !== undefined && val !== null ? String(val) : '');
+      const toStr = (val) =>
+        val !== undefined && val !== null ? String(val) : '';
       const boolToStr = (val) => (val === true ? 'true' : 'false');
 
       reset({
@@ -52,7 +53,9 @@ export const useQuestionario = ({ onSuccess } = {}) => {
         // Booleans de Contexto (Converter Boolean -> String "true"/"false" para Radio)
         possuiCaes: boolToStr(q.possuiCaes),
         possuiGatos: boolToStr(q.possuiGatos),
-        disposicaoNecessidadesEspeciais: boolToStr(q.disposicaoNecessidadesEspeciais),
+        disposicaoNecessidadesEspeciais: boolToStr(
+          q.disposicaoNecessidadesEspeciais
+        ),
         cienteCustos: boolToStr(q.cienteCustos),
 
         // Termos (Manter Boolean para Checkbox)
@@ -61,7 +64,8 @@ export const useQuestionario = ({ onSuccess } = {}) => {
         termoPacienciaAdaptacao: q.termoPacienciaAdaptacao || false,
         termoVistoria: q.termoVistoria || false,
         termoDevolucaoNaoAbandono: q.termoDevolucaoNaoAbandono || false,
-        termoLegislacaoPosseResponsavel: q.termoLegislacaoPosseResponsavel || false,
+        termoLegislacaoPosseResponsavel:
+          q.termoLegislacaoPosseResponsavel || false,
       });
     }
   }, [user, reset]);
@@ -70,10 +74,8 @@ export const useQuestionario = ({ onSuccess } = {}) => {
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
       const firstError = Object.values(errors)[0];
-      // Se for um erro de enum/objeto, a mensagem pode estar aninhada
       const msg = firstError?.message || 'Verifique os campos obrigatórios.';
       showToast(msg, 'warning');
-      console.log('Erros de validação:', errors); // Útil para debug
     }
   }, [errors]);
 
@@ -84,10 +86,10 @@ export const useQuestionario = ({ onSuccess } = {}) => {
       // O Zod já converteu as strings numéricas para Int e "true" para boolean aqui
       if (isEditing) {
         response = await updateQuestionario(data);
-        showToast('Perfil atualizado com sucesso!', 'success');
+        showToast('Questionário atualizado com sucesso!', 'success');
       } else {
         response = await createQuestionario(data);
-        showToast('Perfil criado com sucesso!', 'success');
+        showToast('Questionário criado com sucesso!', 'success');
       }
 
       // Atualiza o contexto do usuário com o novo questionário retornado
