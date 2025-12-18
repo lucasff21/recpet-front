@@ -19,9 +19,7 @@ const FaqItem = ({ question, answer, isOpen, onToggle }) => {
         )}
       </button>
       {isOpen && (
-        <div className="px-6 pb-5 text-gray-600 leading-relaxed">
-          {answer}
-        </div>
+        <div className="px-6 pb-5 text-gray-600 leading-relaxed">{answer}</div>
       )}
     </div>
   );
@@ -39,7 +37,7 @@ const Faq = () => {
     {
       question: 'Há algum custo para adotar?',
       answer:
-        "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.",
+        'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
     },
     {
       question: 'O que preciso para adotar?',
@@ -82,21 +80,21 @@ const Faq = () => {
           ))}
         </div>
 
-        <div className="mt-10 bg-blue-100 p-6 rounded-lg text-center">
-          <h2 className="text-xl font-bold text-gray-800 mb-3">
-            Ainda tem dúvidas?
-          </h2>
-          <p className="text-gray-600 mb-4">
-            Entre em contato conosco! Estamos aqui para ajudar você a encontrar
-            seu novo melhor amigo.
-          </p>
-          <a
-            href="mailto:equiperecpet@gmail.com"
-            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-semibold"
-          >
-            Entrar em Contato
-          </a>
-        </div>
+        {/*<div className="mt-10 bg-blue-100 p-6 rounded-lg text-center">*/}
+        {/*  <h2 className="text-xl font-bold text-gray-800 mb-3">*/}
+        {/*    Ainda tem dúvidas?*/}
+        {/*  </h2>*/}
+        {/*  <p className="text-gray-600 mb-4">*/}
+        {/*    Entre em contato conosco! Estamos aqui para ajudar você a encontrar*/}
+        {/*    seu novo melhor amigo.*/}
+        {/*  </p>*/}
+        {/*  <a*/}
+        {/*    href="mailto:equiperecpet@gmail.com"*/}
+        {/*    className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-semibold"*/}
+        {/*  >*/}
+        {/*    Entrar em Contato*/}
+        {/*  </a>*/}
+        {/*</div>*/}
       </div>
     </Layout>
   );
