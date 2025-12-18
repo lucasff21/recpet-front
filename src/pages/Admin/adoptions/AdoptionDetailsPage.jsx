@@ -16,9 +16,20 @@ import {
   FaPhone,
   FaMapMarkerAlt,
   FaCalendarAlt,
+  FaPrint,
+  FaPaw,
+  FaMars,
+  FaVenus,
+  FaSyringe,
+  FaRulerVertical,
+  FaCheck,
+  FaTimes,
+  FaNotesMedical,
+  FaLock,
 } from 'react-icons/fa';
 import logo from '../../../assets/logo-pet.png';
 import { calculateHumanAge } from '../../../utils/usuario';
+import { calculateAge } from '../../../utils/pet';
 
 const AdoptionDetailsPage = () => {
   const { id } = useParams();
@@ -37,10 +48,49 @@ const AdoptionDetailsPage = () => {
     CASA_QUINTAL_ABERTO: 'Casa com quintal aberto',
     CASA_SEM_QUINTAL: 'Casa sem quintal',
     APARTAMENTO: 'Apartamento',
+    KITNET: 'Kitnet',
+    SITIO: 'Sítio/Chácara',
   };
 
-  const renderBool = (value) => {
-    return value ? 'Sim' : 'Não';
+  const criancasLabels = {
+    NAO_POSSUI: 'Não convive com crianças',
+    CRIANCAS_PEQUENAS: 'Possui crianças pequenas',
+    CRIANCAS_MAIORES: 'Possui crianças maiores',
+    VISITAS_FREQUENTES: 'Recebe visitas de crianças',
+  };
+
+  const tempoLabels = {
+    1: 'Curto (1 a 2 horas livres/dia)',
+    3: 'Moderado (3 a 5 horas livres/dia)',
+    5: 'Amplo (Mais de 5h)',
+  };
+
+  const experienciaLabels = {
+    1: 'Nenhuma (Primeiro contato como tutor)',
+    3: 'Média (Já tive pets)',
+    5: 'Alta (Sei lidar com saúde/comportamento)',
+  };
+
+  const renderBool = (value) => (value ? 'Sim' : 'Não');
+
+  const TermItem = ({ label, value }) => (
+    <div className="flex items-center gap-2 py-1">
+      {value ? (
+        <FaCheck className="text-green-500 w-4 h-4 flex-shrink-0" />
+      ) : (
+        <FaTimes className="text-red-500 w-4 h-4 flex-shrink-0" />
+      )}
+      <span
+        className={`text-sm ${value ? 'text-gray-700' : 'text-gray-400 decoration-line-through'}`}
+      >
+        {label}
+      </span>
+    </div>
+  );
+
+  const displayDate = (dateString) => {
+    if (!dateString) return '—';
+    return new Date(dateString + 'T00:00:00').toLocaleDateString('pt-BR');
   };
 
   const fetchAdoptionDetails = useCallback(async () => {
@@ -86,6 +136,10 @@ const AdoptionDetailsPage = () => {
       });
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   const renderLocalizacao = (user) => {
     const parts = [user.localidade, user.uf];
     return parts.filter(Boolean).join('/') || 'Não informado';
@@ -121,84 +175,224 @@ const AdoptionDetailsPage = () => {
   const { questionario } = request.usuario;
 
   return (
-    <div className="p-4 sm:p-6 space-y-6">
-      <Breadcrumb
-        items={[
-          { label: 'Adoções', href: '/admin/adocoes' },
-          { label: `Solicitação #${request.id}` },
-        ]}
-      />
+    <div className="p-4 sm:p-6 space-y-6" id="adoption-print-area">
+      <div className="print:hidden">
+        <Breadcrumb
+          items={[
+            { label: 'Adoções', href: '/admin/adocoes' },
+            { label: `Solicitação #${request.id}` },
+          ]}
+        />
+      </div>
 
-      <header>
-        <h1 className="text-3xl font-bold text-gray-800">
-          Detalhes da Solicitação de Adoção
-        </h1>
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+            Detalhes da Solicitação{' '}
+            <span className="text-gray-400 font-normal text-xl print:hidden">
+              #{request.id}
+            </span>
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Solicitado em:{' '}
+            {new Date(request.createdAt).toLocaleDateString('pt-BR')} às{' '}
+            {new Date(request.createdAt).toLocaleTimeString('pt-BR')}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 print:hidden">
+          <div className="mr-2">
+            <AdocaoStatusBadge status={request.status} />
+          </div>
+        </div>
       </header>
 
       <div className="space-y-6">
-        <Panel title={'Informações Principais'}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <div className="flex items-center gap-3">
-                <img
-                  src={animal.imagemPath || logo}
-                  alt={animal.nome}
-                  className="h-16 w-16 rounded-lg object-cover"
-                />
-                <div>
-                  <Link
-                    to={`/admin/pets/${animal.id}`}
-                    target="_blank"
-                    className="text-lg font-semibold text-blue-600 hover:underline"
-                  >
-                    {animal.nome}
-                  </Link>
-                  <p className="text-sm text-gray-500">{animal.tipo}</p>
+        <Panel title={'Informações do Animal'}>
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex-shrink-0">
+              <img
+                src={animal.imagemPath || logo}
+                alt={animal.nome}
+                className="h-32 w-32 md:h-40 md:w-40 rounded-lg object-cover border border-gray-200 shadow-sm"
+              />
+            </div>
+            <div className="flex-1 w-full">
+              {/* Cabeçalho do Pet */}
+              <div className="flex flex-col md:flex-row justify-between items-start mb-4 border-b pb-2">
+                <Link
+                  to={`/admin/pets/${animal.id}`}
+                  target="_blank"
+                  className="text-2xl font-bold text-blue-600 hover:underline print:text-black print:no-underline"
+                >
+                  {animal.nome}
+                </Link>
+                <div className="text-sm text-gray-500 mt-1 md:mt-0 flex items-center gap-1">
+                  <FaPaw /> {animal.tipo}
                 </div>
               </div>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">Status:</p>
-              <AdocaoStatusBadge status={request.status} />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">
-                Data da Solicitação:
-              </p>
-              <p className="text-lg font-semibold text-gray-900">
-                {new Date(request.createdAt).toLocaleDateString('pt-BR')}
-              </p>
+
+              {/* Grid de Características Básicas */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-4">
+                <div className="bg-gray-50 p-2 rounded">
+                  <span className="block text-xs font-bold text-gray-500 uppercase mb-1">
+                    Sexo
+                  </span>
+                  <div className="flex items-center gap-2 font-medium text-gray-800">
+                    {animal.sexo === 'FEMEA' ? (
+                      <FaVenus className="text-pink-500" />
+                    ) : (
+                      <FaMars className="text-blue-500" />
+                    )}
+                    {animal.sexo}
+                  </div>
+                </div>
+                <div className="bg-gray-50 p-2 rounded">
+                  <span className="block text-xs font-bold text-gray-500 uppercase mb-1">
+                    Idade
+                  </span>
+                  <div className="flex items-center gap-2 font-medium text-gray-800">
+                    <FaCalendarAlt className="text-gray-400" />
+                    {calculateAge(animal.dataNascimentoAproximada)}
+                  </div>
+                </div>
+                <div className="bg-gray-50 p-2 rounded">
+                  <span className="block text-xs font-bold text-gray-500 uppercase mb-1">
+                    Porte
+                  </span>
+                  <div className="flex items-center gap-2 font-medium text-gray-800">
+                    <FaRulerVertical className="text-gray-400" />
+                    {animal.porte}
+                  </div>
+                </div>
+                <div className="bg-gray-50 p-2 rounded">
+                  <span className="block text-xs font-bold text-gray-500 uppercase mb-1">
+                    Raça
+                  </span>
+                  <div className="flex items-center gap-2 font-medium text-gray-800">
+                    {animal.raca || '—'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Seção de Saúde */}
+              <h4 className="font-bold text-gray-700 text-sm border-b pb-1 mb-2 mt-4 flex items-center gap-2">
+                <FaSyringe className="text-gray-400" /> Dados Clínicos
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-4">
+                <div className="bg-blue-50 p-2 rounded border border-blue-100">
+                  <span className="block text-xs font-bold text-blue-800 uppercase mb-1">
+                    Castrado?
+                  </span>
+                  <span
+                    className={`font-bold ${animal.castrado ? 'text-green-600' : 'text-orange-600'}`}
+                  >
+                    {animal.castrado ? 'SIM' : 'NÃO'}
+                  </span>
+                </div>
+                <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                  <span className="block text-xs font-bold text-gray-500 uppercase mb-1">
+                    Vermifugação
+                  </span>
+                  <span className="text-gray-800">
+                    {displayDate(animal.dataUltimaVermifugacao)}
+                  </span>
+                </div>
+                <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                  <span className="block text-xs font-bold text-gray-500 uppercase mb-1">
+                    Antirrábica
+                  </span>
+                  <span className="text-gray-800">
+                    {displayDate(animal.dataUltimaVacinaAntirrabica)}
+                  </span>
+                </div>
+                <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                  <span className="block text-xs font-bold text-gray-500 uppercase mb-1">
+                    Vac. Múltipla{' '}
+                    {animal.tipoVacinaMultipla &&
+                      `(${animal.tipoVacinaMultipla})`}
+                  </span>
+                  <span className="text-gray-800">
+                    {displayDate(animal.dataUltimaVacinaMultipla)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Observações Médicas e Privadas */}
+              {(animal.observacoesMedicas || animal.observacoesPrivadas) && (
+                <div className="grid grid-cols-1 gap-3 mt-4">
+                  {animal.observacoesMedicas && (
+                    <div className="p-3 bg-gray-50 rounded border border-gray-200">
+                      <span className="flex items-center gap-2 text-xs font-bold text-gray-600 uppercase mb-1">
+                        <FaNotesMedical /> Observações Médicas
+                      </span>
+                      <p className="text-sm text-gray-800 whitespace-pre-wrap">
+                        {animal.observacoesMedicas}
+                      </p>
+                    </div>
+                  )}
+
+                  {animal.observacoesPrivadas && (
+                    <div className="p-3 bg-yellow-50 rounded border border-yellow-200">
+                      <span className="flex items-center gap-2 text-xs font-bold text-yellow-700 uppercase mb-1">
+                        <FaLock /> Observações Privadas (Interno)
+                      </span>
+                      <p className="text-sm text-gray-800 whitespace-pre-wrap">
+                        {animal.observacoesPrivadas}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {animal.caracteristicas && animal.caracteristicas.length > 0 && (
+                <div className="mt-4 pt-2 border-t border-gray-100">
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-2">
+                    Características:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {animal.caracteristicas.map((char) => (
+                      <span
+                        key={char.id}
+                        className="px-2 py-1 text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 rounded-md"
+                      >
+                        {char.nome}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </Panel>
 
         <Panel title={'Informações do Adotante'}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
-              <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
-                <FaUser /> Nome
+              <p className="text-sm font-semibold text-gray-500 flex items-center gap-2 mb-1">
+                <FaUser /> Nome Completo
               </p>
               <Link
                 to={`/admin/usuarios/${usuario.id}`}
                 target="_blank"
-                className="text-lg text-blue-600 hover:underline"
+                className="text-lg text-blue-600 hover:underline print:text-black print:no-underline font-medium"
               >
                 {usuario.nome}
               </Link>
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+              <p className="text-sm font-semibold text-gray-500 flex items-center gap-2 mb-1">
                 <FaEnvelope /> E-mail
               </p>
               <a
                 href={`mailto:${usuario.email}`}
-                className="text-lg text-gray-800 hover:text-blue-600 hover:underline"
+                className="text-lg text-gray-800 hover:text-blue-600 hover:underline break-all"
               >
                 {usuario.email}
               </a>
             </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+            <div className="md:text-right">
+              <p className="text-sm font-semibold text-gray-500 flex items-center md:justify-end gap-2 mb-1">
                 <FaPhone /> Telefone
               </p>
               {usuario.telefone ? (
@@ -215,13 +409,15 @@ const AdoptionDetailsPage = () => {
               )}
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+              <p className="text-sm font-semibold text-gray-500 flex items-center gap-2 mb-1">
                 <FaCalendarAlt /> Idade
               </p>
-              <p>{calculateHumanAge(usuario.dataNascimento)}</p>
+              <p className="text-gray-800">
+                {calculateHumanAge(usuario.dataNascimento)} anos
+              </p>
             </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+            <div className="lg:col-span-2">
+              <p className="text-sm font-semibold text-gray-500 flex items-center gap-2 mb-1">
                 <FaMapMarkerAlt /> Localização
               </p>
               <p className="text-lg text-gray-800">
@@ -231,59 +427,131 @@ const AdoptionDetailsPage = () => {
           </div>
         </Panel>
 
-        <Panel title={'Questionário do Adotante'}>
-          <div className="space-y-2 text-gray-700 text-sm">
+        <Panel title={'Questionário de Pré-Adoção'}>
+          <div className="space-y-4 text-gray-700 text-sm">
             {questionario ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
-                <div>
-                  <div className="font-semibold text-gray-500">Moradia:</div>
-                  <div className="text-base text-gray-900">
-                    {moradiaLabels[questionario.moradia] ||
-                      questionario.moradia}
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                  <div className="p-2 border-l-4 border-blue-200 bg-blue-50">
+                    <div className="font-bold text-blue-800 text-xs uppercase mb-1">
+                      Moradia
+                    </div>
+                    <div className="text-base text-gray-900">
+                      {moradiaLabels[questionario.moradia] ||
+                        questionario.moradia}
+                    </div>
+                  </div>
+
+                  <div className="p-2 border-l-4 border-blue-200 bg-blue-50">
+                    <div className="font-bold text-blue-800 text-xs uppercase mb-1">
+                      Crianças em casa
+                    </div>
+                    <div className="text-base text-gray-900">
+                      {criancasLabels[questionario.temCriancas] ||
+                        questionario.temCriancas}
+                    </div>
+                  </div>
+
+                  <div className="p-2 border-l-4 border-gray-200 bg-gray-50">
+                    <div className="font-bold text-gray-500 text-xs uppercase mb-1">
+                      Tempo Disponível
+                    </div>
+                    <div className="text-base text-gray-900 font-medium">
+                      {tempoLabels[questionario.tempoDisponivel] ||
+                        `${questionario.tempoDisponivel}`}
+                    </div>
+                  </div>
+
+                  <div className="p-2 border-l-4 border-gray-200 bg-gray-50">
+                    <div className="font-bold text-gray-500 text-xs uppercase mb-1">
+                      Experiência com Pets
+                    </div>
+                    <div className="text-base text-gray-900 font-medium">
+                      {experienciaLabels[questionario.experienciaPets] ||
+                        `${questionario.experienciaPets}`}
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <div className="font-semibold text-gray-500">
-                    Telas de Proteção:
+
+                <h4 className="font-bold text-gray-700 mt-4 mb-2 border-b pb-1">
+                  Convivência e Perfil
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-gray-50 p-2 rounded text-center">
+                    <span className="block text-xs font-bold text-gray-500 mb-1">
+                      Possui Cães?
+                    </span>
+                    <span
+                      className={`font-bold ${questionario.possuiCaes ? 'text-blue-600' : 'text-gray-600'}`}
+                    >
+                      {renderBool(questionario.possuiCaes)}
+                    </span>
                   </div>
-                  <div className="text-base text-gray-900">
-                    {renderBool(questionario.telasProtecao)}
+                  <div className="bg-gray-50 p-2 rounded text-center">
+                    <span className="block text-xs font-bold text-gray-500 mb-1">
+                      Possui Gatos?
+                    </span>
+                    <span
+                      className={`font-bold ${questionario.possuiGatos ? 'text-blue-600' : 'text-gray-600'}`}
+                    >
+                      {renderBool(questionario.possuiGatos)}
+                    </span>
                   </div>
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-500">
-                    Todos de Acordo:
-                  </div>
-                  <div className="text-base text-gray-900">
-                    {renderBool(questionario.todosDeAcordo)}
-                  </div>
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-500">
-                    Ciente dos Custos:
-                  </div>
-                  <div className="text-base text-gray-900">
-                    {renderBool(questionario.cienteCustos)}
-                  </div>
-                </div>
-                <div className="md:col-span-2">
-                  <div className="font-semibold text-gray-500">
-                    Animais em casa:
-                  </div>
-                  <div className="text-base text-gray-900">
-                    {questionario.qtdCaes} Cães, {questionario.qtdGatos} Gatos,{' '}
-                    {questionario.qtdOutros} Outros
-                  </div>
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-500">
-                    Termos de Adoção:
-                  </div>
-                  <div className="text-base text-green-600 font-medium">
-                    Aceitos
+                  <div className="bg-gray-50 p-2 rounded text-center col-span-2">
+                    <span className="block text-xs font-bold text-gray-500 mb-1">
+                      Disposto a Nec. Especiais?
+                    </span>
+                    <span
+                      className={`font-bold ${questionario.disposicaoNecessidadesEspeciais ? 'text-green-600' : 'text-gray-600'}`}
+                    >
+                      {renderBool(questionario.disposicaoNecessidadesEspeciais)}
+                    </span>
                   </div>
                 </div>
-              </div>
+
+                <h4 className="font-bold text-gray-700 mt-4 mb-2 border-b pb-1">
+                  Compromissos e Termos
+                </h4>
+                <div className="bg-gray-50 rounded p-4 border border-gray-100">
+                  <div className="mb-3">
+                    <span className="font-bold text-gray-700 mr-2">
+                      Ciente dos Custos Financeiros?
+                    </span>
+                    <span
+                      className={`font-bold ${questionario.cienteCustos ? 'text-green-600' : 'text-red-600'}`}
+                    >
+                      {renderBool(questionario.cienteCustos)}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                    <TermItem
+                      label="Compromisso de Longo Prazo"
+                      value={questionario.termoCompromissoLongoPrazo}
+                    />
+                    <TermItem
+                      label="Saúde e Bem-Estar"
+                      value={questionario.termoSaudeBemEstar}
+                    />
+                    <TermItem
+                      label="Paciência na Adaptação"
+                      value={questionario.termoPacienciaAdaptacao}
+                    />
+                    <TermItem
+                      label="Concordância com Vistoria"
+                      value={questionario.termoVistoria}
+                    />
+                    <TermItem
+                      label="Não Abandono (Devolução)"
+                      value={questionario.termoDevolucaoNaoAbandono}
+                    />
+                    <TermItem
+                      label="Legislação Posse Responsável"
+                      value={questionario.termoLegislacaoPosseResponsavel}
+                    />
+                  </div>
+                </div>
+              </>
             ) : (
               <p className="text-gray-500 italic">
                 Usuário não respondeu o questionário.
@@ -292,64 +560,66 @@ const AdoptionDetailsPage = () => {
           </div>
         </Panel>
 
-        <Panel title={'Ações'}>
-          <div className="mb-6">
-            <label
-              htmlFor="newStatus"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Alterar Status
-            </label>
-            <select
-              id="newStatus"
-              disabled={!!request.concluidoEm || isSaving}
-              name="newStatus"
-              value={newStatus}
-              onChange={(e) => setNewStatus(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
-            >
-              <option value="PENDENTE">PENDENTE</option>
-              <option value="EM_ANALISE">EM ANÁLISE</option>
-              <option value="APROVADO">APROVADO</option>
-              <option value="RECUSADO">RECUSADO</option>
-              <option value="FINALIZADO">FINALIZADO</option>
-            </select>
-          </div>
+        <div className="print:hidden">
+          <Panel title={'Ações Administrativas'}>
+            <div className="mb-6">
+              <label
+                htmlFor="newStatus"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Alterar Status
+              </label>
+              <select
+                id="newStatus"
+                disabled={!!request.concluidoEm || isSaving}
+                name="newStatus"
+                value={newStatus}
+                onChange={(e) => setNewStatus(e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
+              >
+                <option value="PENDENTE">PENDENTE</option>
+                <option value="EM_ANALISE">EM ANÁLISE</option>
+                <option value="APROVADO">APROVADO</option>
+                <option value="RECUSADO">RECUSADO</option>
+                <option value="FINALIZADO">FINALIZADO</option>
+              </select>
+            </div>
 
-          <div className="mb-6">
-            <label
-              htmlFor="adminNotes"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Observações do Administrador:
-            </label>
-            <textarea
-              id="adminNotes"
-              name="adminNotes"
-              rows="4"
-              value={adminNotes}
-              disabled={isSaving}
-              onChange={(e) => setAdminNotes(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
-              placeholder="Adicione notas sobre a análise ou decisão..."
-            ></textarea>
-          </div>
+            <div className="mb-6">
+              <label
+                htmlFor="adminNotes"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Observações do Administrador:
+              </label>
+              <textarea
+                id="adminNotes"
+                name="adminNotes"
+                rows="4"
+                value={adminNotes}
+                disabled={isSaving}
+                onChange={(e) => setAdminNotes(e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
+                placeholder="Adicione notas sobre a análise ou decisão..."
+              ></textarea>
+            </div>
 
-          <div className="flex flex-col space-y-3">
-            <Button
-              onClick={handleStatusChange}
-              disabled={isSaving}
-              loading={isSaving}
-              text={isSaving ? 'Salvando...' : 'Salvar Alterações'}
-              confirm
-            />
-            <Button
-              onClick={() => navigate(-1)}
-              disabled={isSaving}
-              text="Voltar"
-            />
-          </div>
-        </Panel>
+            <div className="flex flex-col space-y-3">
+              <Button
+                onClick={handleStatusChange}
+                disabled={isSaving}
+                loading={isSaving}
+                text={isSaving ? 'Salvando...' : 'Salvar Alterações'}
+                confirm
+              />
+              <Button
+                onClick={() => navigate(-1)}
+                disabled={isSaving}
+                text="Voltar"
+              />
+            </div>
+          </Panel>
+        </div>
       </div>
     </div>
   );
