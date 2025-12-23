@@ -21,6 +21,7 @@ const createParamsFromFilters = (filters) => {
     species: filters.species,
     castrado: filters.castrado,
     vacinado: filters.vacinado,
+    microchip: filters.microchip,
   };
 
   Object.keys(params).forEach(
@@ -47,6 +48,7 @@ const getFiltersFromParams = (searchParams) => {
     species: searchParams.get('species') || '',
     castrado: searchParams.get('castrado') || '',
     vacinado: searchParams.get('vacinado') || '',
+    microchip: searchParams.get('microchip') || '',
   };
 };
 
@@ -140,6 +142,7 @@ const Home = () => {
       species: '',
       castrado: '',
       vacinado: '',
+      microchip: '',
     };
     setTempFilters(defaultFilters);
     setSearchParams({});
@@ -177,6 +180,7 @@ const Home = () => {
           especie: searchParams.get('species') || null,
           castrado: searchParams.get('castrado') || null,
           vacinado: searchParams.get('vacinado') || null,
+          microchip: searchParams.get('microchip') || null,
         };
 
         Object.keys(apiParams).forEach(
@@ -245,7 +249,7 @@ const Home = () => {
             />
           </form>
 
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 pb-4">
             <div className="flex justify-end pb-4">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}

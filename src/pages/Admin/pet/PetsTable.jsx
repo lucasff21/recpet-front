@@ -37,6 +37,8 @@ const PetsTable = () => {
   const urlCastrado = searchParams.get('castrado') || '';
   const urlVacinado = searchParams.get('vacinado') || '';
   const urlVermifugado = searchParams.get('vermifugado') || '';
+  const urlMicrochip = searchParams.get('microchip') || '';
+  const urlRg = searchParams.get('rg') || '';
 
   const [filters, setFilters] = useState({
     nome: urlNome,
@@ -51,6 +53,8 @@ const PetsTable = () => {
     castrado: urlCastrado,
     vacinado: urlVacinado,
     vermifugado: urlVermifugado,
+    microchip: urlMicrochip,
+    rg: urlRg,
   });
 
   const [localFilters, setLocalFilters] = useState({
@@ -65,6 +69,8 @@ const PetsTable = () => {
     castrado: urlCastrado,
     vacinado: urlVacinado,
     vermifugado: urlVermifugado,
+    microchip: urlMicrochip,
+    rg: urlRg,
   });
 
   const [caracteristicasOptions, setCaracteristicasOptions] = useState([]);
@@ -101,6 +107,8 @@ const PetsTable = () => {
       castrado: currentFilters.castrado,
       vacinado: currentFilters.vacinado,
       vermifugado: currentFilters.vermifugado,
+      microchip: currentFilters.microchip,
+      rg: currentFilters.rg,
     };
 
     Object.keys(apiParams).forEach((key) => {
@@ -139,6 +147,8 @@ const PetsTable = () => {
   useEffect(() => {
     const paramsToSet = {};
     if (filters.nome) paramsToSet.nome = filters.nome;
+    if (filters.microchip) paramsToSet.microchip = filters.microchip;
+    if (filters.rg) paramsToSet.rg = filters.rg;
     if (filters.sexo) paramsToSet.sexo = filters.sexo;
     if (filters.porte) paramsToSet.porte = filters.porte;
     if (filters.tipo) paramsToSet.tipo = filters.tipo;
@@ -215,6 +225,8 @@ const PetsTable = () => {
       castrado: '',
       vacinado: '',
       vermifugado: '',
+      microchip: '',
+      rg: '',
     };
     setLocalFilters(emptyFilters);
     setFilters(emptyFilters);
@@ -270,6 +282,37 @@ const PetsTable = () => {
               />
             </div>
 
+            <div>
+              <label htmlFor="microchip" className={labelStyle}>
+                Microchip
+              </label>
+              <input
+                type="text"
+                placeholder="Buscar pelo microchip..."
+                id="microchip"
+                name="microchip"
+                value={localFilters.microchip}
+                onChange={handleFilterChange}
+                onKeyDown={handleSearchKeyDown}
+                className={`${inputStyle} w-full`}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="rg" className={labelStyle}>
+                RG
+              </label>
+              <input
+                type="text"
+                placeholder="Buscar pelo RG..."
+                id="rg"
+                name="rg"
+                value={localFilters.rg}
+                onChange={handleFilterChange}
+                onKeyDown={handleSearchKeyDown}
+                className={`${inputStyle} w-full`}
+              />
+            </div>
 
             <div>
               <label htmlFor="tipo" className={labelStyle}>
