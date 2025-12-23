@@ -79,6 +79,22 @@ const FilterSidebar = ({
           </FilterAccordion>
 
           <FilterAccordion
+            title="MICROCHIP"
+            isOpen={accordionOpen.microchip}
+            toggleOpen={() => toggleAccordion('microchip')}
+          >
+            <input
+              type="text"
+              id="microchip"
+              name="microchip"
+              value={tempFilters.microchip}
+              onChange={handleTempFilterChange}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 mt-2"
+              placeholder="Buscar por microchip..."
+            />
+          </FilterAccordion>
+
+          <FilterAccordion
             title="ESPÉCIE"
             isOpen={accordionOpen.species}
             toggleOpen={() => toggleAccordion('species')}

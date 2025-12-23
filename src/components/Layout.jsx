@@ -9,7 +9,7 @@ const Layout = ({ children, showNavBar = true, showFooter = true }) => {
       {showNavBar && <Header />}
 
       <main
-        className={`font-sans flex-grow align-self-center justify-items-center w-screen`}
+        className={`font-sans flex-grow align-self-center justify-items-center w-full`}
       >
         {children}
       </main>
