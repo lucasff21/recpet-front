@@ -218,7 +218,6 @@ const AdoptionDetailsPage = () => {
               />
             </div>
             <div className="flex-1 w-full">
-              {/* Cabeçalho do Pet */}
               <div className="flex flex-col md:flex-row justify-between items-start mb-4 border-b pb-2">
                 <Link
                   to={`/admin/pets/${animal.id}`}
@@ -270,7 +269,7 @@ const AdoptionDetailsPage = () => {
                     Raça
                   </span>
                   <div className="flex items-center gap-2 font-medium text-gray-800">
-                    {animal.raca || '—'}
+                    {animal.raca || 'SRD'}
                   </div>
                 </div>
               </div>
@@ -280,8 +279,8 @@ const AdoptionDetailsPage = () => {
                 <FaSyringe className="text-gray-400" /> Dados Clínicos
               </h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-4">
-                <div className="bg-blue-50 p-2 rounded border border-blue-100">
-                  <span className="block text-xs font-bold text-blue-800 uppercase mb-1">
+                <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                  <span className="block text-xs font-bold text-gray-500 uppercase mb-1">
                     Castrado?
                   </span>
                   <span
@@ -318,30 +317,29 @@ const AdoptionDetailsPage = () => {
                 </div>
               </div>
 
-              {/* Observações Médicas e Privadas */}
-              {(animal.observacoesMedicas || animal.observacoesPrivadas) && (
+              {animal.observacoesMedicas && (
                 <div className="grid grid-cols-1 gap-3 mt-4">
-                  {animal.observacoesMedicas && (
-                    <div className="p-3 bg-gray-50 rounded border border-gray-200">
-                      <span className="flex items-center gap-2 text-xs font-bold text-gray-600 uppercase mb-1">
-                        <FaNotesMedical /> Observações Médicas
-                      </span>
-                      <p className="text-sm text-gray-800 whitespace-pre-wrap">
-                        {animal.observacoesMedicas}
-                      </p>
-                    </div>
-                  )}
+                  <div className="p-3 bg-gray-50 rounded border border-gray-200">
+                    <span className="flex items-center gap-2 text-xs font-bold text-gray-600 uppercase mb-1">
+                      <FaNotesMedical /> Observações Médicas
+                    </span>
+                    <p className="text-sm text-gray-800 whitespace-pre-wrap">
+                      {animal.observacoesMedicas}
+                    </p>
+                  </div>
+                </div>
+              )}
 
-                  {animal.observacoesPrivadas && (
-                    <div className="p-3 bg-yellow-50 rounded border border-yellow-200">
-                      <span className="flex items-center gap-2 text-xs font-bold text-yellow-700 uppercase mb-1">
-                        <FaLock /> Observações Privadas (Interno)
-                      </span>
-                      <p className="text-sm text-gray-800 whitespace-pre-wrap">
-                        {animal.observacoesPrivadas}
-                      </p>
-                    </div>
-                  )}
+              {animal.observacoesPrivadas && (
+                <div className="grid grid-cols-1 gap-3 mt-4">
+                  <div className="p-3 bg-gray-50 rounded border border-gray-200">
+                    <span className="flex items-center gap-2 text-xs font-bold text-gray-600 uppercase mb-1">
+                      <FaLock /> Observações Internas
+                    </span>
+                    <p className="text-sm text-gray-800 whitespace-pre-wrap">
+                      {animal.observacoesPrivadas}
+                    </p>
+                  </div>
                 </div>
               )}
 
@@ -391,8 +389,8 @@ const AdoptionDetailsPage = () => {
                 {usuario.email}
               </a>
             </div>
-            <div className="md:text-right">
-              <p className="text-sm font-semibold text-gray-500 flex items-center md:justify-end gap-2 mb-1">
+            <div>
+              <p className="text-sm font-semibold text-gray-500 flex items-center gap-2 mb-1">
                 <FaPhone /> Telefone
               </p>
               {usuario.telefone ? (
@@ -432,21 +430,21 @@ const AdoptionDetailsPage = () => {
             {questionario ? (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                  <div className="p-2 border-l-4 border-blue-200 bg-blue-50">
-                    <div className="font-bold text-blue-800 text-xs uppercase mb-1">
+                  <div className="p-2 border-l-4 border-gray-200 bg-gray-50">
+                    <div className="font-bold text-gray-500 text-xs uppercase mb-1">
                       Moradia
                     </div>
-                    <div className="text-base text-gray-900">
+                    <div className="text-base text-gray-900 font-medium">
                       {moradiaLabels[questionario.moradia] ||
                         questionario.moradia}
                     </div>
                   </div>
 
-                  <div className="p-2 border-l-4 border-blue-200 bg-blue-50">
-                    <div className="font-bold text-blue-800 text-xs uppercase mb-1">
+                  <div className="p-2 border-l-4 border-gray-200 bg-gray-50">
+                    <div className="font-bold text-gray-500 text-xs uppercase mb-1">
                       Crianças em casa
                     </div>
-                    <div className="text-base text-gray-900">
+                    <div className="text-base text-gray-900 font-medium">
                       {criancasLabels[questionario.temCriancas] ||
                         questionario.temCriancas}
                     </div>

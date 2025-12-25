@@ -78,7 +78,7 @@ export const basePetSchema = z.object({
     .max(20, { message: 'Microchip deve ter no máximo 20 caracteres' })
     .optional()
     .nullable(),
-  privateInfo: z
+  observacoesPrivadas: z
     .string()
     .max(2000, {
       message: 'Informações privadas deve ter no máximo 2000 caracteres',

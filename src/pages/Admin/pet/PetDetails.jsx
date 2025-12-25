@@ -193,15 +193,17 @@ const PetDetails = () => {
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-500">Raça</p>
-                <p className="text-gray-800">{pet.raca || '—'}</p>
+                <p className="text-gray-800">{pet.raca || 'SRD'}</p>
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-500">RG do Animal</p>
-             <p className="text-gray-800">{pet.rgAnimal || '—'}</p>
+                <p className="text-sm font-semibold text-gray-500">
+                  RG do Animal
+                </p>
+                <p className="text-gray-800">{pet.rgAnimal || '—'}</p>
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-500">Microchip</p>
-             <p className="text-gray-800">{pet.microchipId || '—'}</p>
+                <p className="text-gray-800">{pet.microchipId || '—'}</p>
               </div>
             </div>
           </Panel>
@@ -249,12 +251,12 @@ const PetDetails = () => {
                 <p className="text-gray-800 pt-3">{pet.observacoesMedicas}</p>
               </div>
             )}
-            {pet.privateInfo && (
+            {pet.observacoesPrivadas && (
               <div className="mt-6 border-t pt-4">
                 <h3 className="text-base font-semibold text-gray-700">
-                  Informações Privadas:
+                  Observações Internas:
                 </h3>
-                <p className="text-gray-800 pt-3">{pet.privateInfo}</p>
+                <p className="text-gray-800 pt-3">{pet.observacoesPrivadas}</p>
               </div>
             )}
           </Panel>
