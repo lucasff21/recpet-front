@@ -21,6 +21,7 @@ const createParamsFromFilters = (filters) => {
     species: filters.species,
     castrado: filters.castrado,
     vacinado: filters.vacinado,
+    microchip: filters.microchip,
   };
 
   Object.keys(params).forEach(
@@ -47,6 +48,7 @@ const getFiltersFromParams = (searchParams) => {
     species: searchParams.get('species') || '',
     castrado: searchParams.get('castrado') || '',
     vacinado: searchParams.get('vacinado') || '',
+    microchip: searchParams.get('microchip') || '',
   };
 };
 
@@ -140,6 +142,7 @@ const Home = () => {
       species: '',
       castrado: '',
       vacinado: '',
+      microchip: '',
     };
     setTempFilters(defaultFilters);
     setSearchParams({});
@@ -177,6 +180,7 @@ const Home = () => {
           especie: searchParams.get('species') || null,
           castrado: searchParams.get('castrado') || null,
           vacinado: searchParams.get('vacinado') || null,
+          microchip: searchParams.get('microchip') || null,
         };
 
         Object.keys(apiParams).forEach(
@@ -212,7 +216,7 @@ const Home = () => {
 
   return (
     <Layout>
-      <div className="pt-[80px] px-4 max-w-7xl mx-auto w-full sm:px-6 md:pt-6">
+      <div className="pt-[80px] px-4 max-w-[1400px] mx-auto w-full sm:px-6 md:pt-6">
         <div className="bg-blue-50 p-6 rounded-lg mb-8 mx-auto max-w-full">
           <h2 className="text-xl font-bold text-gray-800 mb-4 text-center sm:text-2xl md:text-3xl">
             Animais à Espera de um Lar
@@ -224,7 +228,7 @@ const Home = () => {
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row lg:space-x-6">
+        <div className="flex flex-col lg:flex-row lg:gap-6">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -245,7 +249,7 @@ const Home = () => {
             />
           </form>
 
-          <div className="flex-1">
+          <div className="flex-1 min-w-0 pb-4">
             <div className="flex justify-end pb-4">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -286,7 +290,7 @@ const Home = () => {
               </p>
             ) : (
               <>
-                <div className="mb-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+                <div className="mb-10 grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 justify-items-center">
                   {filteredAnimals.map((animal) => (
                     <PetCard
                       key={animal.id}
