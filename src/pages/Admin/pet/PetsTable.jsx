@@ -269,7 +269,7 @@ const PetsTable = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="space-y-4">
                   <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                    Identificação & Básico
+                    Identificação & Saúde
                   </h3>
                   <div className="space-y-3">
                     <input
@@ -308,12 +308,38 @@ const PetsTable = () => {
                         </Badge>
                       </div>
                     </div>
+
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1.5 block">
+                        Status de Saúde
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge
+                          active={localFilters.castrado === 'true'}
+                          onClick={() => handleToggle('castrado', 'true')}
+                        >
+                          Castrado
+                        </Badge>
+                        <Badge
+                          active={localFilters.vacinado === 'true'}
+                          onClick={() => handleToggle('vacinado', 'true')}
+                        >
+                          Vacinado
+                        </Badge>
+                        <Badge
+                          active={localFilters.vermifugado === 'true'}
+                          onClick={() => handleToggle('vermifugado', 'true')}
+                        >
+                          Vermifugado
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                    Características Físicas
+                    Características Físicas & Comportamento
                   </h3>
 
                   <div>
@@ -366,39 +392,24 @@ const PetsTable = () => {
 
                   <div>
                     <label className="text-xs text-gray-500 mb-1 block">
-                      Raças
+                      Temperamento
                     </label>
-                    <div className="bg-white border border-gray-200 rounded-lg p-3 h-32 overflow-y-auto custom-scrollbar">
-                      {!localFilters.tipo ? (
-                        <p className="text-xs text-orange-500 italic">
-                          Selecione a Espécie primeiro
-                        </p>
-                      ) : (
-                        <div className="grid grid-cols-1 gap-1">
-                          {metadata.racas
-                            .filter((r) => r.especie === localFilters.tipo)
-                            .map((r) => (
-                              <label
-                                key={r.id}
-                                className="flex items-center gap-2 text-xs text-gray-600 hover:bg-gray-50 p-1 rounded cursor-pointer"
-                              >
-                                <input
-                                  type="checkbox"
-                                  checked={localFilters.racaId.includes(r.id)}
-                                  onChange={(e) =>
-                                    handleCheckboxChange(
-                                      'racaId',
-                                      r.id,
-                                      e.target.checked
-                                    )
-                                  }
-                                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                />
-                                {r.nome}
-                              </label>
-                            ))}
-                        </div>
-                      )}
+                    <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto custom-scrollbar">
+                      {metadata.caracteristicas.map((c) => (
+                        <Badge
+                          key={c.id}
+                          active={localFilters.caracteristicas.includes(c.id)}
+                          onClick={() =>
+                            handleCheckboxChange(
+                              'caracteristicas',
+                              c.id,
+                              !localFilters.caracteristicas.includes(c.id)
+                            )
+                          }
+                        >
+                          {c.nome}
+                        </Badge>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -406,27 +417,61 @@ const PetsTable = () => {
                 <div className="space-y-4 flex flex-col justify-between">
                   <div>
                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
-                      Saúde
+                      Aparência
                     </h3>
-                    <div className="flex flex-wrap gap-2">
-                      <Badge
-                        active={localFilters.castrado === 'true'}
-                        onClick={() => handleToggle('castrado', 'true')}
-                      >
-                        Castrado
-                      </Badge>
-                      <Badge
-                        active={localFilters.vacinado === 'true'}
-                        onClick={() => handleToggle('vacinado', 'true')}
-                      >
-                        Vacinado
-                      </Badge>
-                      <Badge
-                        active={localFilters.vermifugado === 'true'}
-                        onClick={() => handleToggle('vermifugado', 'true')}
-                      >
-                        Vermifugado
-                      </Badge>
+
+                    <div className="mb-4">
+                      <label className="text-xs text-gray-500 mb-1 block">
+                        Raças
+                      </label>
+                      <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto custom-scrollbar">
+                        {!localFilters.tipo ? (
+                          <p className="text-xs text-orange-500 italic w-full">
+                            Selecione a Espécie primeiro
+                          </p>
+                        ) : (
+                          metadata.racas
+                            .filter((r) => r.especie === localFilters.tipo)
+                            .map((r) => (
+                              <Badge
+                                key={r.id}
+                                active={localFilters.racaId.includes(r.id)}
+                                onClick={() =>
+                                  handleCheckboxChange(
+                                    'racaId',
+                                    r.id,
+                                    !localFilters.racaId.includes(r.id)
+                                  )
+                                }
+                              >
+                                {r.nome}
+                              </Badge>
+                            ))
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1 block">
+                        Cores
+                      </label>
+                      <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto custom-scrollbar">
+                        {metadata.cores.map((c) => (
+                          <Badge
+                            key={c.id}
+                            active={localFilters.corId.includes(c.id)}
+                            onClick={() =>
+                              handleCheckboxChange(
+                                'corId',
+                                c.id,
+                                !localFilters.corId.includes(c.id)
+                              )
+                            }
+                          >
+                            {c.nome}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
@@ -548,10 +593,10 @@ const PetsTable = () => {
                       </td>
 
                       <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => navigate(`/admin/pets/${pet.id}`)}
-                            className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
+                            className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
                             title="Ver Detalhes"
                           >
                             <span className="text-xs font-medium hidden sm:inline">
@@ -562,7 +607,7 @@ const PetsTable = () => {
                             onClick={() =>
                               navigate(`/admin/pets/${pet.id}/editar`)
                             }
-                            className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors flex items-center gap-1"
+                            className="p-1.5 text-orange-600 hover:text-orange-800 hover:bg-orange-50 rounded-lg transition-colors flex items-center gap-1"
                             title="Editar"
                           >
                             <span className="text-xs font-medium hidden sm:inline">
