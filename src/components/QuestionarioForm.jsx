@@ -69,9 +69,7 @@ const QuestionarioForm = ({ onSuccess, onClose, showTitle = true }) => {
         <div className="bg-white p-6">
           {showTitle && (
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              {isEditing
-                ? 'Editar Perfil de Adotante'
-                : 'Criar Perfil de Adotante'}
+              {isEditing ? 'Editar Questionário' : 'Preencher Questionário'}
             </h2>
           )}
           <p className="text-gray-600 mb-6">

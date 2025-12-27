@@ -6,13 +6,13 @@ import ModalAdoptionDetails from '../../../components/ModalAdoptionDetails';
 import Pagination from '../../../components/Pagination';
 import AdoptionTable from '../../../components/AdoptionTable';
 import { findUserById, getAdocoesByUserId } from '../../../services/ApiAdmin';
-import logo from '../../../assets/logo-pet.png';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import {
   FaEnvelope,
   FaPhone,
   FaCalendarAlt,
-  FaAddressBook,
+  FaIdCard,
+  FaMapMarkerAlt,
 } from 'react-icons/fa';
 import Breadcrumb from '../../../components/Breadcrumb';
 import { calculateHumanAge } from '../../../utils/usuario';
@@ -124,40 +124,57 @@ const UserDetails = () => {
       <>
         <div className="space-y-6">
           <Panel>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <img
-                  className="h-20 w-20 rounded-full object-cover bg-gray-200"
-                  src={logo}
-                  alt={user?.nome || 'Usuário'}
-                />
-                <div className="flex flex-col justify-around gap-2">
-                  <h1 className="text-2xl font-bold text-gray-800">
-                    {user?.nome}
-                  </h1>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
-                    {user?.tipoUsuario || 'USUARIO'}
-                  </span>
-                </div>
-              </div>
+            <div className="flex items-center justify-between w-full">
+              <h1 className="text-3xl font-bold text-gray-800">{user?.nome}</h1>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800">
+                {user?.tipoUsuario || 'USUARIO'}
+              </span>
             </div>
           </Panel>
 
-          <Panel title="Informações de Contato">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6">
+          <Panel title="Dados Pessoais e Contato">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-6">
               <div>
-                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2 mb-1">
+                  <FaIdCard /> CPF
+                </p>
+                <p className="text-gray-800 font-medium font-mono">
+                  {user.cpf || 'Não informado'}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2 mb-1">
+                  <FaCalendarAlt /> Idade
+                </p>
+                <p className="text-gray-800">
+                  {user.dataNascimento
+                    ? `${calculateHumanAge(user.dataNascimento)} anos`
+                    : 'Não informada'}
+                  {user.dataNascimento && (
+                    <span className="text-xs text-gray-500 block">
+                      {new Date(
+                        user.dataNascimento + 'T00:00:00'
+                      ).toLocaleDateString('pt-BR')}
+                    </span>
+                  )}
+                </p>
+              </div>
+
+              <div className="lg:col-span-2">
+                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2 mb-1">
                   <FaEnvelope /> E-mail
                 </p>
                 <a
                   href={`mailto:${user.email}`}
-                  className="text-gray-800 hover:text-blue-600 hover:underline"
+                  className="text-gray-800 hover:text-blue-600 hover:underline break-all"
                 >
                   {user.email}
                 </a>
               </div>
+
               <div>
-                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2 mb-1">
                   <FaPhone /> Telefone
                 </p>
                 <p className="text-gray-800">
@@ -175,31 +192,34 @@ const UserDetails = () => {
                   )}
                 </p>
               </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
-                  <FaCalendarAlt /> Idade
+
+              <div className="md:col-span-2 lg:col-span-2">
+                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2 mb-1">
+                  <FaMapMarkerAlt /> Endereço
                 </p>
-                <p className="text-gray-800">
-                  {user.dataNascimento
-                    ? calculateHumanAge(user.dataNascimento)
-                    : 'Não informada'}{' '}
-                  (
-                  {user.dataNascimento
-                    ? new Date(
-                        user.dataNascimento + 'T00:00:00'
-                      ).toLocaleDateString('pt-BR')
-                    : 'Não informada'}
-                  )
+                <p className="text-gray-800 text-sm">
+                  {user.endereco ? (
+                    <>
+                      {user.endereco.logradouro}, {user.endereco.numero}
+                      {user.endereco.complemento &&
+                        ` - ${user.endereco.complemento}`}
+                      , {user.endereco.bairro}, {user.endereco.localidade} -{' '}
+                      {user.endereco.uf}
+                    </>
+                  ) : (
+                    <span className="italic text-gray-500">
+                      Endereço não cadastrado
+                    </span>
+                  )}
                 </p>
               </div>
+
               <div>
-                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2">
-                  <FaAddressBook /> Localidade
+                <p className="text-sm font-semibold text-gray-500 flex items-center gap-2 mb-1">
+                  <FaMapMarkerAlt /> CEP
                 </p>
-                <p className="text-gray-800">
-                  {user.endereco?.localidade && user.endereco?.uf
-                    ? `${user.endereco.localidade}/${user.endereco.uf}`
-                    : 'Não informado'}
+                <p className="text-gray-800 text-sm">
+                  {user.endereco?.cep || 'Não informado'}
                 </p>
               </div>
             </div>
