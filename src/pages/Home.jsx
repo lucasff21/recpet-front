@@ -156,46 +156,59 @@ const Home = () => {
 
   return (
     <Layout>
-      <div className="pt-[80px] px-4 max-w-[1400px] mx-auto w-full flex flex-col lg:flex-row lg:gap-6">
-        <FilterSidebar
-          isSidebarOpen={isSidebarOpen}
-          setIsSidebarOpen={setIsSidebarOpen}
-          tempFilters={tempFilters}
-          handleTempFilterChange={handleTempFilterChange}
-          handleMultiSelectChange={handleMultiSelectChange}
-          handleBooleanChange={handleBooleanChange}
-          applyFilters={applyFilters}
-          clearFilters={clearFilters}
-          metadata={metadata}
-        />
-        <div className="flex-1">
-          {loading ? (
-            <AiOutlineLoading3Quarters className="animate-spin mx-auto mt-20" />
-          ) : filteredAnimals.length === 0 ? (
-            <p className="text-center mt-20 text-gray-600">
-              Nenhum animal encontrado com os filtros selecionados.
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredAnimals.map((animal) => (
-                <PetCard
-                  key={animal.id}
-                  pet={animal}
-                  openPagePet={(id) => navigate(`/pets/${id}`)}
-                  isPending={pendingAnimalIds.has(animal.id)}
-                />
-              ))}
-            </div>
-          )}
-          <Pagination
-            currentPage={pageData.number + 1}
-            totalPageCount={pageData.totalPages}
-            onPageChange={(p) =>
-              setSearchParams(
-                createParamsFromFilters({ ...tempFilters, page: p - 1 })
-              )
-            }
+      <div className="pt-[80px] sm:pt-[40px] px-4 max-w-[1400px] mx-auto w-full">
+        <div className="bg-blue-50 p-6 rounded-lg mb-8 mx-auto max-w-full">
+          <h2 className="text-xl font-bold text-gray-800 mb-4 text-center sm:text-2xl md:text-3xl">
+            Animais à Espera de um Lar
+          </h2>
+          <p className="text-center text-gray-600 m-0 text-sm sm:text-base">
+            Aqui você encontra todos os nossos animais disponíveis para adoção.
+            Cada um com sua história, seu jeitinho único e esperando a chance de
+            fazer parte da sua vida.
+          </p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row lg:gap-6">
+          <FilterSidebar
+            isSidebarOpen={isSidebarOpen}
+            setIsSidebarOpen={setIsSidebarOpen}
+            tempFilters={tempFilters}
+            handleTempFilterChange={handleTempFilterChange}
+            handleMultiSelectChange={handleMultiSelectChange}
+            handleBooleanChange={handleBooleanChange}
+            applyFilters={applyFilters}
+            clearFilters={clearFilters}
+            metadata={metadata}
           />
+          <div className="flex-1">
+            {loading ? (
+              <AiOutlineLoading3Quarters className="animate-spin mx-auto mt-20" />
+            ) : filteredAnimals.length === 0 ? (
+              <p className="text-center mt-20 text-gray-600">
+                Nenhum animal encontrado com os filtros selecionados.
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filteredAnimals.map((animal) => (
+                  <PetCard
+                    key={animal.id}
+                    pet={animal}
+                    openPagePet={(id) => navigate(`/pets/${id}`)}
+                    isPending={pendingAnimalIds.has(animal.id)}
+                  />
+                ))}
+              </div>
+            )}
+            <Pagination
+              currentPage={pageData.number + 1}
+              totalPageCount={pageData.totalPages}
+              onPageChange={(p) =>
+                setSearchParams(
+                  createParamsFromFilters({ ...tempFilters, page: p - 1 })
+                )
+              }
+            />
+          </div>
         </div>
       </div>
     </Layout>
