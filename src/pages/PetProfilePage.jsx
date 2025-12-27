@@ -20,7 +20,6 @@ const predefinedColors = [
   'bg-purple-100 text-purple-800',
   'bg-indigo-100 text-indigo-800',
   'bg-amber-100 text-amber-800',
-  'bg-red-100 text-red-800',
   'bg-pink-100 text-pink-800',
   'bg-teal-100 text-teal-800',
   'bg-lime-100 text-lime-800',
@@ -252,6 +251,12 @@ const PetProfilePage = () => {
                         <p className="text-sm text-gray-500 m-0">Pelagem</p>
                         <p className="font-medium text-base md:text-lg">
                           {selectedPet.pelagem || 'Não informada'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 m-0">Cor</p>
+                        <p className="font-medium text-base md:text-lg">
+                          {selectedPet.cor || '—'}
                         </p>
                       </div>
                       <div>

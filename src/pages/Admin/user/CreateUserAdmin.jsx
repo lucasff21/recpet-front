@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import { useCreateAdminUserForm } from '../../../hooks/useCreateAdminUserForm';
 import InputField from '../../../components/FormFields/InputField';
 import SelectField from '../../../components/FormFields/SelectField';
+import Panel from '../../../components/Panel';
 
 const CreateUserAdmin = () => {
   const {
@@ -15,10 +16,10 @@ const CreateUserAdmin = () => {
   } = useCreateAdminUserForm();
 
   return (
-    <div>
+    <Panel>
       <header className="text-center">
         <h1 className="text-3xl font-extrabold text-gray-900">
-          Crie um novo usuário
+          Crie um usuário
         </h1>
       </header>
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
@@ -70,7 +71,7 @@ const CreateUserAdmin = () => {
         </div>
       </form>
       <ToastContainer />
-    </div>
+    </Panel>
   );
 };
 

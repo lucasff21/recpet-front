@@ -63,11 +63,8 @@ export const basePetSchema = z.object({
     .max(2000, { message: 'Observações deve ter no máximo 2000 caracteres' })
     .optional()
     .nullable(),
-  raca: z
-    .string()
-    .max(20, { message: 'Raça deve ter no máximo 20 caracteres' })
-    .optional()
-    .nullable(),
+  racaId: z.string().optional().nullable(),
+  corId: z.string().optional().nullable(),
   rgAnimal: z
     .string()
     .max(20, { message: 'RG do animal deve ter no máximo 20 caracteres' })

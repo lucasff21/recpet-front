@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { showToast } from '../utils/toast';
-import { findAllAnimals, findAllCaracteristicas } from '../services/ApiAdocao';
+import { findAllAnimals, getFiltros } from '../services/ApiAdocao';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout';
 import PetCard from '../components/Cards/PetCard';
@@ -12,311 +12,193 @@ import { useAdoptions } from '../contexts/AdoptionContext';
 
 const createParamsFromFilters = (filters) => {
   const params = {
-    name: filters.name,
-    size: filters.size,
-    ageGroup: filters.ageGroup,
-    gender: filters.gender,
-    temperament: filters.temperament.join(','),
-    page: filters.page.toString(),
-    species: filters.species,
+    nome: filters.name,
+    porte: filters.size.join(','),
+    faixaEtaria: filters.ageGroup.join(','),
+    sexo: filters.gender.join(','),
+    caracteristicasIds: filters.temperament.join(','),
+    tipo: filters.species,
     castrado: filters.castrado,
     vacinado: filters.vacinado,
     microchip: filters.microchip,
+    racaId: filters.racaId.join(','),
+    corId: filters.corId.join(','),
+    page: filters.page.toString(),
   };
 
-  Object.keys(params).forEach(
-    (key) => (params[key] === '' || params[key] == null) && delete params[key]
-  );
-
-  if (params.page === '0') {
-    delete params.page;
-  }
-
+  Object.keys(params).forEach((key) => !params[key] && delete params[key]);
+  if (params.page === '0') delete params.page;
   return params;
 };
 
-const getFiltersFromParams = (searchParams) => {
-  return {
-    name: searchParams.get('name') || '',
-    size: searchParams.get('size') || '',
-    ageGroup: searchParams.get('ageGroup') || '',
-    gender: searchParams.get('gender') || '',
-    temperament: searchParams.get('temperament')
-      ? searchParams.get('temperament').split(',').map(Number)
-      : [],
-    page: searchParams.get('page') ? Number(searchParams.get('page')) : 0,
-    species: searchParams.get('species') || '',
-    castrado: searchParams.get('castrado') || '',
-    vacinado: searchParams.get('vacinado') || '',
-    microchip: searchParams.get('microchip') || '',
-  };
-};
+const getFiltersFromParams = (searchParams) => ({
+  name: searchParams.get('nome') || '',
+  size: searchParams.get('porte') ? searchParams.get('porte').split(',') : [],
+  ageGroup: searchParams.get('faixaEtaria')
+    ? searchParams.get('faixaEtaria').split(',')
+    : [],
+  gender: searchParams.get('sexo') ? searchParams.get('sexo').split(',') : [],
+  temperament: searchParams.get('caracteristicasIds')
+    ? searchParams.get('caracteristicasIds').split(',').map(Number)
+    : [],
+  species: searchParams.get('tipo') || '',
+  castrado: searchParams.get('castrado') || '',
+  vacinado: searchParams.get('vacinado') || '',
+  microchip: searchParams.get('microchip') || '',
+  racaId: searchParams.get('racaId')
+    ? searchParams.get('racaId').split(',').map(Number)
+    : [],
+  corId: searchParams.get('corId')
+    ? searchParams.get('corId').split(',').map(Number)
+    : [],
+  page: Number(searchParams.get('page')) || 0,
+});
 
 const Home = () => {
   const [filteredAnimals, setFilteredAnimals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [metadata, setMetadata] = useState({
+    caracteristicas: [],
+    racas: [],
+    cores: [],
+  });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [pageData, setPageData] = useState({ totalPages: 0, number: 0 });
   const navigate = useNavigate();
   const { pendingAnimalIds } = useAdoptions();
-
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const [pageData, setPageData] = useState({
-    totalPages: 0,
-    number: 0,
-  });
-
-  const [allTemperaments, setAllTemperaments] = useState([]);
-  const [temperamentsLoading, setTemperamentsLoading] = useState(true);
-  const [temperamentsError, setTemperamentsError] = useState(null);
 
   const [tempFilters, setTempFilters] = useState(() =>
     getFiltersFromParams(searchParams)
   );
 
   useEffect(() => {
-    const fetchTemperaments = async () => {
-      try {
-        setTemperamentsLoading(true);
-        const { data } = await findAllCaracteristicas();
-        setAllTemperaments(data);
-        setTemperamentsError(null);
-      } catch (err) {
-        setTemperamentsError('Não foi possível carregar as opções de filtro.');
-        showToast('Erro ao carregar filtros', 'error');
-      } finally {
-        setTemperamentsLoading(false);
-      }
-    };
-    fetchTemperaments();
+    getFiltros()
+      .then((res) => setMetadata(res.data))
+      .catch(() => showToast('Erro ao carregar filtros', 'error'));
   }, []);
 
   useEffect(() => {
     setTempFilters(getFiltersFromParams(searchParams));
   }, [searchParams]);
 
-  const openPageAnimal = useCallback(
-    (id) => {
-      navigate(`/pets/${id}`);
-    },
-    [navigate]
-  );
-
   const handleTempFilterChange = useCallback((e) => {
     const { name, value } = e.target;
     setTempFilters((prev) => ({ ...prev, [name]: value }));
   }, []);
 
-  const handleTemperamentChange = useCallback((temperamentId, isChecked) => {
+  const handleMultiSelectChange = useCallback((name, id, checked) => {
     setTempFilters((prev) => {
-      const currentTemperaments = prev.temperament;
-      if (isChecked) {
-        return {
-          ...prev,
-          temperament: [...currentTemperaments, temperamentId],
-        };
-      } else {
-        return {
-          ...prev,
-          temperament: currentTemperaments.filter((id) => id !== temperamentId),
-        };
-      }
+      const current = prev[name];
+      const next = checked
+        ? [...current, id]
+        : current.filter((item) => item !== id);
+      return { ...prev, [name]: next };
     });
   }, []);
 
-  const applyFilters = useCallback(() => {
-    const newFiltersWithPageReset = { ...tempFilters, page: 0 };
-    setSearchParams(createParamsFromFilters(newFiltersWithPageReset));
-    setIsSidebarOpen(false);
-  }, [tempFilters, setSearchParams]);
+  const handleBooleanChange = useCallback((name, checked) => {
+    setTempFilters((prev) => ({
+      ...prev,
+      [name]: checked ? 'true' : '',
+    }));
+  }, []);
 
-  const clearFilters = useCallback(() => {
-    const defaultFilters = {
+  const applyFilters = () => {
+    setSearchParams(createParamsFromFilters({ ...tempFilters, page: 0 }));
+    setIsSidebarOpen(false);
+  };
+
+  const clearFilters = () => {
+    const empty = {
       name: '',
-      size: '',
-      ageGroup: '',
-      gender: '',
+      size: [],
+      ageGroup: [],
+      gender: [],
       temperament: [],
-      page: 0,
       species: '',
       castrado: '',
       vacinado: '',
       microchip: '',
+      racaId: [],
+      corId: [],
+      page: 0,
     };
-    setTempFilters(defaultFilters);
+    setTempFilters(empty);
     setSearchParams({});
-    setIsSidebarOpen(false);
-  }, [setSearchParams]);
-
-  const handlePageChange = useCallback(
-    (page) => {
-      const currentFilters = getFiltersFromParams(searchParams);
-      const newParams = createParamsFromFilters({
-        ...currentFilters,
-        page: page - 1,
-      });
-      setSearchParams(newParams);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    },
-    [searchParams, setSearchParams]
-  );
+  };
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        setError(null);
+        const params = Object.fromEntries([...searchParams]);
+        const response = await findAllAnimals(params);
 
-        const caracteristicasIds = searchParams.get('temperament') || null;
-
-        const apiParams = {
-          nome: searchParams.get('name') || null,
-          porte: searchParams.get('size') || null,
-          faixaEtaria: searchParams.get('ageGroup') || null,
-          sexo: searchParams.get('gender') || null,
-          caracteristicasIds: caracteristicasIds,
-          page: searchParams.get('page') || 0,
-          especie: searchParams.get('species') || null,
-          castrado: searchParams.get('castrado') || null,
-          vacinado: searchParams.get('vacinado') || null,
-          microchip: searchParams.get('microchip') || null,
-        };
-
-        Object.keys(apiParams).forEach(
-          (key) =>
-            (apiParams[key] === '' || apiParams[key] == null) &&
-            delete apiParams[key]
+        setFilteredAnimals(
+          response.data.content.map((a) => ({
+            ...a,
+            idade: a.dataNascimentoAproximada
+              ? calculateAge(a.dataNascimentoAproximada)
+              : 'Desconhecida',
+          }))
         );
-
-        const response = await findAllAnimals(apiParams);
-
-        const animals = response.data.content.map((animal) => ({
-          ...animal,
-          idade: animal.dataNascimentoAproximada
-            ? calculateAge(animal.dataNascimentoAproximada)
-            : 'Desconhecida',
-        }));
-
-        setFilteredAnimals(animals);
         setPageData({
           totalPages: response.data.totalPages,
           number: response.data.number,
         });
-      } catch (err) {
-        setError('Erro ao carregar a lista de animais. Tente novamente.');
-        showToast('Erro ao carregar animais', 'error');
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [searchParams]);
 
   return (
     <Layout>
-      <div className="pt-[80px] px-4 max-w-[1400px] mx-auto w-full sm:px-6 md:pt-6">
-        <div className="bg-blue-50 p-6 rounded-lg mb-8 mx-auto max-w-full">
-          <h2 className="text-xl font-bold text-gray-800 mb-4 text-center sm:text-2xl md:text-3xl">
-            Animais à Espera de um Lar
-          </h2>
-          <p className="text-center text-gray-600 m-0 text-sm sm:text-base">
-            Aqui você encontra todos os nossos animais disponíveis para adoção.
-            Cada um com sua história, seu jeitinho único e esperando a chance de
-            fazer parte da sua vida.
-          </p>
-        </div>
-
-        <div className="flex flex-col lg:flex-row lg:gap-6">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              applyFilters();
-            }}
-          >
-            <FilterSidebar
-              isSidebarOpen={isSidebarOpen}
-              setIsSidebarOpen={setIsSidebarOpen}
-              tempFilters={tempFilters}
-              handleTempFilterChange={handleTempFilterChange}
-              handleTemperamentChange={handleTemperamentChange}
-              applyFilters={applyFilters}
-              clearFilters={clearFilters}
-              allTemperaments={allTemperaments}
-              temperamentsLoading={temperamentsLoading}
-              temperamentsError={temperamentsError}
-            />
-          </form>
-
-          <div className="flex-1 min-w-0 pb-4">
-            <div className="flex justify-end pb-4">
-              <button
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition duration-200 flex items-center justify-center space-x-2 lg:hidden sm:w-auto"
-              >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM4 10a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zM4 16a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z"
-                  ></path>
-                </svg>
-                <span>Filtros</span>
-              </button>
+      <div className="pt-[80px] px-4 max-w-[1400px] mx-auto w-full flex flex-col lg:flex-row lg:gap-6">
+        <FilterSidebar
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+          tempFilters={tempFilters}
+          handleTempFilterChange={handleTempFilterChange}
+          handleMultiSelectChange={handleMultiSelectChange}
+          handleBooleanChange={handleBooleanChange}
+          applyFilters={applyFilters}
+          clearFilters={clearFilters}
+          metadata={metadata}
+        />
+        <div className="flex-1">
+          {loading ? (
+            <AiOutlineLoading3Quarters className="animate-spin mx-auto mt-20" />
+          ) : filteredAnimals.length === 0 ? (
+            <p className="text-center mt-20 text-gray-600">
+              Nenhum animal encontrado com os filtros selecionados.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredAnimals.map((animal) => (
+                <PetCard
+                  key={animal.id}
+                  pet={animal}
+                  openPagePet={(id) => navigate(`/pets/${id}`)}
+                  isPending={pendingAnimalIds.has(animal.id)}
+                />
+              ))}
             </div>
-            {loading ? (
-              <div className="flex justify-center items-center h-48">
-                <AiOutlineLoading3Quarters className="animate-spin w-8 h-8" />
-                <p className="ml-4 text-gray-600">Carregando animais...</p>
-              </div>
-            ) : error ? (
-              <div
-                className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                role="alert"
-              >
-                <span className="block sm:inline"> {error} </span>
-              </div>
-            ) : filteredAnimals.length === 0 ? (
-              <p className="text-center text-gray-600 text-lg py-10">
-                Nenhum animal encontrado com os filtros selecionados.
-              </p>
-            ) : (
-              <>
-                <div className="mb-10 grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 justify-items-center">
-                  {filteredAnimals.map((animal) => (
-                    <PetCard
-                      key={animal.id}
-                      pet={animal}
-                      openPagePet={openPageAnimal}
-                      isPending={pendingAnimalIds.has(animal.id)}
-                    />
-                  ))}
-                </div>
-
-                {pageData.totalPages > 1 && (
-                  <div className="flex justify-center mt-12">
-                    <Pagination
-                      currentPage={pageData.number + 1}
-                      totalPageCount={pageData.totalPages}
-                      onPageChange={handlePageChange}
-                    />
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+          )}
+          <Pagination
+            currentPage={pageData.number + 1}
+            totalPageCount={pageData.totalPages}
+            onPageChange={(p) =>
+              setSearchParams(
+                createParamsFromFilters({ ...tempFilters, page: p - 1 })
+              )
+            }
+          />
         </div>
       </div>
     </Layout>
   );
 };
-
 export default Home;

@@ -10,6 +10,10 @@ export const findAllCaracteristicas = () => {
   return axios.get(`${URL.api}/animais/caracteristicas`);
 };
 
+export const getFiltros = () => {
+  return axios.get(`${URL.api}/animais/filtros`);
+};
+
 export const createAnimal = (animal) => {
   return apiClient.post('/animais', animal, {
     headers: {
@@ -23,19 +27,9 @@ export const updateQuestionario = (data) => {
 };
 
 export const createQuestionario = async (questionarioData) => {
-  console.log(questionarioData)
+  console.log(questionarioData);
 
   return await apiClient.post('/questionario', questionarioData);
-};
-
-export const findByQuestionarioEmail = async (email, token) => {
-  try {
-    const response = await apiClient.get(`questionario/email/${email}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error: ', error?.response?.data || error.message);
-    return null;
-  }
 };
 
 export const findAnimalById = async (id) => {

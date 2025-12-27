@@ -1,664 +1,614 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { findAllAnimals } from '../../../services/ApiAdmin';
-import { findAllCaracteristicas } from '../../../services/ApiAdocao';
-import { showToast } from '../../../utils/toast';
-import logo from '../../../assets/logo-pet.png';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { GoSearch, GoPlus, GoChevronDown } from 'react-icons/go';
+import { FaFilter, FaDog, FaCat } from 'react-icons/fa6';
+import { findAllAnimals } from '../../../services/ApiAdmin';
+import { getFiltros } from '../../../services/ApiAdocao';
+import { showToast } from '../../../utils/toast';
 import { calculateAge } from '../../../utils/pet';
 import Pagination from '../../../components/Pagination';
-import { GoPlus } from 'react-icons/go';
-import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import Panel from '../../../components/Panel';
+import logo from '../../../assets/logo-pet.png';
 
 const PetsTable = () => {
   document.title = 'Pets | ADMIN';
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [pets, setPets] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+
   const [pageData, setPageData] = useState({
     totalPages: 0,
     number: 0,
     totalElements: 0,
   });
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const urlNome = searchParams.get('nome') || '';
-  const urlSexo = searchParams.get('sexo') || '';
-  const urlPorte = searchParams.get('porte') || '';
-  const urlTipo = searchParams.get('tipo') || '';
-  const urlFaixaEtaria = searchParams.get('faixaEtaria') || '';
-  const urlCaracteristicas = searchParams.getAll('caracteristicas');
-  const urlDisponivel = searchParams.get('disponivelParaAdocao') || '';
-  const urlPage = searchParams.get('page')
-    ? Number(searchParams.get('page')) - 1
-    : 0;
-
-  const urlCastrado = searchParams.get('castrado') || '';
-  const urlVacinado = searchParams.get('vacinado') || '';
-  const urlVermifugado = searchParams.get('vermifugado') || '';
-  const urlMicrochip = searchParams.get('microchip') || '';
-  const urlRg = searchParams.get('rg') || '';
-
-  const [filters, setFilters] = useState({
-    nome: urlNome,
-    sexo: urlSexo,
-    porte: urlPorte,
-    tipo: urlTipo,
-    faixaEtaria: urlFaixaEtaria,
-    caracteristicas: urlCaracteristicas,
-    disponivelParaAdocao: urlDisponivel,
-    page: urlPage,
-
-    castrado: urlCastrado,
-    vacinado: urlVacinado,
-    vermifugado: urlVermifugado,
-    microchip: urlMicrochip,
-    rg: urlRg,
+  const [metadata, setMetadata] = useState({
+    caracteristicas: [],
+    racas: [],
+    cores: [],
   });
 
   const [localFilters, setLocalFilters] = useState({
-    nome: urlNome,
-    sexo: urlSexo,
-    porte: urlPorte,
-    tipo: urlTipo,
-    faixaEtaria: urlFaixaEtaria,
-    caracteristicas: urlCaracteristicas,
-    disponivelParaAdocao: urlDisponivel,
-
-    castrado: urlCastrado,
-    vacinado: urlVacinado,
-    vermifugado: urlVermifugado,
-    microchip: urlMicrochip,
-    rg: urlRg,
+    nome: searchParams.get('nome') || '',
+    microchip: searchParams.get('microchip') || '',
+    rg: searchParams.get('rg') || '',
+    tipo: searchParams.get('tipo') || '',
+    sexo: searchParams.get('sexo') || '',
+    disponivelParaAdocao: searchParams.get('disponivelParaAdocao') || '',
+    castrado: searchParams.get('castrado') || '',
+    vacinado: searchParams.get('vacinado') || '',
+    vermifugado: searchParams.get('vermifugado') || '',
+    porte: searchParams.get('porte')
+      ? searchParams.get('porte').split(',')
+      : [],
+    faixaEtaria: searchParams.get('faixaEtaria')
+      ? searchParams.get('faixaEtaria').split(',')
+      : [],
+    caracteristicas: searchParams.get('caracteristicas')
+      ? searchParams.get('caracteristicas').split(',').map(Number)
+      : [],
+    racaId: searchParams.get('racaId')
+      ? searchParams.get('racaId').split(',').map(Number)
+      : [],
+    corId: searchParams.get('corId')
+      ? searchParams.get('corId').split(',').map(Number)
+      : [],
   });
 
-  const [caracteristicasOptions, setCaracteristicasOptions] = useState([]);
-  const [loadingCaracteristicas, setLoadingCaracteristicas] = useState(true);
-
   useEffect(() => {
-    const fetchCaracteristicas = async () => {
-      try {
-        setLoadingCaracteristicas(true);
-        const { data } = await findAllCaracteristicas();
-        setCaracteristicasOptions(data);
-      } catch (error) {
-        showToast('Erro ao carregar características.', 'error');
-      } finally {
-        setLoadingCaracteristicas(false);
-      }
-    };
-    fetchCaracteristicas();
+    getFiltros()
+      .then((res) => setMetadata(res.data))
+      .catch(() => showToast('Erro ao carregar metadados', 'error'));
   }, []);
 
-  const fetchPets = useCallback((currentFilters) => {
+  const fetchPets = useCallback(() => {
     setLoading(true);
-
-    const apiParams = {
-      page: currentFilters.page,
-      nome: currentFilters.nome,
-      sexo: currentFilters.sexo,
-      porte: currentFilters.porte,
-      tipo: currentFilters.tipo,
-      faixaEtaria: currentFilters.faixaEtaria,
-      caracteristicas: currentFilters.caracteristicas,
-      disponivelParaAdocao: currentFilters.disponivelParaAdocao,
-
-      castrado: currentFilters.castrado,
-      vacinado: currentFilters.vacinado,
-      vermifugado: currentFilters.vermifugado,
-      microchip: currentFilters.microchip,
-      rg: currentFilters.rg,
-    };
-
-    Object.keys(apiParams).forEach((key) => {
-      if (
-        (apiParams[key] === '' ||
-          apiParams[key] === null ||
-          (Array.isArray(apiParams[key]) && apiParams[key].length === 0)) &&
-        key !== 'page'
-      ) {
-        delete apiParams[key];
-      }
-    });
-
-    findAllAnimals(apiParams)
+    const params = Object.fromEntries([...searchParams]);
+    findAllAnimals(params)
       .then((response) => {
         const pageResponse = response.data;
-        const petsData = pageResponse.content.map((pet) => ({
-          ...pet,
-          idade: pet.dataNascimentoAproximada
-            ? calculateAge(pet.dataNascimentoAproximada)
-            : 'Desconhecido',
-        }));
-        setPets(petsData);
+        setPets(
+          pageResponse.content.map((p) => ({
+            ...p,
+            idade: p.dataNascimentoAproximada
+              ? calculateAge(p.dataNascimentoAproximada)
+              : 'Desconhecido',
+          }))
+        );
         setPageData({
           totalPages: pageResponse.totalPages,
           number: pageResponse.number,
           totalElements: pageResponse.totalElements,
         });
       })
-      .catch(() => {
-        showToast('Erro ao carregar pets', 'error');
-      })
+      .catch(() => showToast('Erro ao carregar pets', 'error'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
-    const paramsToSet = {};
-    if (filters.nome) paramsToSet.nome = filters.nome;
-    if (filters.microchip) paramsToSet.microchip = filters.microchip;
-    if (filters.rg) paramsToSet.rg = filters.rg;
-    if (filters.sexo) paramsToSet.sexo = filters.sexo;
-    if (filters.porte) paramsToSet.porte = filters.porte;
-    if (filters.tipo) paramsToSet.tipo = filters.tipo;
-    if (filters.faixaEtaria) paramsToSet.faixaEtaria = filters.faixaEtaria;
-    if (filters.disponivelParaAdocao)
-      paramsToSet.disponivelParaAdocao = filters.disponivelParaAdocao;
-    if (filters.page > 0) paramsToSet.page = filters.page + 1;
+    fetchPets();
+  }, [fetchPets]);
 
-    if (filters.castrado) paramsToSet.castrado = filters.castrado;
-    if (filters.vacinado) paramsToSet.vacinado = filters.vacinado;
-    if (filters.vermifugado) paramsToSet.vermifugado = filters.vermifugado;
-
-    if (filters.caracteristicas && filters.caracteristicas.length > 0) {
-      paramsToSet.caracteristicas = filters.caracteristicas;
-    }
-
-    setSearchParams(paramsToSet, { replace: true });
-    fetchPets(filters);
-  }, [filters, fetchPets, setSearchParams]);
-
-  const handlePageChange = useCallback((page) => {
-    setFilters((prev) => ({ ...prev, page: page - 1 }));
-  }, []);
-
-  const handleEdit = (id) => {
-    navigate(`/admin/pets/${id}/editar`);
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setLocalFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFilterChange = (event) => {
-    const { name, value } = event.target;
-    setLocalFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: value,
+  const handleCheckboxChange = (name, id, checked) => {
+    setLocalFilters((prev) => ({
+      ...prev,
+      [name]: checked
+        ? [...prev[name], id]
+        : prev[name].filter((item) => item !== id),
     }));
   };
 
-  const handleCaracteristicasChange = (event) => {
-    const { value, checked } = event.target;
-    setLocalFilters((prev) => {
-      const currentCaracteristicas = prev.caracteristicas || [];
-      if (checked) {
-        return {
-          ...prev,
-          caracteristicas: [...currentCaracteristicas, value],
-        };
-      } else {
-        return {
-          ...prev,
-          caracteristicas: currentCaracteristicas.filter((id) => id !== value),
-        };
-      }
-    });
+  const handleToggle = (name, value) => {
+    setLocalFilters((prev) => ({
+      ...prev,
+      [name]: prev[name] === value ? '' : value,
+    }));
   };
 
   const applyFilters = () => {
-    setFilters((prev) => ({
-      ...prev,
-      ...localFilters,
-      page: 0,
-    }));
-  };
-
-  const clearFilters = () => {
-    const emptyFilters = {
-      nome: '',
-      sexo: '',
-      porte: '',
-      tipo: '',
-      faixaEtaria: '',
-      caracteristicas: [],
-      disponivelParaAdocao: '',
-      page: 0,
-
-      castrado: '',
-      vacinado: '',
-      vermifugado: '',
-      microchip: '',
-      rg: '',
-    };
-    setLocalFilters(emptyFilters);
-    setFilters(emptyFilters);
+    const params = {};
+    Object.keys(localFilters).forEach((key) => {
+      if (Array.isArray(localFilters[key])) {
+        if (localFilters[key].length > 0)
+          params[key] = localFilters[key].join(',');
+      } else if (localFilters[key] !== '') {
+        params[key] = localFilters[key];
+      }
+    });
+    setSearchParams(params);
   };
 
   const handleSearchKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      applyFilters();
+    if (e.key === 'Enter') applyFilters();
+  };
+
+  const clearFilters = () => {
+    const empty = {
+      nome: '',
+      microchip: '',
+      rg: '',
+      tipo: '',
+      sexo: '',
+      disponivelParaAdocao: '',
+      castrado: '',
+      vacinado: '',
+      vermifugado: '',
+      porte: [],
+      faixaEtaria: [],
+      caracteristicas: [],
+      racaId: [],
+      corId: [],
+    };
+    setLocalFilters(empty);
+    setSearchParams({});
+  };
+
+  const getFaixaEtariaLabel = (key) => {
+    switch (key) {
+      case 'FILHOTE':
+        return 'Filhote (0-1 ano)';
+      case 'ADOLESCENTE':
+        return 'Adolescente (1-3 anos)';
+      case 'ADULTO':
+        return 'Adulto (3-8 anos)';
+      case 'IDOSO':
+        return 'Idoso (8+ anos)';
+      default:
+        return key;
     }
   };
 
-  const inputStyle =
-    'h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500';
-  const labelStyle = 'block text-sm font-medium text-gray-700 mb-1';
+  const Badge = ({ active, children, onClick }) => (
+    <button
+      onClick={onClick}
+      className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-all shadow-sm ${
+        active
+          ? 'bg-blue-600 text-white border-blue-600'
+          : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300 hover:text-blue-600'
+      }`}
+    >
+      {children}
+    </button>
+  );
 
   return (
-    <Panel>
-      <header className="text-center">
-        <h1 className="text-3xl font-bold text-gray-800">
-          Pets ({pageData.totalElements})
-        </h1>
-      </header>
-
-      <div className="py-4 border-b">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-gray-700">Filtros</h2>
-          <Link
-            to="../criar"
-            className="list-group-item list-group-item-action"
-          >
-            <button className="h-10 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
-              <GoPlus className="h-5 w-5" />
-              Adicionar PET
+    <Panel className="bg-transparent">
+      <div className="mx-auto pb-10">
+        <header className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Pets Registrados
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Total de {pageData.totalElements} animais encontrados
+            </p>
+          </div>
+          <Link to="../criar">
+            <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg shadow-sm transition-all font-medium text-sm w-full md:w-auto justify-center">
+              <GoPlus size={18} />
+              Adicionar Novo Pet
             </button>
           </Link>
-        </div>
+        </header>
 
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div>
-              <label htmlFor="nome" className={labelStyle}>
-                Nome
-              </label>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6 overflow-visible relative z-10">
+          <div className="p-4 border-b border-gray-100 flex flex-col lg:flex-row gap-4 items-center justify-between">
+            <div className="relative w-full lg:w-96">
+              <GoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
-                placeholder="Buscar pelo nome..."
-                id="nome"
                 name="nome"
                 value={localFilters.nome}
                 onChange={handleFilterChange}
                 onKeyDown={handleSearchKeyDown}
-                className={`${inputStyle} w-full`}
+                placeholder="Buscar por nome..."
+                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
               />
             </div>
 
-            <div>
-              <label htmlFor="microchip" className={labelStyle}>
-                Microchip
-              </label>
-              <input
-                type="text"
-                placeholder="Buscar pelo microchip..."
-                id="microchip"
-                name="microchip"
-                value={localFilters.microchip}
-                onChange={handleFilterChange}
-                onKeyDown={handleSearchKeyDown}
-                className={`${inputStyle} w-full`}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="rg" className={labelStyle}>
-                RG
-              </label>
-              <input
-                type="text"
-                placeholder="Buscar pelo RG..."
-                id="rg"
-                name="rg"
-                value={localFilters.rg}
-                onChange={handleFilterChange}
-                onKeyDown={handleSearchKeyDown}
-                className={`${inputStyle} w-full`}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="tipo" className={labelStyle}>
-                Espécie
-              </label>
+            <div className="flex w-full lg:w-auto items-center gap-3 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
               <select
-                id="tipo"
                 name="tipo"
                 value={localFilters.tipo}
                 onChange={handleFilterChange}
-                className={`${inputStyle} w-full`}
+                className="bg-white border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 min-w-[120px]"
               >
-                <option value="">Todos</option>
+                <option value="">Todas Espécies</option>
                 <option value="CACHORRO">Cachorro</option>
                 <option value="GATO">Gato</option>
               </select>
-            </div>
 
-            <div>
-              <label htmlFor="sexo" className={labelStyle}>
-                Sexo
-              </label>
               <select
-                id="sexo"
-                name="sexo"
-                value={localFilters.sexo}
-                onChange={handleFilterChange}
-                className={`${inputStyle} w-full`}
-              >
-                <option value="">Todos</option>
-                <option value="MACHO">Macho</option>
-                <option value="FEMEA">Fêmea</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="porte" className={labelStyle}>
-                Porte
-              </label>
-              <select
-                id="porte"
-                name="porte"
-                value={localFilters.porte}
-                onChange={handleFilterChange}
-                className={`${inputStyle} w-full`}
-              >
-                <option value="">Todos</option>
-                <option value="PEQUENO">Pequeno</option>
-                <option value="MEDIO">Médio</option>
-                <option value="GRANDE">Grande</option>
-                <option value="GIGANTE">Gigante</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="faixaEtaria" className={labelStyle}>
-                Faixa Etária
-              </label>
-              <select
-                id="faixaEtaria"
-                name="faixaEtaria"
-                value={localFilters.faixaEtaria}
-                onChange={handleFilterChange}
-                className={`${inputStyle} w-full`}
-              >
-                <option value="">Todos</option>
-                <option value="FILHOTE">Filhote (0-1 ano)</option>
-                <option value="ADOLESCENTE">Adolescente (1-3 anos)</option>
-                <option value="ADULTO">Adulto (3-8 anos)</option>
-                <option value="IDOSO">Idoso (8+ anos)</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="disponivelParaAdocao" className={labelStyle}>
-                Disponibilidade
-              </label>
-              <select
-                id="disponivelParaAdocao"
                 name="disponivelParaAdocao"
                 value={localFilters.disponivelParaAdocao}
                 onChange={handleFilterChange}
-                className={`${inputStyle} w-full`}
+                className="bg-white border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 min-w-[140px]"
               >
-                <option value="">Todos</option>
+                <option value="">Status Adoção</option>
                 <option value="true">Disponível</option>
-                <option value="false">Não Disponível</option>
+                <option value="false">Indisponível</option>
               </select>
+
+              <button
+                onClick={applyFilters}
+                className="bg-gray-900 text-white font-medium px-6 py-2 rounded-lg hover:bg-black transition-colors shadow-sm flex items-center justify-center gap-2"
+              >
+                Filtrar
+              </button>
+
+              <button
+                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg border transition-colors whitespace-nowrap ${
+                  showAdvancedFilters
+                    ? 'bg-blue-50 border-blue-200 text-blue-700'
+                    : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                }`}
+                title="Mais Filtros"
+              >
+                <FaFilter size={14} />
+                <GoChevronDown
+                  size={14}
+                  className={`transition-transform ${
+                    showAdvancedFilters ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4">
-            <div>
-              <label htmlFor="castrado" className={labelStyle}>
-                Castrado
-              </label>
-              <select
-                id="castrado"
-                name="castrado"
-                value={localFilters.castrado}
-                onChange={handleFilterChange}
-                className={`${inputStyle} w-full`}
-              >
-                <option value="">Todos</option>
-                <option value="true">Sim</option>
-                <option value="false">Não</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="vacinado" className={labelStyle}>
-                Vacinado
-              </label>
-              <select
-                id="vacinado"
-                name="vacinado"
-                value={localFilters.vacinado}
-                onChange={handleFilterChange}
-                className={`${inputStyle} w-full`}
-              >
-                <option value="">Todos</option>
-                <option value="true">Sim</option>
-                <option value="false">Não</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="vermifugado" className={labelStyle}>
-                Vermifugado
-              </label>
-              <select
-                id="vermifugado"
-                name="vermifugado"
-                value={localFilters.vermifugado}
-                onChange={handleFilterChange}
-                className={`${inputStyle} w-full`}
-              >
-                <option value="">Todos</option>
-                <option value="true">Sim</option>
-                <option value="false">Não</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="pt-4 border-t">
-            <label className="text-base font-semibold text-gray-700">
-              Características
-            </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 pt-2 p-4 mt-2 max-h-48 overflow-y-auto">
-              {loadingCaracteristicas ? (
-                <div className="flex items-center justify-center h-20 col-span-full">
-                  <AiOutlineLoading3Quarters className="animate-spin text-xl text-gray-600" />
-                  <span className="ml-2">Carregando características...</span>
-                </div>
-              ) : caracteristicasOptions.length > 0 ? (
-                caracteristicasOptions.map((caracteristica) => (
-                  <div key={caracteristica.id} className="flex items-center">
+          {showAdvancedFilters && (
+            <div className="p-5 bg-gray-50/50 border-b border-gray-200 animate-in slide-in-from-top-2 duration-200">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="space-y-4">
+                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    Identificação & Básico
+                  </h3>
+                  <div className="space-y-3">
                     <input
-                      type="checkbox"
-                      id={`caracteristica-filter-${caracteristica.id}`}
-                      name="caracteristicas"
-                      value={String(caracteristica.id)}
-                      checked={localFilters.caracteristicas.includes(
-                        String(caracteristica.id)
-                      )}
-                      onChange={handleCaracteristicasChange}
-                      className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                      type="text"
+                      name="microchip"
+                      value={localFilters.microchip}
+                      onChange={handleFilterChange}
+                      placeholder="Microchip"
+                      className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
                     />
-                    <label
-                      htmlFor={`caracteristica-filter-${caracteristica.id}`}
-                      className="ml-2 text-sm text-gray-900"
-                    >
-                      {caracteristica.nome}
-                    </label>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-600 col-span-full">
-                  Nenhuma característica disponível.
-                </p>
-              )}
-            </div>
-          </div>
+                    <input
+                      type="text"
+                      name="rg"
+                      value={localFilters.rg}
+                      onChange={handleFilterChange}
+                      placeholder="RG"
+                      className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                    />
 
-          <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3 pt-4">
-            <button
-              onClick={applyFilters}
-              className="h-10 px-4 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors shadow-sm"
-            >
-              Aplicar Filtros
-            </button>
-            <button
-              onClick={clearFilters}
-              className="h-10 px-4 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
-            >
-              Limpar Filtros
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                #
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Nome
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Idade
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Raça
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Sexo
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Disponível para adoção
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Ações
-              </th>
-            </tr>
-          </thead>
-          {!loading ? (
-            <tbody className="bg-white divide-y divide-gray-200">
-              {pets.length > 0 ? (
-                pets.map((pet) => (
-                  <tr
-                    key={pet.id}
-                    className="hover:bg-gray-50 cursor-pointer"
-                    onClick={() => navigate(`/admin/pets/${pet.id}`)}
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {pet.id ?? '-'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <img
-                          className="h-10 w-10 rounded-full"
-                          src={pet.imagemPath || logo}
-                          alt={pet.nome || 'Animal'}
-                        />
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-blue-600">
-                            <Link to={`/admin/pets/${pet.id}`}>{pet.nome}</Link>
-                          </div>
-                        </div>
+                    <div>
+                      <label className="text-xs text-gray-500 mb-1.5 block">
+                        Sexo
+                      </label>
+                      <div className="flex gap-2">
+                        <Badge
+                          active={localFilters.sexo === 'MACHO'}
+                          onClick={() => handleToggle('sexo', 'MACHO')}
+                        >
+                          Macho
+                        </Badge>
+                        <Badge
+                          active={localFilters.sexo === 'FEMEA'}
+                          onClick={() => handleToggle('sexo', 'FEMEA')}
+                        >
+                          Fêmea
+                        </Badge>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{pet.idade}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {pet.raca || '—'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`${pet.sexo.toLowerCase() === 'macho' ? 'bg-sky-100 text-sky-800' : 'bg-pink-50 text-pink-800'} rounded-full px-3 py-1 text-xs font-bold`}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    Características Físicas
+                  </h3>
+
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">
+                      Porte
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {['PEQUENO', 'MEDIO', 'GRANDE', 'GIGANTE'].map((p) => (
+                        <Badge
+                          key={p}
+                          active={localFilters.porte.includes(p)}
+                          onClick={() =>
+                            handleCheckboxChange(
+                              'porte',
+                              p,
+                              !localFilters.porte.includes(p)
+                            )
+                          }
+                        >
+                          {p.charAt(0) + p.slice(1).toLowerCase()}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">
+                      Faixa Etária
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {['FILHOTE', 'ADOLESCENTE', 'ADULTO', 'IDOSO'].map(
+                        (f) => (
+                          <Badge
+                            key={f}
+                            active={localFilters.faixaEtaria.includes(f)}
+                            onClick={() =>
+                              handleCheckboxChange(
+                                'faixaEtaria',
+                                f,
+                                !localFilters.faixaEtaria.includes(f)
+                              )
+                            }
+                          >
+                            {getFaixaEtariaLabel(f)}
+                          </Badge>
+                        )
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs text-gray-500 mb-1 block">
+                      Raças
+                    </label>
+                    <div className="bg-white border border-gray-200 rounded-lg p-3 h-32 overflow-y-auto custom-scrollbar">
+                      {!localFilters.tipo ? (
+                        <p className="text-xs text-orange-500 italic">
+                          Selecione a Espécie primeiro
+                        </p>
+                      ) : (
+                        <div className="grid grid-cols-1 gap-1">
+                          {metadata.racas
+                            .filter((r) => r.especie === localFilters.tipo)
+                            .map((r) => (
+                              <label
+                                key={r.id}
+                                className="flex items-center gap-2 text-xs text-gray-600 hover:bg-gray-50 p-1 rounded cursor-pointer"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={localFilters.racaId.includes(r.id)}
+                                  onChange={(e) =>
+                                    handleCheckboxChange(
+                                      'racaId',
+                                      r.id,
+                                      e.target.checked
+                                    )
+                                  }
+                                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                />
+                                {r.nome}
+                              </label>
+                            ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
+                      Saúde
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge
+                        active={localFilters.castrado === 'true'}
+                        onClick={() => handleToggle('castrado', 'true')}
                       >
-                        {pet.sexo.toUpperCase()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="flex justify-center">
-                        {pet.disponivelParaAdocao ? (
-                          <FaCircleCheck color="green" />
-                        ) : (
-                          <FaCircleXmark color="red" />
-                        )}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                      <button
-                        className="text-blue-600 hover:text-blue-900 mr-3"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/admin/pets/${pet.id}`);
-                        }}
+                        Castrado
+                      </Badge>
+                      <Badge
+                        active={localFilters.vacinado === 'true'}
+                        onClick={() => handleToggle('vacinado', 'true')}
                       >
-                        Ver mais
-                      </button>
-                      <button
-                        className="text-blue-600 hover:text-blue-900 mr-3"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEdit(pet.id);
-                        }}
+                        Vacinado
+                      </Badge>
+                      <Badge
+                        active={localFilters.vermifugado === 'true'}
+                        onClick={() => handleToggle('vermifugado', 'true')}
                       >
-                        Editar
-                      </button>
+                        Vermifugado
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center pt-8 gap-3 mt-auto">
+                    <button
+                      onClick={clearFilters}
+                      className="text-sm text-gray-500 hover:text-red-500 underline whitespace-nowrap"
+                    >
+                      Limpar Filtros
+                    </button>
+                    <button
+                      onClick={applyFilters}
+                      className="flex-1 bg-gray-900 text-white text-xs font-bold px-4 py-3 rounded-lg hover:bg-black transition-colors shadow-sm flex items-center justify-center gap-2 max-w-64"
+                    >
+                      FILTRAR
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden relative z-0">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50/80 border-b border-gray-100">
+                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Animal
+                  </th>
+                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Sexo
+                  </th>
+                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Espécie
+                  </th>
+                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Idade
+                  </th>
+                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-center">
+                    Disponível
+                  </th>
+                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">
+                    Ações
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {loading ? (
+                  <tr>
+                    <td colSpan="6" className="py-20 text-center text-gray-400">
+                      Carregando...
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="9" className="py-8 text-center text-gray-500">
-                    Nenhum animal encontrado.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          ) : (
-            <tbody>
-              <tr>
-                <td colSpan="9" className="py-10">
-                  <div className="flex justify-center items-center">
-                    <AiOutlineLoading3Quarters className="animate-spin w-8 h-8 text-gray-500" />
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          )}
-        </table>
-      </div>
+                ) : pets.length > 0 ? (
+                  pets.map((pet) => (
+                    <tr
+                      key={pet.id}
+                      className="hover:bg-blue-50/30 transition-colors group"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={pet.imagemPath || logo}
+                            alt={pet.nome}
+                            className="w-10 h-10 rounded-full object-cover border border-gray-200 shadow-sm"
+                          />
+                          <div>
+                            <div className="font-semibold text-gray-900 text-sm">
+                              {pet.nome}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {pet.raca?.nome || 'SRD'}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
 
-      {pageData.totalPages > 1 && (
-        <div className="flex justify-center mt-6">
-          <Pagination
-            currentPage={pageData.number + 1}
-            totalPageCount={pageData.totalPages}
-            onPageChange={handlePageChange}
-          />
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${
+                            pet.sexo === 'MACHO'
+                              ? 'bg-blue-50 text-blue-700 border border-blue-100'
+                              : 'bg-pink-50 text-pink-700 border border-pink-100'
+                          }`}
+                        >
+                          {pet.sexo === 'MACHO' ? 'Macho' : 'Fêmea'}
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1.5 text-sm text-gray-600">
+                          {pet.tipo === 'CACHORRO' ? (
+                            <FaDog size={14} />
+                          ) : (
+                            <FaCat size={14} />
+                          )}
+                          <span className="capitalize">
+                            {pet.tipo?.toLowerCase()}
+                          </span>
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4 text-sm text-gray-600">
+                        {pet.idade}
+                      </td>
+
+                      <td className="px-6 py-4 text-center">
+                        {pet.disponivelParaAdocao ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                            Sim
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">
+                            Não
+                          </span>
+                        )}
+                      </td>
+
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => navigate(`/admin/pets/${pet.id}`)}
+                            className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
+                            title="Ver Detalhes"
+                          >
+                            <span className="text-xs font-medium hidden sm:inline">
+                              Ver mais
+                            </span>
+                          </button>
+                          <button
+                            onClick={() =>
+                              navigate(`/admin/pets/${pet.id}/editar`)
+                            }
+                            className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors flex items-center gap-1"
+                            title="Editar"
+                          >
+                            <span className="text-xs font-medium hidden sm:inline">
+                              Editar
+                            </span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="py-20 text-center">
+                      <div className="flex flex-col items-center justify-center text-gray-400">
+                        <GoSearch size={48} className="mb-4 opacity-20" />
+                        <p>Nenhum pet encontrado com os filtros atuais.</p>
+                        <button
+                          onClick={clearFilters}
+                          className="mt-2 text-blue-600 text-sm hover:underline"
+                        >
+                          Limpar todos os filtros
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {pageData.totalPages > 1 && (
+            <div className="px-6 py-4 border-t border-gray-100 flex justify-center bg-gray-50">
+              <Pagination
+                currentPage={pageData.number + 1}
+                totalPageCount={pageData.totalPages}
+                onPageChange={(p) =>
+                  setSearchParams({
+                    ...Object.fromEntries([...searchParams]),
+                    page: p - 1,
+                  })
+                }
+              />
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </Panel>
   );
 };

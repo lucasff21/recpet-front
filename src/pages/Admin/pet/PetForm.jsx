@@ -7,7 +7,7 @@ import { Button } from '../../../components/Button';
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState, useRef } from 'react';
-import { findAllCaracteristicas } from '../../../services/ApiAdocao';
+import { getFiltros } from '../../../services/ApiAdocao';
 import { showToast } from '../../../utils/toast';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import DateField from '../../../components/FormFields/DateField';
@@ -27,6 +27,12 @@ const PetForm = ({
 
   const [imagePreSave, setImagePreSave] = useState(null);
   const [localCurrentImage, setLocalCurrentImage] = useState(currentImage);
+  const [metadata, setMetadata] = useState({
+    caracteristicas: [],
+    racas: [],
+    cores: [],
+  });
+  const [loadingMetadata, setLoadingMetadata] = useState(true);
 
   const hasDefaultValuesBeenSet = useRef(false);
 
@@ -61,11 +67,10 @@ const PetForm = ({
           tipoVacinaMultipla: 'V10',
           observacoesMedicas: '',
           observacoesPrivadas: '',
+          racaId: '',
+          corId: '',
         },
   });
-
-  const [caracteristicasOptions, setCaracteristicasOptions] = useState([]);
-  const [loadingCaracteristicas, setLoadingCaracteristicas] = useState(true);
 
   const tipoAnimal = watch('tipo');
   const dataVacinaMultipla = watch('dataUltimaVacinaMultipla');
@@ -84,6 +89,21 @@ const PetForm = ({
   };
 
   useEffect(() => {
+    const fetchMetadata = async () => {
+      try {
+        setLoadingMetadata(true);
+        const { data } = await getFiltros();
+        setMetadata(data);
+      } catch (error) {
+        showToast('Erro ao carregar opções de cadastro.', 'error');
+      } finally {
+        setLoadingMetadata(false);
+      }
+    };
+    fetchMetadata();
+  }, []);
+
+  useEffect(() => {
     if (
       isEdit &&
       defaultValues &&
@@ -98,20 +118,22 @@ const PetForm = ({
         tipo: defaultValues.tipo || 'CACHORRO',
         disponivelParaAdocao:
           String(defaultValues.disponivelParaAdocao) || 'true',
-
         castrado: String(defaultValues.castrado) || 'false',
+        racaId: defaultValues.raca?.id
+          ? String(defaultValues.raca.id)
+          : defaultValues.racaId || '',
+        corId: defaultValues.cor?.id
+          ? String(defaultValues.cor.id)
+          : defaultValues.corId || '',
         dataUltimaVermifugacao: defaultValues.dataUltimaVermifugacao || '',
         dataUltimaVacinaAntirrabica:
           defaultValues.dataUltimaVacinaAntirrabica || '',
         dataUltimaVacinaMultipla: defaultValues.dataUltimaVacinaMultipla || '',
         tipoVacinaMultipla:
-          defaultValues.tipoVacinaMultipla || defaultValues.tipo === 'CACHORRO'
-            ? 'V10'
-            : 'V5',
+          defaultValues.tipoVacinaMultipla ||
+          (defaultValues.tipo === 'CACHORRO' ? 'V10' : 'V5'),
         observacoesMedicas: defaultValues.observacoesMedicas || '',
-        raca: defaultValues.raca || '',
         rgAnimal: defaultValues.rgAnimal || '',
-        privateInfo: defaultValues.privateInfo || '',
         microchipId: defaultValues.microchipId || '',
         observacoesPrivadas: defaultValues.observacoesPrivadas || '',
       });
@@ -126,13 +148,12 @@ const PetForm = ({
         pelagem: 'CURTA',
         tipo: 'CACHORRO',
         descricao: '',
-        raca: '',
+        racaId: '',
+        corId: '',
         rgAnimal: '',
         microchipId: '',
-        privateInfo: '',
         disponivelParaAdocao: 'true',
         caracteristicasIds: [],
-
         castrado: 'false',
         dataUltimaVermifugacao: '',
         dataUltimaVacinaAntirrabica: '',
@@ -148,27 +169,18 @@ const PetForm = ({
   }, [defaultValues, isEdit, reset]);
 
   useEffect(() => {
-    const fetchCaracteristicas = async () => {
-      try {
-        setLoadingCaracteristicas(true);
-        const { data } = await findAllCaracteristicas();
-        setCaracteristicasOptions(data);
-      } catch (error) {
-        showToast('Erro ao carregar características.', 'error');
-      } finally {
-        setLoadingCaracteristicas(false);
-      }
-    };
-    fetchCaracteristicas();
-  }, []);
-
-  useEffect(() => {
     const tipoVacinaAtual = watch('tipoVacinaMultipla');
     if (dataVacinaMultipla && !tipoVacinaAtual) {
       const defaultTipo = tipoAnimal === 'CACHORRO' ? 'V10' : 'V5';
       setValue('tipoVacinaMultipla', defaultTipo, { shouldValidate: true });
     }
   }, [dataVacinaMultipla, tipoAnimal, setValue, watch]);
+
+  useEffect(() => {
+    if (!isEdit) {
+      setValue('racaId', '');
+    }
+  }, [tipoAnimal, setValue, isEdit]);
 
   const handleFormSubmit = (data) => {
     const dataToSend = { ...data };
@@ -324,16 +336,37 @@ const PetForm = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <InputField
-            id="raca"
-            type="text"
-            name="raca"
+          <SelectField
+            id="racaId"
             register={register}
             errors={errors}
-            placeholder="Raça"
             label="Raça"
-            maxLength={20}
+            disabled={loadingMetadata}
+            options={[
+              { value: '', label: 'Selecione a raça' },
+              ...metadata.racas
+                .filter((r) => r.especie === tipoAnimal)
+                .map((r) => ({ value: String(r.id), label: r.nome })),
+            ]}
           />
+
+          <SelectField
+            id="corId"
+            register={register}
+            errors={errors}
+            label="Cor"
+            disabled={loadingMetadata}
+            options={[
+              { value: '', label: 'Selecione a cor' },
+              ...metadata.cores.map((c) => ({
+                value: String(c.id),
+                label: c.nome,
+              })),
+            ]}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <InputField
             id="rgAnimal"
             type="text"
@@ -342,6 +375,16 @@ const PetForm = ({
             errors={errors}
             placeholder="RG do animal"
             label="RG do animal"
+            maxLength={20}
+          />
+          <InputField
+            id="microchipId"
+            type="text"
+            name="microchipId"
+            register={register}
+            errors={errors}
+            placeholder="Microchip"
+            label="Microchip"
             maxLength={20}
           />
         </div>
@@ -355,19 +398,6 @@ const PetForm = ({
             placeholder="Informações privadas (visíveis apenas para administradores)"
             label="Informações Privadas"
             rows={3}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <InputField
-            id="microchipId"
-            type="text"
-            name="microchipId"
-            register={register}
-            errors={errors}
-            placeholder="Microchip"
-            label="Microchip"
-            maxLength={20}
           />
         </div>
 
@@ -462,13 +492,13 @@ const PetForm = ({
             Selecione as características do animal
           </label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-            {loadingCaracteristicas ? (
+            {loadingMetadata ? (
               <div className="flex items-center justify-center h-20 col-span-2">
                 <AiOutlineLoading3Quarters className="animate-spin text-xl text-gray-600" />
-                <span>Carregando características...</span>
+                <span>Carregando opções...</span>
               </div>
-            ) : caracteristicasOptions.length > 0 ? (
-              caracteristicasOptions.map((caracteristica) => (
+            ) : metadata.caracteristicas.length > 0 ? (
+              metadata.caracteristicas.map((caracteristica) => (
                 <CheckboxField
                   key={caracteristica.id}
                   id={`caracteristica-${caracteristica.id}`}
