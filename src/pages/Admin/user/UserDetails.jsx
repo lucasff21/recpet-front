@@ -16,6 +16,7 @@ import {
 } from 'react-icons/fa';
 import Breadcrumb from '../../../components/Breadcrumb';
 import { calculateHumanAge } from '../../../utils/usuario';
+import AdoptionQuestionnaire from '../../../components/AdoptionQuestionnaire';
 
 const UserDetails = () => {
   const { id: userId } = useParams();
@@ -78,17 +79,6 @@ const UserDetails = () => {
   };
 
   const questionario = user?.questionario || null;
-
-  const moradiaLabels = {
-    CASA_QUINTAL_TOTALMENTE_FECHADO: 'Casa com quintal totalmente fechado',
-    CASA_QUINTAL_ABERTO: 'Casa com quintal aberto',
-    CASA_SEM_QUINTAL: 'Casa sem quintal',
-    APARTAMENTO: 'Apartamento',
-  };
-
-  const renderBool = (value) => {
-    return value ? 'Sim' : 'Não';
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -216,65 +206,7 @@ const UserDetails = () => {
           </Panel>
 
           <Panel title="Questionário de Adoção">
-            {questionario ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
-                <div>
-                  <p className="text-sm font-semibold text-gray-500">Moradia</p>
-                  <p className="text-gray-800">
-                    {moradiaLabels[questionario.moradia] ||
-                      questionario.moradia}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold text-gray-500">
-                    Telas de Proteção
-                  </p>
-                  <p className="text-gray-800">
-                    {renderBool(questionario.telasProtecao)}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold text-gray-500">
-                    Todos de Acordo
-                  </p>
-                  <p className="text-gray-800">
-                    {renderBool(questionario.todosDeAcordo)}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold text-gray-500">
-                    Ciente dos Custos
-                  </p>
-                  <p className="text-gray-800">
-                    {renderBool(questionario.cienteCustos)}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold text-gray-500">
-                    Animais em casa
-                  </p>
-                  <p className="text-gray-800">
-                    {questionario.qtdCaes} Cães, {questionario.qtdGatos} Gatos,{' '}
-                    {questionario.qtdOutros} Outros
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-sm font-semibold text-gray-500">
-                    Termos de Adoção
-                  </p>
-                  <p className="text-green-600 font-medium">Aceitos</p>
-                </div>
-              </div>
-            ) : (
-              <p className="text-gray-500 italic">
-                Usuário não preencheu o questionário.
-              </p>
-            )}
+            <AdoptionQuestionnaire questionario={questionario} />
           </Panel>
 
           <Panel
