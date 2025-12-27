@@ -23,73 +23,84 @@ import AdoptionManagement from './adoptions/AdoptionManagement';
 const AdminArea = () => {
   document.title = 'Painel Admin';
   const { logout } = useContext(AuthContext);
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
 
   const adminMenuItems = [
     {
       path: '/',
       label: 'Página Inicial',
-      icon: <IoMdHome className="h-5 w-5 mr-3" />,
+      icon: <IoMdHome className="h-5 w-5" />,
     },
     {
       path: '/admin/dashboard',
       label: 'Dashboard',
-      icon: <TbLayoutDashboard className="h-5 w-5 mr-3" />,
+      icon: <TbLayoutDashboard className="h-5 w-5" />,
     },
     {
       path: '/admin/usuarios',
       label: 'Usuários',
-      icon: <FaUser className="h-5 w-5 mr-3" />,
+      icon: <FaUser className="h-5 w-5" />,
     },
     {
       path: '/admin/pets',
       label: 'Pets',
-      icon: <MdOutlinePets className="h-5 w-5 mr-3" />,
+      icon: <MdOutlinePets className="h-5 w-5" />,
     },
     {
       path: '/admin/adocoes',
       label: 'Solicitações',
-      icon: <PiFilesFill className="h-5 w-5 mr-3" />,
+      icon: <PiFilesFill className="h-5 w-5" />,
     },
     {
       path: '/admin/temperamentos',
       label: 'Temperamentos',
-      icon: <AiOutlineTags className="h-5 w-5 mr-3" />,
+      icon: <AiOutlineTags className="h-5 w-5" />,
     },
     {
       path: '/admin/conteudos',
       label: 'Conteúdos',
-      icon: <FiFileText className="h-5 w-5 mr-3" />,
+      icon: <FiFileText className="h-5 w-5" />,
     },
     {
       label: 'Sair',
-      icon: <IoExitOutline className="h-5 w-5 mr-3" />,
+      icon: <IoExitOutline className="h-5 w-5" />,
       action: logout,
     },
   ];
 
   return (
-    <div className="flex bg-gray-50 h-screen">
+    <div className="flex bg-gray-50 h-screen overflow-hidden">
       <ToastContainer />
+
       <Sidebar
         title="Painel Admin"
         navigationItems={adminMenuItems}
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
-      ></Sidebar>
+        isCollapsed={isCollapsed}
+        toggleCollapse={toggleCollapse}
+      />
 
-      <main className="flex-1 p-8 font-sans overflow-auto">
+      <main className="flex-1 p-4 md:p-8 font-sans overflow-auto relative transition-all duration-300">
         <div className="flex">
           {!isSidebarOpen && (
             <button
               onClick={() => setIsSidebarOpen(true)}
-              className="fixed top-16 left-0 lg:hidden bg-blue-600 text-white p-3 pl-4 rounded-r-full shadow-lg z-50 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform -translate-x-1/2"
+              className="fixed top-4 left-0 lg:hidden bg-blue-600 text-white p-2 pl-3 rounded-r-full shadow-lg z-30 hover:bg-blue-700 transition-all duration-200"
               aria-label="Abrir Menu"
             >
-              <GoSidebarExpand onClick={() => setIsSidebarOpen(true)} />
+              <GoSidebarExpand size={20} />
             </button>
           )}
         </div>
+
         <Routes>
           <Route path="dashboard/*" element={<AdminDashboard />} />
           <Route path="pets/*" element={<PetManagement />} />

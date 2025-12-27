@@ -196,6 +196,10 @@ const PetDetails = () => {
                 <p className="text-gray-800">{pet.raca || 'SRD'}</p>
               </div>
               <div>
+                <p className="text-sm font-semibold text-gray-500">Cor</p>
+                <p className="text-gray-800">{pet.cor || '—'}</p>
+              </div>
+              <div>
                 <p className="text-sm font-semibold text-gray-500">
                   RG do Animal
                 </p>

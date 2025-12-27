@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Helper para converter "true"/"false" (string de Radio) para boolean real
 const stringToBoolean = z.preprocess((val) => {
   if (typeof val === 'boolean') return val;
   if (val === 'true') return true;
@@ -8,7 +7,6 @@ const stringToBoolean = z.preprocess((val) => {
   return val;
 }, z.boolean());
 
-// Helper para converter string numérica em int e validar range
 const createScaleSchema = (min, max, label) =>
   z.coerce
     .number({ invalid_type_error: 'Selecione uma opção válida' })
@@ -17,7 +15,6 @@ const createScaleSchema = (min, max, label) =>
     .max(max, `O valor máximo é ${max}`);
 
 export const questionarioSchema = z.object({
-  // --- Preferências (Enums) ---
   preferenciaSexo: z.enum(['MACHO', 'FEMEA', 'INDIFERENTE'], {
     errorMap: () => ({ message: 'Selecione a preferência de sexo' }),
   }),
@@ -34,18 +31,22 @@ export const questionarioSchema = z.object({
   instintoGuarda: createScaleSchema(1, 5, 'Instinto de Guarda'),
 
   moradia: z.enum(
-    ['KITNET', 'APARTAMENTO_PEQUENO', 'APARTAMENTO_GRANDE', 'CASA_SEM_QUINTAL', 'CASA_COM_QUINTAL'],
+    [
+      'KITNET',
+      'APARTAMENTO_PEQUENO',
+      'APARTAMENTO_GRANDE',
+      'CASA_SEM_QUINTAL',
+      'CASA_COM_QUINTAL',
+    ],
     { errorMap: () => ({ message: 'Selecione um tipo de moradia válido' }) }
   ),
-   tempoDisponivel: createScaleSchema(1, 5, 'Tempo Disponível'),
+  tempoDisponivel: createScaleSchema(1, 5, 'Tempo Disponível'),
   experienciaPets: createScaleSchema(1, 5, 'Experiência'),
 
-  // --- Booleanos de Contexto (Radio Groups ou Checkbox) ---
   possuiCaes: stringToBoolean,
   possuiGatos: stringToBoolean,
   disposicaoNecessidadesEspeciais: stringToBoolean,
 
-  // --- Termos (Devem ser true) ---
   cienteCustos: stringToBoolean.refine((val) => val === true, {
     message: 'Você deve estar ciente dos custos',
   }),
@@ -73,7 +74,7 @@ export const questionarioSchema = z.object({
 export const defaultValues = {
   preferenciaSexo: 'INDIFERENTE',
   temCriancas: 'NAO',
-  preferenciaPorte: '2', 
+  preferenciaPorte: '2',
   nivelEnergia: '3',
   nivelQuedaPelo: '3',
   nivelLatido: '3',

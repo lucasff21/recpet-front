@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Panel from '../../../components/Panel';
 import { showToast } from '../../../utils/toast';
 import { findAllPaginas } from '../../../services/ApiAdmin';
-import { GoPlus } from 'react-icons/go';
+import { GoPlus, GoSearch } from 'react-icons/go';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import Pagination from '../../../components/Pagination';
 
@@ -11,14 +11,31 @@ const ContentModal = ({ content, onClose }) => {
   if (!content) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-xl max-w-3xl w-full max-h-[80vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold mb-4">Visualizar Conteúdo</h2>
-        <div className="prose" dangerouslySetInnerHTML={{ __html: content }} />
-        <div className="text-right mt-6">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-[9999] p-4">
+      <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[85vh] flex flex-col animate-in fade-in zoom-in duration-200">
+        <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+          <h2 className="text-xl font-bold text-gray-800">
+            Visualizar Conteúdo
+          </h2>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="p-6 overflow-y-auto custom-scrollbar">
+          <div
+            className="prose max-w-none text-gray-600"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+        </div>
+
+        <div className="p-6 border-t border-gray-100 bg-gray-50 rounded-b-xl flex justify-end">
+          <button
+            onClick={onClose}
+            className="px-5 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-black transition-colors"
           >
             Fechar
           </button>
@@ -34,7 +51,11 @@ const ContentTable = () => {
   const navigate = useNavigate();
   const [modalContent, setModalContent] = useState(null);
 
-  const [pageData, setPageData] = useState({ totalPages: 0, number: 0 });
+  const [pageData, setPageData] = useState({
+    totalPages: 0,
+    number: 0,
+    totalElements: 0,
+  });
   const [currentPage, setCurrentPage] = useState(0);
 
   const getPaginas = useCallback((page) => {
@@ -45,6 +66,8 @@ const ContentTable = () => {
         setPageData({
           totalPages: response.data.totalPages,
           number: response.data.number,
+          totalElements:
+            response.data.totalElements || response.data.content.length,
         });
       })
       .catch(() => showToast('Erro ao carregar conteúdos.', 'error'))
@@ -68,100 +91,132 @@ const ContentTable = () => {
   };
 
   return (
-    <Panel>
-      <header className="text-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">
-          Gerenciar Conteúdos
-        </h1>
-      </header>
-      <div className="flex justify-end mb-4">
-        <Link to="criar">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
-            <GoPlus className="h-5 w-5" />
-            Nova Página
-          </button>
-        </Link>
-      </div>
+    <Panel className="bg-transparent">
+      <div className="mx-auto pb-10">
+        <header className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Gerenciar Conteúdos
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Páginas institucionais e termos de uso
+            </p>
+          </div>
+          <Link to="criar">
+            <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg shadow-sm transition-all font-medium text-sm w-full md:w-auto justify-center">
+              <GoPlus size={18} />
+              Nova Página
+            </button>
+          </Link>
+        </header>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                ID
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Nome (Identificador)
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Título
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Última Atualização
-              </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Ações
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {loading ? (
-              <tr>
-                <td colSpan="5" className="py-10 text-center">
-                  <AiOutlineLoading3Quarters className="animate-spin w-8 h-8 text-gray-500 mx-auto" />
-                </td>
-              </tr>
-            ) : paginas.length > 0 ? (
-              paginas.map((pagina) => (
-                <tr key={pagina.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {pagina.id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-mono">
-                    {pagina.nome}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {pagina.titulo}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(pagina.updatedAt).toLocaleDateString('pt-BR')}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                    <button
-                      onClick={() => handleViewContent(pagina.conteudo)}
-                      className="text-green-600 hover:text-green-900 mr-4"
-                    >
-                      Ver Conteúdo
-                    </button>
-                    <button
-                      onClick={() => handleEdit(pagina.id)}
-                      className="text-blue-600 hover:text-blue-900"
-                    >
-                      Editar
-                    </button>
-                  </td>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden relative z-0">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50/80 border-b border-gray-100">
+                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Identificador (Slug)
+                  </th>
+                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Título da Página
+                  </th>
+                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Última Atualização
+                  </th>
+                  <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">
+                    Ações
+                  </th>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" className="py-8 text-center text-gray-500">
-                  Nenhuma página de conteúdo encontrada.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {!loading ? (
+                  paginas.length > 0 ? (
+                    paginas.map((pagina) => (
+                      <tr
+                        key={pagina.id}
+                        className="hover:bg-blue-50/30 transition-colors group"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="text-sm font-mono text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                            {pagina.nome}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="text-sm font-medium text-gray-900">
+                            {pagina.titulo}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(pagina.updatedAt).toLocaleDateString(
+                            'pt-BR',
+                            {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            }
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => handleViewContent(pagina.conteudo)}
+                              className="p-1.5 text-green-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors flex items-center gap-1"
+                              title="Visualizar Conteúdo"
+                            >
+                              <span className="text-xs font-medium hidden sm:inline">
+                                Visualizar
+                              </span>
+                            </button>
+                            <button
+                              onClick={() => handleEdit(pagina.id)}
+                              className="p-1.5 text-blue-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
+                              title="Editar Página"
+                            >
+                              <span className="text-xs font-medium hidden sm:inline">
+                                Editar
+                              </span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className="py-20 text-center">
+                        <div className="flex flex-col items-center justify-center text-gray-400">
+                          <GoSearch size={48} className="mb-4 opacity-20" />
+                          <p>Nenhuma página de conteúdo encontrada.</p>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="py-20">
+                      <div className="flex justify-center items-center">
+                        <AiOutlineLoading3Quarters className="animate-spin w-8 h-8 text-blue-600" />
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
 
-      {pageData.totalPages > 1 && (
-        <div className="flex justify-center mt-6">
-          <Pagination
-            currentPage={pageData.number + 1}
-            totalPageCount={pageData.totalPages}
-            onPageChange={handlePageChange}
-          />
+          {pageData.totalPages > 1 && (
+            <div className="px-6 py-4 border-t border-gray-100 flex justify-center bg-gray-50">
+              <Pagination
+                currentPage={pageData.number + 1}
+                totalPageCount={pageData.totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
         </div>
-      )}
+      </div>
 
       <ContentModal
         content={modalContent}
