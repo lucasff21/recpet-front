@@ -8,11 +8,11 @@ import Login from './pages/User/Login';
 import CreateAccountForm from './pages/User/CreateAccount';
 import AboutUs from './pages/AboutUs';
 import PetProfilePage from './pages/PetProfilePage';
-import DashboardPage from './pages/User/painel/DashboardPage';
 import Contact from './pages/Contact';
 import RecoveryPassword from './pages/User/RecoveryPassword';
 import ResetPassword from './pages/User/ResetPassword';
 import Faq from './pages/Faq';
+import UserArea from './pages/User/painel/UserArea';
 
 const PrivateRoute = ({ element: Element }) => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -64,10 +64,7 @@ const AppRoutes = () => (
       />
 
       {/* ROTAS PROTEGIDA */}
-      <Route
-        path="/painel/*"
-        element={<PrivateRoute element={DashboardPage} />}
-      />
+      <Route path="/painel/*" element={<PrivateRoute element={UserArea} />} />
 
       {/* ROTAS PROTEGIDA ADMIN */}
       <Route path="/admin/*" element={<AdminRoute element={AdminArea} />} />

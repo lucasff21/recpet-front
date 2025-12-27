@@ -2,7 +2,6 @@ import { ToastContainer } from 'react-toastify';
 import { useQuestionario } from '../hooks/useQuestionario';
 import SelectField from './FormFields/SelectField';
 import RadioGroupField from './FormFields/RadioGroupField';
-// InputField removido pois não usamos mais quantidades numéricas
 import CheckboxField from './FormFields/CheckboxField';
 import { Button } from './Button';
 
@@ -10,21 +9,12 @@ const QuestionarioForm = ({ onSuccess, onClose, showTitle = true }) => {
   const { register, handleSubmit, errors, isSubmitting, isEditing } =
     useQuestionario({ onSuccess });
 
-  // --- Opções Mapeadas para os Enums e Escalas ---
-
-  const sexoOptions = [
-    { value: 'MACHO', label: 'Macho' },
-    { value: 'FEMEA', label: 'Fêmea' },
-    { value: 'INDIFERENTE', label: 'Indiferente' },
-  ];
-
   const criancasOptions = [
     { value: 'NAO', label: 'Não convive com crianças' },
     { value: 'CRIANCAS_PEQUENAS', label: 'Crianças pequenas (até 5 anos)' },
     { value: 'CRIANCAS_MAIORES', label: 'Crianças maiores (6+ anos)' },
   ];
 
-  // Moradia agora é escala 1-5, mas para o usuário mostramos o texto
   const moradiaOptions = [
     { value: 'KITNET', label: 'Kitnet' },
     { value: 'APARTAMENTO_PEQUENO', label: 'Apartamento Pequeno' },
@@ -48,15 +38,15 @@ const QuestionarioForm = ({ onSuccess, onClose, showTitle = true }) => {
   ];
 
   const tempoOptions = [
-    { value: '1', label: 'Curto (1 a 2 horas livres/dia)' },
-    { value: '3', label: 'Moderado (3 a 5 horas livres/dia)' },
-    { value: '5', label: 'Amplo (Mais de 5h)' },
+    { value: '1', label: '1 a 2 horas/dia' },
+    { value: '3', label: '3 a 5 horas/dia' },
+    { value: '5', label: 'Mais de 5h/dia' },
   ];
 
   const experienciaOptions = [
-    { value: '1', label: 'Nenhuma (Primeiro contato como tutor)' },
-    { value: '3', label: 'Média (Já tive pets)' },
-    { value: '5', label: 'Alta (Sei lidar com saúde/comportamento)' },
+    { value: '1', label: 'Primeiro contato como tutor' },
+    { value: '3', label: 'Já teve animais de estimação' },
+    { value: '5', label: 'Conhecimento especializado' },
   ];
 
   const escala1a5Options = [

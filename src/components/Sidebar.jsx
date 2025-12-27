@@ -46,7 +46,6 @@ const Sidebar = ({
             isCollapsed ? 'justify-center' : 'justify-between px-6'
           }`}
         >
-          {/* Logo e Título (Visível apenas quando expandido) */}
           {!isCollapsed && (
             <div className="flex items-center gap-3 overflow-hidden animate-in fade-in duration-300">
               <div className="text-blue-600 flex-shrink-0">
@@ -58,7 +57,6 @@ const Sidebar = ({
             </div>
           )}
 
-          {/* Botão de Recolher/Expandir (Desktop - Movido para o Topo) */}
           <button
             onClick={toggleCollapse}
             className={`hidden lg:flex p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-blue-600 transition-colors ${isCollapsed ? '' : ''}`}
@@ -71,7 +69,6 @@ const Sidebar = ({
             )}
           </button>
 
-          {/* Botão Fechar (Mobile) */}
           <button
             onClick={() => setIsSidebarOpen(false)}
             className="lg:hidden p-1 rounded-md text-gray-500 hover:bg-gray-100"
@@ -109,6 +106,7 @@ const Sidebar = ({
                 <NavLink
                   key={index}
                   to={item.path}
+                  end={item.end}
                   className={navLinkClassName}
                   onClick={() => setIsSidebarOpen(false)}
                   title={isCollapsed ? item.label : ''}
