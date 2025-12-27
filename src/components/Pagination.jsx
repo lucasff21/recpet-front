@@ -11,9 +11,9 @@ const Pagination = (props) => {
     siblingCount,
   });
 
-  if (currentPage === 0 || paginationRange.length < 2) {
-    return null;
-  }
+  // if (currentPage === 0 || paginationRange.length < 2) {
+  //   return null;
+  // }
 
   const onNext = () => {
     onPageChange(currentPage + 1);
@@ -26,7 +26,7 @@ const Pagination = (props) => {
   let lastPage = paginationRange[paginationRange.length - 1];
 
   return (
-    <ul className="flex list-none items-center gap-2">
+    <ul className="flex list-none items-center justify-center gap-2 pt-5">
       <li
         className={`flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 transition-colors hover:bg-gray-100 ${
           currentPage === 1

@@ -149,7 +149,7 @@ const UserDetails = () => {
                 </p>
                 <p className="text-gray-800">
                   {user.dataNascimento
-                    ? `${calculateHumanAge(user.dataNascimento)} anos`
+                    ? `${calculateHumanAge(user.dataNascimento)}`
                     : 'Não informada'}
                   {user.dataNascimento && (
                     <span className="text-xs text-gray-500 block">
