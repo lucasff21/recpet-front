@@ -352,7 +352,7 @@ const AdoptionDetailsPage = () => {
                 label="Idade"
                 value={
                   usuario.dataNascimento
-                    ? `${calculateHumanAge(usuario.dataNascimento)} anos`
+                    ? `${calculateHumanAge(usuario.dataNascimento)}`
                     : 'Não informada'
                 }
                 color="gray"
