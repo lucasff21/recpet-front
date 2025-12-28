@@ -41,24 +41,24 @@ const CharacteristicsTable = () => {
           </Link>
         </header>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6 overflow-visible relative z-10">
+        <div className="bg-white rounded-xl border border-gray-300 mb-6 overflow-visible relative z-10">
           <div className="p-4 flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div className="relative w-full lg:w-96">
-              <GoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <GoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 w-4 h-4" />
               <input
                 type="text"
                 value={filterName}
                 onChange={(e) => setFilterName(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
                 placeholder="Buscar por nome..."
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-400 rounded-lg text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500"
               />
             </div>
 
             <div className="flex w-full lg:w-auto items-center gap-3">
               <button
                 onClick={handleSearch}
-                className="bg-gray-900 text-white font-medium px-6 py-2 rounded-lg hover:bg-black transition-colors shadow-sm flex items-center justify-center gap-2 w-full lg:w-auto"
+                className="bg-blue-600 text-white font-bold px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2 w-full lg:w-auto active:scale-95"
               >
                 Filtrar
               </button>
