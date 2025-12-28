@@ -124,10 +124,10 @@ const AdoptionsPage = () => {
           </div>
         </header>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6 overflow-visible relative z-10">
+        <div className="bg-white rounded-xl border border-gray-300 mb-6 overflow-visible relative z-10">
           <div className="p-4 flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div className="relative w-full lg:w-96">
-              <GoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <GoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 w-4 h-4" />
               <input
                 type="text"
                 name="termo"
@@ -135,18 +135,17 @@ const AdoptionsPage = () => {
                 onChange={handleFilterChange}
                 onKeyDown={handleSearchKeyDown}
                 placeholder="Buscar por pet, adotante ou email..."
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-400 rounded-lg text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500"
               />
             </div>
 
             <div className="flex w-full lg:w-auto items-center gap-3 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
               <div className="relative">
-                <FaFilter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3 h-3" />
                 <select
                   name="status"
                   value={localFilters.status}
                   onChange={handleFilterChange}
-                  className="bg-white border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block pl-8 p-2 min-w-[180px]"
+                  className="bg-white border border-gray-400 text-black font-medium text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 min-w-[180px] cursor-pointer"
                 >
                   <option value="">Todos os Status</option>
                   <option value="PENDENTE">Pendente</option>
@@ -159,7 +158,7 @@ const AdoptionsPage = () => {
 
               <button
                 onClick={handleSearch}
-                className="bg-gray-900 text-white font-medium px-6 py-2 rounded-lg hover:bg-black transition-colors shadow-sm flex items-center justify-center gap-2"
+                className="bg-blue-600 text-white font-bold px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2 active:scale-95"
               >
                 Filtrar
               </button>
@@ -167,7 +166,7 @@ const AdoptionsPage = () => {
               {(localFilters.termo || localFilters.status) && (
                 <button
                   onClick={clearFilters}
-                  className="text-sm text-gray-500 hover:text-blue-600 underline whitespace-nowrap px-2"
+                  className="text-sm text-black font-bold hover:text-red-600 underline whitespace-nowrap px-2 transition-colors"
                 >
                   Limpar
                 </button>

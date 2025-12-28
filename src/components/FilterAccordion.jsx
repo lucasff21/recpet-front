@@ -1,14 +1,14 @@
 const FilterAccordion = ({ title, children, isOpen, toggleOpen }) => {
   return (
-    <div className="border-b border-gray-200">
+    <div className="border-b border-gray-300">
       <button
-        className="flex justify-between items-center w-full py-3 text-left font-medium text-gray-700 hover:text-gray-900 focus:outline-none"
+        className="flex justify-between items-center w-full py-4 text-left font-bold text-black hover:text-blue-700 focus:outline-none transition-colors"
         onClick={toggleOpen}
       >
-        <span>{title}</span>
-        <span>{isOpen ? '-' : '+'}</span>
+        <span className="text-sm tracking-wider">{title}</span>
+        <span className="text-lg font-bold">{isOpen ? '-' : '+'}</span>
       </button>
-      {isOpen && <div className="pb-4">{children}</div>}
+      {isOpen && <div className="pb-5 animate-fadeIn">{children}</div>}
     </div>
   );
 };

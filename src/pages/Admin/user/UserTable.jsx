@@ -175,7 +175,7 @@ const UserTable = () => {
           </Link>
         </header>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6 overflow-visible relative z-10">
+        <div className="bg-white rounded-xl border border-gray-300 mb-6 overflow-visible relative z-10">
           <div className="p-4 flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div className="flex w-full lg:w-auto gap-2">
               <select
@@ -183,14 +183,14 @@ const UserTable = () => {
                 name="tipoBusca"
                 value={localFilters.tipoBusca}
                 onChange={handleFilterChange}
-                className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-28"
+                className="bg-white border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-28 font-medium cursor-pointer"
               >
                 <option value="NOME">Nome</option>
                 <option value="EMAIL">Email</option>
               </select>
 
               <div className="relative w-full lg:w-80">
-                <GoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <GoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 w-4 h-4" />
                 <input
                   type="text"
                   name="valor"
@@ -198,19 +198,18 @@ const UserTable = () => {
                   onChange={handleFilterChange}
                   onKeyDown={handleSearchKeyDown}
                   placeholder="Buscar..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-400 rounded-lg text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500"
                 />
               </div>
             </div>
 
             <div className="flex w-full lg:w-auto items-center gap-3 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
               <div className="relative">
-                <FaUserTag className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3 h-3" />
                 <select
                   name="role"
                   value={localFilters.role}
                   onChange={handleFilterChange}
-                  className="bg-white border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block pl-8 p-2 min-w-[150px]"
+                  className="bg-white border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 min-w-[150px] font-medium cursor-pointer"
                 >
                   <option value="">Todos Tipos</option>
                   {Object.entries(tipos).map(([key, value]) => (
@@ -222,12 +221,11 @@ const UserTable = () => {
               </div>
 
               <div className="relative">
-                <FaSort className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3 h-3" />
                 <select
                   name="sortByDate"
                   value={localFilters.sortByDate}
                   onChange={handleFilterChange}
-                  className="bg-white border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block pl-8 p-2 min-w-[150px]"
+                  className="bg-white border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 min-w-[150px] font-medium cursor-pointer"
                 >
                   <option value="desc">Mais Recentes</option>
                   <option value="asc">Mais Antigos</option>
@@ -236,16 +234,17 @@ const UserTable = () => {
 
               <button
                 onClick={handleSearch}
-                className="bg-gray-900 text-white font-medium px-6 py-2 rounded-lg hover:bg-black transition-colors shadow-sm flex items-center justify-center gap-2"
+                className="bg-blue-600 text-white font-bold px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-all shadow-md flex items-center justify-center gap-2 active:scale-95"
               >
                 Filtrar
               </button>
+
               {(localFilters.valor ||
                 localFilters.role ||
                 localFilters.sortByDate !== 'desc') && (
                 <button
                   onClick={clearFilters}
-                  className="text-sm text-gray-500 hover:text-blue-600 underline whitespace-nowrap px-2"
+                  className="text-sm text-black font-bold hover:text-red-600 underline whitespace-nowrap px-2 transition-colors"
                 >
                   Limpar
                 </button>

@@ -199,10 +199,10 @@ const PetsTable = () => {
           </Link>
         </header>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6 overflow-visible relative z-10">
-          <div className="p-4 border-b border-gray-100 flex flex-col lg:flex-row gap-4 items-center justify-between">
+        <div className="bg-white rounded-xl border border-gray-300 mb-6 overflow-visible relative z-10">
+          <div className="p-4 flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div className="relative w-full lg:w-96">
-              <GoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <GoSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 w-4 h-4" />
               <input
                 type="text"
                 name="nome"
@@ -210,7 +210,7 @@ const PetsTable = () => {
                 onChange={handleFilterChange}
                 onKeyDown={handleSearchKeyDown}
                 placeholder="Buscar por nome..."
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-400 rounded-lg text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-gray-500"
               />
             </div>
 
@@ -219,7 +219,7 @@ const PetsTable = () => {
                 name="tipo"
                 value={localFilters.tipo}
                 onChange={handleFilterChange}
-                className="bg-white border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 min-w-[120px]"
+                className="bg-white border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 min-w-[120px] font-medium cursor-pointer"
               >
                 <option value="">Todas Espécies</option>
                 <option value="CACHORRO">Cachorro</option>
@@ -230,45 +230,42 @@ const PetsTable = () => {
                 name="disponivelParaAdocao"
                 value={localFilters.disponivelParaAdocao}
                 onChange={handleFilterChange}
-                className="bg-white border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 min-w-[140px]"
+                className="bg-white border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2 min-w-[140px] font-medium cursor-pointer"
               >
-                <option value="">Status Adoção</option>
+                <option value="">Todos</option>
                 <option value="true">Disponível</option>
                 <option value="false">Indisponível</option>
               </select>
 
               <button
                 onClick={applyFilters}
-                className="bg-gray-900 text-white font-medium px-6 py-2 rounded-lg hover:bg-black transition-colors shadow-sm flex items-center justify-center gap-2"
+                className="bg-blue-600 text-white font-bold px-6 py-2 rounded-lg hover:bg-blue-700 transition-all shadow-md flex items-center justify-center gap-2 active:scale-95"
               >
                 Filtrar
               </button>
 
               <button
                 onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg border transition-colors whitespace-nowrap ${
+                className={`flex items-center gap-2 px-3 py-2 text-sm font-bold rounded-lg border transition-all whitespace-nowrap ${
                   showAdvancedFilters
-                    ? 'bg-blue-50 border-blue-200 text-blue-700'
-                    : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                    ? 'bg-blue-600 border-blue-700 text-white'
+                    : 'bg-white border-gray-400 text-black hover:bg-gray-100'
                 }`}
-                title="Mais Filtros"
               >
                 <FaFilter size={14} />
                 <GoChevronDown
                   size={14}
-                  className={`transition-transform ${
-                    showAdvancedFilters ? 'rotate-180' : ''
-                  }`}
+                  className={`transition-transform ${showAdvancedFilters ? 'rotate-180' : ''}`}
                 />
               </button>
             </div>
           </div>
 
           {showAdvancedFilters && (
-            <div className="p-5 bg-gray-50/50 border-b border-gray-200 animate-in slide-in-from-top-2 duration-200">
+            <div className="p-5 border-gray-300 animate-in slide-in-from-top-2 duration-200">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="space-y-4">
-                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  <h3 className="text-xs font-bold text-black uppercase tracking-widest">
                     Identificação & Saúde
                   </h3>
                   <div className="space-y-3">
@@ -278,7 +275,7 @@ const PetsTable = () => {
                       value={localFilters.microchip}
                       onChange={handleFilterChange}
                       placeholder="Microchip"
-                      className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 py-2 text-sm bg-white border border-gray-400 text-black rounded-lg focus:outline-none focus:border-blue-500 placeholder-gray-500"
                     />
                     <input
                       type="text"
@@ -286,11 +283,11 @@ const PetsTable = () => {
                       value={localFilters.rg}
                       onChange={handleFilterChange}
                       placeholder="RG"
-                      className="w-full px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 py-2 text-sm bg-white border border-gray-400 text-black rounded-lg focus:outline-none focus:border-blue-500 placeholder-gray-500"
                     />
 
                     <div>
-                      <label className="text-xs text-gray-500 mb-1.5 block">
+                      <label className="text-xs text-black font-bold mb-1.5 block">
                         Sexo
                       </label>
                       <div className="flex gap-2">
@@ -310,8 +307,8 @@ const PetsTable = () => {
                     </div>
 
                     <div>
-                      <label className="text-xs text-gray-500 mb-1.5 block">
-                        Status de Saúde
+                      <label className="text-xs text-black font-bold mb-1.5 block">
+                        Saúde
                       </label>
                       <div className="flex flex-wrap gap-2">
                         <Badge
@@ -321,16 +318,57 @@ const PetsTable = () => {
                           Castrado
                         </Badge>
                         <Badge
-                          active={localFilters.vacinado === 'true'}
-                          onClick={() => handleToggle('vacinado', 'true')}
+                          active={localFilters.castrado === 'false'}
+                          onClick={() => handleToggle('castrado', 'false')}
                         >
-                          Vacinado
+                          Não Castrado
                         </Badge>
+
+                        <Badge
+                          active={localFilters.vacinadoAntirrabica === 'true'}
+                          onClick={() =>
+                            handleToggle('vacinadoAntirrabica', 'true')
+                          }
+                        >
+                          Antirrábica
+                        </Badge>
+                        <Badge
+                          active={localFilters.vacinadoAntirrabica === 'false'}
+                          onClick={() =>
+                            handleToggle('vacinadoAntirrabica', 'false')
+                          }
+                        >
+                          Não Antirrábica
+                        </Badge>
+
+                        <Badge
+                          active={localFilters.vacinadoMultipla === 'true'}
+                          onClick={() =>
+                            handleToggle('vacinadoMultipla', 'true')
+                          }
+                        >
+                          Múltipla
+                        </Badge>
+                        <Badge
+                          active={localFilters.vacinadoMultipla === 'false'}
+                          onClick={() =>
+                            handleToggle('vacinadoMultipla', 'false')
+                          }
+                        >
+                          Não Múltipla
+                        </Badge>
+
                         <Badge
                           active={localFilters.vermifugado === 'true'}
                           onClick={() => handleToggle('vermifugado', 'true')}
                         >
                           Vermifugado
+                        </Badge>
+                        <Badge
+                          active={localFilters.vermifugado === 'false'}
+                          onClick={() => handleToggle('vermifugado', 'false')}
+                        >
+                          Não Vermifugado
                         </Badge>
                       </div>
                     </div>
@@ -338,12 +376,12 @@ const PetsTable = () => {
                 </div>
 
                 <div className="space-y-4">
-                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                    Características Físicas & Comportamento
+                  <h3 className="text-xs font-bold text-black uppercase tracking-widest">
+                    Características & Comportamento
                   </h3>
 
                   <div>
-                    <label className="text-xs text-gray-500 mb-1 block">
+                    <label className="text-xs text-black font-bold mb-1 block">
                       Porte
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -366,7 +404,7 @@ const PetsTable = () => {
                   </div>
 
                   <div>
-                    <label className="text-xs text-gray-500 mb-1 block">
+                    <label className="text-xs text-black font-bold mb-1 block">
                       Faixa Etária
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -391,7 +429,7 @@ const PetsTable = () => {
                   </div>
 
                   <div>
-                    <label className="text-xs text-gray-500 mb-1 block">
+                    <label className="text-xs text-black font-bold mb-1 block">
                       Temperamento
                     </label>
                     <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto custom-scrollbar">
@@ -416,17 +454,17 @@ const PetsTable = () => {
 
                 <div className="space-y-4 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
+                    <h3 className="text-xs font-bold text-black uppercase tracking-widest mb-4">
                       Aparência
                     </h3>
 
                     <div className="mb-4">
-                      <label className="text-xs text-gray-500 mb-1 block">
+                      <label className="text-xs text-black font-bold mb-1 block">
                         Raças
                       </label>
                       <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto custom-scrollbar">
                         {!localFilters.tipo ? (
-                          <p className="text-xs text-orange-500 italic w-full">
+                          <p className="text-xs text-red-600 font-bold italic w-full">
                             Selecione a Espécie primeiro
                           </p>
                         ) : (
@@ -452,7 +490,7 @@ const PetsTable = () => {
                     </div>
 
                     <div>
-                      <label className="text-xs text-gray-500 mb-1 block">
+                      <label className="text-xs text-black font-bold mb-1 block">
                         Cores
                       </label>
                       <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto custom-scrollbar">
@@ -478,13 +516,13 @@ const PetsTable = () => {
                   <div className="flex justify-between items-center pt-8 gap-3 mt-auto">
                     <button
                       onClick={clearFilters}
-                      className="text-sm text-gray-500 hover:text-red-500 underline whitespace-nowrap"
+                      className="text-sm text-black font-bold hover:text-red-600 underline whitespace-nowrap transition-colors"
                     >
                       Limpar Filtros
                     </button>
                     <button
                       onClick={applyFilters}
-                      className="flex-1 bg-gray-900 text-white text-xs font-bold px-4 py-3 rounded-lg hover:bg-black transition-colors shadow-sm flex items-center justify-center gap-2 max-w-64"
+                      className="flex-1 bg-blue-600 text-white text-xs font-bold px-4 py-3 rounded-lg hover:bg-blue-700 transition-all shadow-md active:scale-95 max-w-64"
                     >
                       FILTRAR
                     </button>
