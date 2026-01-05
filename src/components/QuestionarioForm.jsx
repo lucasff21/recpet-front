@@ -72,12 +72,6 @@ const QuestionarioForm = ({ onSuccess, onClose, showTitle = true }) => {
               {isEditing ? 'Editar Questionário' : 'Preencher Questionário'}
             </h2>
           )}
-          <p className="text-gray-600 mb-6">
-            {isEditing
-              ? 'Atualize suas preferências para melhorarmos as recomendações.'
-              : 'Responda com sinceridade para encontrarmos o pet ideal para você.'}
-          </p>
-
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="">
               <h3 className="text-lg font-semibold text-gray-700 mb-4">
