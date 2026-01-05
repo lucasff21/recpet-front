@@ -37,7 +37,7 @@ const PetProfilePage = () => {
   const { isAuthenticated, user } = useContext(AuthContext);
   const [pageLoading, setPageLoading] = useState(true);
   const [adoptionLoading, setAdoptionLoading] = useState(false);
-  const [isQuestionarioModalOpen, setIsQuestionarioModalOpen] = useState(false);
+  const [isQuestionarioModalOpen, setIsQuestionarioModalOpen] = useState(true);
 
   const { pendingAnimalIds, loadingAdoptions, addAdoption } = useAdoptions();
   const [isPending, setIsPending] = useState(false);
