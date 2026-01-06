@@ -6,6 +6,8 @@ import AdocaoStatusBadge from '../../../components/AdocaoStatusBadge';
 import ConfirmModal from '../../../components/ConfirmModal';
 import { useAdoptions } from '../../../contexts/AdoptionContext';
 import { Link } from 'react-router-dom';
+import { statusDetails, filterStatus, filterStatusOptions } from '../../../constants';
+import StatusFilter from '../../../components/StatusFilter';
 
 const Adoptions = () => {
   const [solicitacoes, setSolicitacoes] = useState([]);
@@ -13,6 +15,7 @@ const Adoptions = () => {
   const [error] = useState(null);
   const [modal, setModal] = useState({ isOpen: false, adoptionId: null });
   const { removeAdoption } = useAdoptions();
+  const [filtroStatus, setFiltroStatus] = useState(filterStatus.TODOS);
 
   useEffect(() => {
     setLoading(true);
@@ -27,37 +30,6 @@ const Adoptions = () => {
         setLoading(false);
       });
   }, []);
-
-  const statusDetails = {
-    PENDENTE: {
-      label: 'PENDENTE',
-      observation: 'Aguardando revisão inicial.',
-    },
-    EM_ANALISE: {
-      label: 'EM ANÁLISE',
-      observation: 'Questionário em análise pela equipe.',
-    },
-    APROVADO: {
-      label: 'APROVADO',
-      observation:
-        'Parabéns! Sua solicitação foi aprovada. Entraremos em contato para os próximos passos.',
-    },
-    RECUSADO: {
-      label: 'RECUSADO',
-      observation:
-        'Agradecemos seu interesse, mas no momento não foi possível prosseguir com a adoção.',
-    },
-    FINALIZADO: {
-      label: 'FINALIZADO',
-      observation:
-        'Parabéns! Seu processo de adoção foi aprovado, entraremos em contato em breve para mais detalhes!',
-    },
-    DESCONHECIDO: {
-      label: 'DESCONHECIDO',
-      observation:
-        'Status desconhecido. Entre em contato para mais informações.',
-    },
-  };
 
   const handleDelete = () => {
     setLoading(true);
@@ -83,11 +55,22 @@ const Adoptions = () => {
     setModal({ isOpen: false, adoptionId: null });
   };
 
+  const solicitacoesFiltradas = solicitacoes.filter((solicitacao) => {
+    if (filtroStatus === filterStatus.TODOS) {
+      return true;
+    }
+    return solicitacao.status === filtroStatus;
+  });
+
   return (
     <div className="max-w-4xl mx-auto bg-white p-6 rounded-ld shadow-sm">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">
-        Minhas Solicitações de Adoção
-      </h2>
+      <div className="flex flex-row justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">
+          Minhas Solicitações de Adoção
+        </h2>
+        
+        <StatusFilter value={filtroStatus} onChange={setFiltroStatus} />
+      </div>
 
       {loading && (
         <div className="flex justify-center items-center h-48">
@@ -118,7 +101,13 @@ const Adoptions = () => {
         </div>
       )}
 
-      {!loading && !error && solicitacoes.length > 0 && (
+      {!loading && !error && solicitacoes.length > 0 && solicitacoesFiltradas.length === 0 && (
+        <div className="text-center py-10 text-gray-600">
+          <p>Nenhuma solicitação encontrada com o status "{filterStatusOptions.find(opt => opt.value === filtroStatus)?.label}".</p>
+        </div>
+      )}
+
+      {!loading && !error && solicitacoesFiltradas.length > 0 && (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white rounded-lg overflow-hidden">
             <thead className="bg-gray-50 border-b border-gray-200">
@@ -141,7 +130,7 @@ const Adoptions = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {solicitacoes.map((solicitacao) => (
+              {solicitacoesFiltradas.map((solicitacao) => (
                 <tr key={solicitacao.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
